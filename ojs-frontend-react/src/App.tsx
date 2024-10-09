@@ -1,35 +1,58 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import * as THREE from "three";
+import { GameConfig, handleMovement, KeyboardLayout, PlayerProps } from "./lib";
+import GUI from "lil-gui";
+import { Player, CameraController } from "./components";
+import { Canvas } from "@react-three/fiber";
+import { useEffect, useRef } from "react";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const gameObject: GameConfig = {
+    keyboardLayout: "QWERTY",
+  };
+
+  const playerProps: PlayerProps = {
+    playerRef: useRef<THREE.Mesh>(null),
+    moveSpeed: 1,
+    health: 100,
+  };
+
+  useEffect(() => {
+    const gui = new GUI();
+    const gameFolder = gui.addFolder("game");
+    const playerFolder = gui.addFolder("player");
+
+    gameFolder
+      .add(gameObject, "keyboardLayout", ["QWERTY", "Colemak"])
+      .onChange((value: KeyboardLayout) => {
+        console.log("keyboard layout changed to: ", value);
+      });
+
+    playerFolder.add(playerProps, "moveSpeed");
+    playerFolder.add(playerProps, "health", 0, 100);
+
+    return () => {
+      gui.destroy();
+    };
+  }, [gameObject]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      handleMovement(e, gameObject.keyboardLayout, playerProps);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [gameObject.keyboardLayout]);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <Canvas style={{ width: "100vw", height: "100vh", background: "white" }}>
+      <CameraController playerRef={playerProps.playerRef} />
+      <Player ref={playerProps.playerRef} />
+      <ambientLight />
+    </Canvas>
+  );
+};
 
-export default App
+export default App;
