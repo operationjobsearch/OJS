@@ -10,8 +10,13 @@ export interface GameConfig {
   keyboardLayout: KeyboardLayout;
 }
 
-export interface PlayerProps {
+export interface PlayerConfig {
   playerRef: React.RefObject<THREE.Mesh>;
   moveSpeed: number;
   health: number;
+}
+
+export interface PlayerProps {
+  playerConfig: PlayerConfig;
+  gameObject: GameConfig;
 }

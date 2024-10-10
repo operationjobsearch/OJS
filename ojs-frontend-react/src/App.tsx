@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { GameConfig, handleMovement, KeyboardLayout, PlayerProps } from "./lib";
+import { GameConfig, KeyboardLayout, PlayerConfig } from "./lib";
 import GUI from "lil-gui";
 import { Player, CameraController } from "./components";
 import { Canvas } from "@react-three/fiber";
@@ -10,7 +10,7 @@ const App = () => {
     keyboardLayout: "QWERTY",
   };
 
-  const playerProps: PlayerProps = {
+  const playerConfig: PlayerConfig = {
     playerRef: useRef<THREE.Mesh>(null),
     moveSpeed: 1,
     health: 100,
@@ -27,29 +27,22 @@ const App = () => {
         console.log("keyboard layout changed to: ", value);
       });
 
-    playerFolder.add(playerProps, "moveSpeed");
-    playerFolder.add(playerProps, "health", 0, 100);
+    playerFolder.add(playerConfig, "moveSpeed");
+    playerFolder.add(playerConfig, "health", 0, 100);
 
     return () => {
       gui.destroy();
     };
   }, [gameObject]);
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      handleMovement(e, gameObject.keyboardLayout, playerProps);
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [gameObject.keyboardLayout]);
-
   return (
     <Canvas style={{ width: "100vw", height: "100vh", background: "white" }}>
-      <CameraController playerRef={playerProps.playerRef} />
-      <Player ref={playerProps.playerRef} />
+      <CameraController playerRef={playerConfig.playerRef} />
+      <Player
+        ref={playerConfig.playerRef}
+        gameObject={gameObject}
+        playerConfig={playerConfig}
+      />
       <ambientLight />
     </Canvas>
   );
