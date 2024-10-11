@@ -1,22 +1,23 @@
 import * as THREE from "three";
 
 export type KeyboardLayout = "QWERTY" | "Colemak";
+export type Coordinate = { x: number; y: number };
 
-export interface CameraControllerProps {
-  playerRef: React.RefObject<THREE.Mesh>;
-}
-
-export interface GameConfig {
+export interface GameObject {
   keyboardLayout: KeyboardLayout;
 }
 
-export interface PlayerConfig {
-  playerRef: React.RefObject<THREE.Mesh>;
+export interface PlayerObject {
+  modelRef: React.RefObject<THREE.Mesh>;
   moveSpeed: number;
   health: number;
 }
 
 export interface PlayerProps {
-  playerConfig: PlayerConfig;
-  gameObject: GameConfig;
+  player: PlayerObject;
+  game: GameObject;
+}
+
+export interface CameraControllerProps {
+  modelRef: React.RefObject<THREE.Mesh>;
 }

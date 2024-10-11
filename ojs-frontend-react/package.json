@@ -13,6 +13,7 @@
     "@react-three/fiber": "^8.17.9",
     "@react-three/rapier": "^1.5.0",
     "gsap": "^3.12.5",
+    "leva": "^0.9.35",
     "lil-gui": "^0.19.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
