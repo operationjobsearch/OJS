@@ -13,7 +13,7 @@ export interface PlayerObject {
   health: number;
 }
 
-export interface PlayerProps {
+export interface GameProps {
   player: PlayerObject;
   game: GameObject;
 }

@@ -3,7 +3,7 @@ import { CameraControllerProps, Coordinate, moveCamera } from "..";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
 
-const CameraController = ({ modelRef }: CameraControllerProps) => {
+export const CameraController = ({ modelRef }: CameraControllerProps) => {
   const { set } = useThree();
   const mouseRef = useRef<Coordinate>({ x: 0, y: 0 });
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
@@ -31,5 +31,3 @@ const CameraController = ({ modelRef }: CameraControllerProps) => {
 
   return <perspectiveCamera ref={cameraRef} fov={75} />;
 };
-
-export default CameraController;
