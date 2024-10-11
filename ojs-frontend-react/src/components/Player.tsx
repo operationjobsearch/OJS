@@ -1,28 +1,26 @@
 import * as THREE from "three";
-import { movePlayer, PlayerProps } from "..";
+import { movePlayer, GameProps } from "..";
 import { forwardRef, useEffect } from "react";
 
-const Player = forwardRef<THREE.Mesh, PlayerProps>(({ game, player }, ref) => {
-  console.log("render");
+export const Player = forwardRef<THREE.Mesh, GameProps>(
+  ({ game, player }, ref) => {
+    useEffect(() => {
+      const handleKeyDown = (e: KeyboardEvent) => {
+        movePlayer(e, game.keyboardLayout, player);
+      };
 
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      movePlayer(e, game.keyboardLayout, player);
-    };
+      console.log("keyboard layout changed to: ", game.keyboardLayout);
+      window.addEventListener("keydown", handleKeyDown);
+      return () => {
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    }, [game.keyboardLayout]);
 
-    console.log("keyboard layout changed to: ", game.keyboardLayout);
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [game.keyboardLayout]);
-
-  return (
-    <mesh ref={ref}>
-      <boxGeometry />
-      <meshStandardMaterial />
-    </mesh>
-  );
-});
-
-export default Player;
+    return (
+      <mesh ref={ref}>
+        <boxGeometry />
+        <meshStandardMaterial />
+      </mesh>
+    );
+  }
+);
