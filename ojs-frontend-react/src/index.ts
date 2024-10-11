@@ -1,5 +1,6 @@
 export { Player } from "./components/Player";
 export { CameraController } from "./components/CameraController";
+export { DebugPanel } from "./components/DebugPanel";
 export * from "./lib/utils/cameraUtils";
 export * from "./lib/utils/playerUtils";
 export * from "./lib/utils/debugPanelUtils";

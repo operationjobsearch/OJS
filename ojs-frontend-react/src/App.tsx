@@ -1,7 +1,13 @@
 import * as THREE from "three";
-import { GameObject, PlayerObject, Player, CameraController, Canvas } from ".";
+import {
+  GameObject,
+  PlayerObject,
+  Player,
+  CameraController,
+  Canvas,
+  DebugPanel,
+} from ".";
 import { useRef } from "react";
-import { DebugPanel } from "./components/DebugPanel";
 
 const App = () => {
   const game: GameObject = {
