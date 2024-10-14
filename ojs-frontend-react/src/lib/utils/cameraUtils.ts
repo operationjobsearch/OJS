@@ -3,32 +3,35 @@ import gsap from "gsap";
 import { Coordinate } from "../types";
 
 export const moveCamera = (
-  cameraRef: React.RefObject<THREE.PerspectiveCamera>,
+  camera: THREE.Camera,
   modelRef: React.RefObject<THREE.Mesh>,
-  mouseRef: React.RefObject<Coordinate>
+  mousePos: Coordinate
 ): void => {
-  if (cameraRef.current && modelRef.current && mouseRef.current) {
+  if (modelRef.current) {
     const playerPosition = modelRef.current.position;
-
+    // const cameraPos = cameraRef.current.position.clone();
     const cameraOffset = new THREE.Vector3(0, 5, 8);
-    const cameraPosition = playerPosition.clone().add(cameraOffset);
-    cameraRef.current.position.lerp(cameraPosition, 0.1);
+    const cameraPos = playerPosition.clone().add(cameraOffset);
 
-    const rotationSpeed = 1;
-    const rotationAboutX = mouseRef.current.y * rotationSpeed;
-    const rotationAboutY = -mouseRef.current.x * rotationSpeed;
+    // radians to revolutions
+    // const revolution = 2 * Math.PI;
 
-    // cameraRef.current.position.y += 0.5 * Math.PI * mouseRef.current.y; // Pivot horizontally around the player
-    // cameraRef.current.position.x += 0.5 * Math.PI * mouseRef.current.x; // Pivot vertically
+    // // spherical coordinates
+    // const azimuthAnglePhi = revolution * mousePos.x; // horizontal rotation (about y-axis)
+    // const polarAngleTheta = 0.5 * revolution * mousePos.y; // vertical rotation (about x-axis)
 
-    // console.log("camX", cameraRef.current.position.x);
-    // console.log("camY", cameraRef.current.position.y);
+    // console.log("horizontal rotation: ", azimuthAnglePhi);
+    // console.log("vertical rotation: ", polarAngleTheta);
 
-    const focalPoint = new THREE.Vector3(
-      playerPosition.x,
-      playerPosition.y,
-      playerPosition.z
-    );
-    cameraRef.current.lookAt(focalPoint);
+    // cartesian coordinates
+    // const x = Math.sin(azimuthAnglePhi) * Math.sin(polarAngleTheta);
+    // const y = Math.cos(polarAngleTheta);
+    // const z = playerPosition.z + 3;
+
+    // const cameraPos: THREE.Vector3 = new THREE.Vector3(x, y, z);
+    // cameraPos.normalize();
+
+    camera.lookAt(playerPosition);
+    camera.position.lerp(cameraPos, 0.1);
   }
 };

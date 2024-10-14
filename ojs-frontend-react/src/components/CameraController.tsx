@@ -1,24 +1,37 @@
+import {
+  CameraControllerProps,
+  Coordinate,
+  moveCamera,
+  EnhancedOrbitControls,
+} from "..";
 import * as THREE from "three";
-import { CameraControllerProps, Coordinate, moveCamera } from "..";
 import { useFrame, useThree } from "@react-three/fiber";
+import { OrbitControls } from "three/examples/jsm/Addons.js";
 import { useEffect, useRef, useState } from "react";
 
 export const CameraController = ({ modelRef }: CameraControllerProps) => {
-  const { set } = useThree();
-  const mouseRef = useRef<Coordinate>({ x: 0, y: 0 });
-  const cameraRef = useRef<THREE.PerspectiveCamera>(null);
+  const { camera, gl } = useThree();
+  const [mousePos, setMousePos] = useState<Coordinate>({ x: 0, y: 0 });
 
   useEffect(() => {
-    if (cameraRef.current) {
-      set({ camera: cameraRef.current });
-    }
-  }, [cameraRef, set]);
+    const controls = new OrbitControls(camera, gl.domElement);
+    controls.enablePan = false;
+    controls.enableZoom = false;
+    // controls.enableRotate = false;
+
+    return () => {
+      controls.dispose();
+    };
+  }, [camera, gl]);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
-      mouseRef.current.x = (e.clientX / window.innerWidth) * 2 - 1;
-      mouseRef.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
+      setMousePos({
+        x: (e.clientX / window.innerWidth) * 2 - 1,
+        y: -(e.clientY / window.innerHeight) * 2 + 1,
+      });
     };
+
     window.addEventListener("mousemove", handleMouseMove);
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
@@ -26,8 +39,10 @@ export const CameraController = ({ modelRef }: CameraControllerProps) => {
   }, []);
 
   useFrame(() => {
-    moveCamera(cameraRef, modelRef, mouseRef);
+    moveCamera(camera, modelRef, mousePos);
+
+    // orbitControls.update();
   });
 
-  return <perspectiveCamera ref={cameraRef} fov={75} />;
+  return null;
 };

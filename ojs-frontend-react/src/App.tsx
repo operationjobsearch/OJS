@@ -1,15 +1,15 @@
-import * as THREE from "three";
 import {
   GameObject,
   PlayerObject,
   Player,
   CameraController,
-  Canvas,
   DebugPanel,
 } from ".";
+import * as THREE from "three";
 import { useRef } from "react";
+import { Canvas } from "@react-three/fiber";
 
-const App = () => {
+export const App = () => {
   const game: GameObject = {
     keyboardLayout: "QWERTY",
   };
@@ -21,13 +21,13 @@ const App = () => {
   };
 
   return (
-    <Canvas style={{ width: "100vw", height: "100vh", background: "black" }}>
-      <DebugPanel player={player} game={game} />
-      <CameraController modelRef={player.modelRef} />
-      <Player ref={player.modelRef} game={game} player={player} />
-      <ambientLight />
-    </Canvas>
+    <div className="canvas">
+      <Canvas resize={{ scroll: true, debounce: { scroll: 50, resize: 50 } }}>
+        <DebugPanel player={player} game={game} />
+        <CameraController modelRef={player.modelRef} />
+        <Player ref={player.modelRef} game={game} player={player} />
+        <ambientLight />
+      </Canvas>
+    </div>
   );
 };
-
-export default App;

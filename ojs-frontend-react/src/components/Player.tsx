@@ -1,5 +1,5 @@
-import * as THREE from "three";
 import { movePlayer, GameProps } from "..";
+import * as THREE from "three";
 import { forwardRef, useEffect } from "react";
 
 export const Player = forwardRef<THREE.Mesh, GameProps>(
