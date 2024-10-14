@@ -1,6 +1,8 @@
 import { movePlayer, GameProps } from "..";
 import * as THREE from "three";
 import { forwardRef, useEffect } from "react";
+import { RigidBody } from "@react-three/rapier";
+import { Box } from "@react-three/drei";
 
 export const Player = forwardRef<THREE.Mesh, GameProps>(
   ({ game, player }, ref) => {
@@ -17,10 +19,11 @@ export const Player = forwardRef<THREE.Mesh, GameProps>(
     }, [game.keyboardLayout]);
 
     return (
-      <mesh ref={ref}>
-        <boxGeometry />
-        <meshStandardMaterial />
-      </mesh>
+      <RigidBody>
+        <Box ref={ref} position={[0, 0, 0]}>
+          <meshStandardMaterial />
+        </Box>
+      </RigidBody>
     );
   }
 );

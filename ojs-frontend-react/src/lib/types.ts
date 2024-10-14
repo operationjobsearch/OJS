@@ -9,7 +9,7 @@ export interface GameObject {
 }
 
 export interface PlayerObject {
-  modelRef: React.RefObject<THREE.Mesh>;
+  characterModel: React.RefObject<THREE.Mesh>;
   moveSpeed: number;
   health: number;
 }
@@ -20,20 +20,20 @@ export interface GameProps {
 }
 
 export interface CameraControllerProps {
-  modelRef: React.RefObject<THREE.Mesh>;
+  characterModel: React.RefObject<THREE.Mesh>;
 }
 
-export declare class EnhancedOrbitControls extends OrbitControls {
-  constructor(camera: THREE.Camera, domElement: any = null) {
-    super(camera, domElement);
-  }
+// export declare class EnhancedOrbitControls extends OrbitControls {
+//   constructor(camera: THREE.Camera, domElement: any = null) {
+//     super(camera, domElement);
+//   }
 
-  // rotate(angle: number) {
-  //   this.getPolarAngle()
-  //   this.
-  // }
+// rotate(angle: number) {
+//   this.getPolarAngle()
+//   this.
+// }
 
-  // rotate(angle: number) {
-  //   this.rotateLeft(angle);
-  // }
-}
+// rotate(angle: number) {
+//   this.rotateLeft(angle);
+// }
+// }

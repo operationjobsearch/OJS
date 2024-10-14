@@ -4,10 +4,17 @@ import {
   Player,
   CameraController,
   DebugPanel,
+  World,
+  GameProps,
 } from ".";
 import * as THREE from "three";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
+import { KeyboardControls } from "@react-three/drei";
+
+export const Controls = {
+  jump: "jump",
+};
 
 export const App = () => {
   const game: GameObject = {
@@ -15,19 +22,28 @@ export const App = () => {
   };
 
   const player: PlayerObject = {
-    modelRef: useRef<THREE.Mesh>(null),
+    characterModel: useRef<THREE.Mesh>(null),
     moveSpeed: 1,
     health: 100,
   };
 
+  const gameProps: GameProps = {
+    game: game,
+    player: player,
+  };
+
+  const map = useMemo(() => [{ name: Controls.jump, keys: ["Space"] }], []);
+
   return (
     <div className="canvas">
-      <Canvas resize={{ scroll: true, debounce: { scroll: 50, resize: 50 } }}>
-        <DebugPanel player={player} game={game} />
-        <CameraController modelRef={player.modelRef} />
-        <Player ref={player.modelRef} game={game} player={player} />
-        <ambientLight />
-      </Canvas>
+      <KeyboardControls map={map}>
+        <Canvas resize={{ scroll: true, debounce: { scroll: 50, resize: 50 } }}>
+          <CameraController characterModel={player.characterModel} />
+          <DebugPanel {...gameProps} />
+          <World {...gameProps} />
+          <ambientLight />
+        </Canvas>
+      </KeyboardControls>
     </div>
   );
 };

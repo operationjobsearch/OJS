@@ -4,11 +4,11 @@ import { Coordinate } from "../types";
 
 export const moveCamera = (
   camera: THREE.Camera,
-  modelRef: React.RefObject<THREE.Mesh>,
+  characterModel: React.RefObject<THREE.Mesh>,
   mousePos: Coordinate
 ): void => {
-  if (modelRef.current) {
-    const playerPosition = modelRef.current.position;
+  if (characterModel.current) {
+    const playerPosition = characterModel.current.position;
     // const cameraPos = cameraRef.current.position.clone();
     const cameraOffset = new THREE.Vector3(0, 5, 8);
     const cameraPos = playerPosition.clone().add(cameraOffset);

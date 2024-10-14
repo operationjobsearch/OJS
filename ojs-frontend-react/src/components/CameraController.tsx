@@ -2,14 +2,14 @@ import {
   CameraControllerProps,
   Coordinate,
   moveCamera,
-  EnhancedOrbitControls,
+  // EnhancedOrbitControls,
 } from "..";
 import * as THREE from "three";
 import { useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls } from "three/examples/jsm/Addons.js";
 import { useEffect, useRef, useState } from "react";
 
-export const CameraController = ({ modelRef }: CameraControllerProps) => {
+export const CameraController = ({ characterModel }: CameraControllerProps) => {
   const { camera, gl } = useThree();
   const [mousePos, setMousePos] = useState<Coordinate>({ x: 0, y: 0 });
 
@@ -39,7 +39,7 @@ export const CameraController = ({ modelRef }: CameraControllerProps) => {
   }, []);
 
   useFrame(() => {
-    moveCamera(camera, modelRef, mousePos);
+    moveCamera(camera, characterModel, mousePos);
 
     // orbitControls.update();
   });
