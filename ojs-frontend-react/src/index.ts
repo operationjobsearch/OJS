@@ -3,6 +3,7 @@ export { App } from "./App";
 export { CameraController } from "./components/CameraController";
 export { DebugPanel } from "./components/DebugPanel";
 export { Player } from "./components/Player";
+export { Reticle } from "./components/Reticle";
 export { World } from "./components/World";
 
 // Utils

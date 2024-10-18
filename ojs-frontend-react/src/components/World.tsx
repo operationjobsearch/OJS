@@ -1,36 +1,16 @@
-import { Controls } from "../App";
 import { Player, GameProps } from "..";
 import { Suspense, useRef } from "react";
-import { useFrame } from "@react-three/fiber";
 import { Physics, RapierRigidBody, RigidBody } from "@react-three/rapier";
-import { Box, useKeyboardControls } from "@react-three/drei";
+import { Box } from "@react-three/drei";
 
-export const World = (gameProps: GameProps) => {
-  const player = useRef<RapierRigidBody>(null);
-  //   const
-  const jump = () => {
-    if (player.current && isOnFloor.current) {
-      player.current.applyImpulse({ x: 0, y: 5, z: 0 }, true);
-      isOnFloor.current = false;
-      console.log("impulse applied");
-    }
-  };
-
-  const jumpPressed = useKeyboardControls((state) => state[Controls.jump]);
-  useFrame(() => {
-    if (jumpPressed) {
-      console.log(isOnFloor);
-      jump();
-    }
-  });
-
+export const World = ({ player, game }: GameProps) => {
   const isOnFloor = useRef(true);
 
   return (
     <Suspense>
       <Physics>
         <RigidBody
-          ref={player}
+          ref={player.characterRigidBody}
           colliders="cuboid"
           onCollisionEnter={({ other }) => {
             if (
@@ -51,7 +31,7 @@ export const World = (gameProps: GameProps) => {
             }
           }}
         >
-          <Player ref={gameProps.player.characterModel} {...gameProps} />
+          <Player ref={player.characterModel} player={player} game={game} />
         </RigidBody>
 
         <RigidBody colliders="cuboid" type="fixed" name="floor">

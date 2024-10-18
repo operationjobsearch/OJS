@@ -1,8 +1,7 @@
+import { RapierRigidBody } from "@react-three/rapier";
 import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/Addons.js";
 
 export type KeyboardLayout = "QWERTY" | "Colemak";
-export type Coordinate = { x: number; y: number };
 
 export interface GameObject {
   keyboardLayout: KeyboardLayout;
@@ -10,6 +9,9 @@ export interface GameObject {
 
 export interface PlayerObject {
   characterModel: React.RefObject<THREE.Mesh>;
+  characterRigidBody: React.RefObject<RapierRigidBody>;
+  reticle: React.RefObject<THREE.Mesh>;
+  mouseMovement: React.RefObject<{ x: number; y: number }>;
   moveSpeed: number;
   health: number;
 }
@@ -22,18 +24,3 @@ export interface GameProps {
 export interface CameraControllerProps {
   characterModel: React.RefObject<THREE.Mesh>;
 }
-
-// export declare class EnhancedOrbitControls extends OrbitControls {
-//   constructor(camera: THREE.Camera, domElement: any = null) {
-//     super(camera, domElement);
-//   }
-
-// rotate(angle: number) {
-//   this.getPolarAngle()
-//   this.
-// }
-
-// rotate(angle: number) {
-//   this.rotateLeft(angle);
-// }
-// }

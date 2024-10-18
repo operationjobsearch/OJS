@@ -3,6 +3,7 @@ import * as THREE from "three";
 import { forwardRef, useEffect } from "react";
 import { RigidBody } from "@react-three/rapier";
 import { Box } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
 
 export const Player = forwardRef<THREE.Mesh, GameProps>(
   ({ game, player }, ref) => {
@@ -17,6 +18,8 @@ export const Player = forwardRef<THREE.Mesh, GameProps>(
         window.removeEventListener("keydown", handleKeyDown);
       };
     }, [game.keyboardLayout]);
+
+    useFrame(() => {});
 
     return (
       <RigidBody>

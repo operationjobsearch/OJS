@@ -1,47 +1,91 @@
-import {
-  CameraControllerProps,
-  Coordinate,
-  moveCamera,
-  // EnhancedOrbitControls,
-} from "..";
-import * as THREE from "three";
 import { useFrame, useThree } from "@react-three/fiber";
-import { OrbitControls } from "three/examples/jsm/Addons.js";
-import { useEffect, useRef, useState } from "react";
+import { useState, useEffect } from "react";
+import * as THREE from "three";
+import { GameProps } from "../lib/types";
 
-export const CameraController = ({ characterModel }: CameraControllerProps) => {
-  const { camera, gl } = useThree();
-  const [mousePos, setMousePos] = useState<Coordinate>({ x: 0, y: 0 });
+export const CameraController = ({ player }: GameProps) => {
+  const { camera } = useThree();
+  const radius = 3; // Adjusted distance between camera and player
+  const verticalOffset = 2.5; // Increased height offset to keep the camera above the player
+  const lookAtOffset = 1; // Offset to look slightly above the player's head
+  const [theta, setTheta] = useState(Math.PI / 2); // Horizontal angle (theta)
+  const [phi, setPhi] = useState(Math.PI / 6); // Vertical angle (phi)
+  const [isPointerLocked, setIsPointerLocked] = useState(false);
+  const [isWindowActive, setIsWindowActive] = useState(true);
 
+  // Handle pointer lock and window focus states
   useEffect(() => {
-    const controls = new OrbitControls(camera, gl.domElement);
-    controls.enablePan = false;
-    controls.enableZoom = false;
-    // controls.enableRotate = false;
-
-    return () => {
-      controls.dispose();
-    };
-  }, [camera, gl]);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({
-        x: (e.clientX / window.innerWidth) * 2 - 1,
-        y: -(e.clientY / window.innerHeight) * 2 + 1,
-      });
+    const handlePointerLockChange = () => {
+      setIsPointerLocked(!!document.pointerLockElement);
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
+    const handleWindowFocus = () => {
+      setIsWindowActive(true);
+    };
+
+    const handleWindowBlur = () => {
+      setIsWindowActive(false);
+    };
+
+    document.addEventListener("pointerlockchange", handlePointerLockChange);
+    window.addEventListener("focus", handleWindowFocus);
+    window.addEventListener("blur", handleWindowBlur);
+
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener(
+        "pointerlockchange",
+        handlePointerLockChange
+      );
+      window.removeEventListener("focus", handleWindowFocus);
+      window.removeEventListener("blur", handleWindowBlur);
     };
   }, []);
 
+  // Update camera position based on mouse movement
   useFrame(() => {
-    moveCamera(camera, characterModel, mousePos);
+    if (
+      !(player.characterModel.current && player.mouseMovement.current) ||
+      !isPointerLocked ||
+      !isWindowActive
+    ) {
+      return;
+    }
 
-    // orbitControls.update();
+    // Capture mouse deltas and reset them after use to avoid momentum-like behavior
+    const mouseDeltaX = -player.mouseMovement.current.x * 0.001;
+    const mouseDeltaY = player.mouseMovement.current.y * 0.001;
+
+    player.mouseMovement.current.x = 0;
+    player.mouseMovement.current.y = 0;
+
+    // Update horizontal and vertical angles
+    const newTheta = theta + mouseDeltaX;
+    const newPhi = Math.max(
+      -Math.PI / 3,
+      Math.min(Math.PI / 3, phi + mouseDeltaY)
+    );
+
+    // Calculate the new camera position using spherical coordinates
+    const x =
+      player.characterModel.current.position.x +
+      radius * Math.sin(newTheta) * Math.cos(newPhi);
+    const y =
+      player.characterModel.current.position.y +
+      radius * Math.sin(newPhi) +
+      verticalOffset;
+    const z =
+      player.characterModel.current.position.z +
+      radius * Math.cos(newTheta) * Math.cos(newPhi);
+
+    camera.position.set(x, y, z);
+
+    // Make the camera look slightly above the player's head
+    const lookAtPosition = player.characterModel.current.position.clone();
+    lookAtPosition.y += lookAtOffset;
+    camera.lookAt(lookAtPosition);
+
+    setTheta(newTheta);
+    setPhi(newPhi);
   });
 
   return null;

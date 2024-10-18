@@ -1,5 +1,6 @@
 import { KeyboardLayout, PlayerObject } from "../..";
 import gsap from "gsap";
+import * as THREE from "three";
 
 export const movePlayer = (
   event: KeyboardEvent,
@@ -50,3 +51,8 @@ export const movePlayer = (
       return; // Ignore other keys
   }
 };
+
+export const moveTarget = (
+  characterModel: React.RefObject<THREE.Mesh>,
+  target: React.RefObject<THREE.Mesh>
+) => {};
