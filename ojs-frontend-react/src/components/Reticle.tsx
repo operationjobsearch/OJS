@@ -1,7 +1,6 @@
 import { useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { useRef } from "react";
-import { GameProps } from "../lib/types";
+import { GameProps } from "..";
 
 export const Reticle = ({ player }: GameProps) => {
   const { camera } = useThree();
@@ -33,7 +32,7 @@ export const Reticle = ({ player }: GameProps) => {
 
   return (
     <mesh ref={player.reticle}>
-      <circleGeometry args={[0.1, 32]} /> {/* Increased size */}
+      <circleGeometry args={[0.05, 32]} /> {/* Increased size */}
       <meshBasicMaterial color="white" depthTest={false} />{" "}
       {/* Disable depth testing */}
     </mesh>

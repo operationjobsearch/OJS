@@ -8,6 +8,8 @@ export { World } from "./components/World";
 
 // Utils
 export * from "./lib/types";
+export * from "./lib/utils/appUtils";
+export * from "./lib/utils/generalUtils";
 export * from "./lib/utils/cameraUtils";
 export * from "./lib/utils/playerUtils";
 export * from "./lib/utils/debugPanelUtils";

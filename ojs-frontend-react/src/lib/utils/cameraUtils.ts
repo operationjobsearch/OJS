@@ -1,62 +1,73 @@
 import * as THREE from "three";
+import { Coordinate, GameObject } from "../..";
+
+export const setCameraAngles = (
+  characterModel: React.RefObject<THREE.Mesh>,
+  mouseMovement: React.RefObject<Coordinate>,
+  game: GameObject
+): void => {
+  if (
+    !(characterModel.current && mouseMovement.current) ||
+    !game.isPointerLocked ||
+    !game.isWindowActive
+  ) {
+    return;
+  }
+
+  // Capture mouse deltas and reset them after use to avoid momentum-like behavior
+  const mouseDeltaX = -mouseMovement.current.x * 0.001;
+  const mouseDeltaY = mouseMovement.current.y * 0.001;
+
+  mouseMovement.current.x = 0;
+  mouseMovement.current.y = 0;
+
+  // Update horizontal and vertical angles
+  const newTheta = game.cameraAngleTheta + mouseDeltaX;
+  const newPhi = Math.max(
+    -Math.PI / 3,
+    Math.min(Math.PI / 3, game.cameraAnglePhi + mouseDeltaY)
+  );
+
+  game.cameraAngleTheta = newTheta;
+  game.cameraAnglePhi = newPhi;
+};
 
 export const moveCamera = (
   camera: THREE.Camera,
   characterModel: React.RefObject<THREE.Mesh>,
-  target: React.RefObject<THREE.Mesh>,
-  mouseDelta: { x: number; y: number },
-  fixedDistance: number // Constant distance between camera and target
+  mouseMovement: React.RefObject<Coordinate>,
+  game: GameObject
 ): void => {
-  if (characterModel.current && target.current) {
-    const targetPosition = characterModel.current.position;
-
-    // Rotate the camera based on mouse movement
-    rotateCamera(
-      camera,
-      targetPosition,
-      mouseDelta.x,
-      mouseDelta.y,
-      fixedDistance
-    );
-
-    // Ensure the camera is always looking at the target point (not the player directly)
-    camera.lookAt(target.current?.position);
+  if (
+    !(characterModel.current && mouseMovement.current) ||
+    !game.isPointerLocked ||
+    !game.isWindowActive
+  ) {
+    return;
   }
-};
 
-// Spherical coordinates for camera movement
-const spherical = new THREE.Spherical();
-const sphericalDelta = new THREE.Spherical();
+  setCameraAngles(characterModel, mouseMovement, game);
 
-// Rotation speed factor
-const rotateSpeed = 0.01; // Adjust this to control the camera speed
+  // Calculate the new camera position using spherical coordinates
+  const x =
+    characterModel.current.position.x +
+    game.cameraRadius *
+      Math.sin(game.cameraAngleTheta) *
+      Math.cos(game.cameraAnglePhi);
+  const y =
+    characterModel.current.position.y +
+    game.cameraRadius * Math.sin(game.cameraAnglePhi) +
+    game.cameraVerticalOffset;
+  const z =
+    characterModel.current.position.z +
+    game.cameraRadius *
+      Math.cos(game.cameraAngleTheta) *
+      Math.cos(game.cameraAnglePhi);
 
-// Rotate the camera based on mouse input
-const rotateCamera = (
-  camera: THREE.Camera,
-  targetPosition: THREE.Vector3,
-  deltaX: number,
-  deltaY: number,
-  fixedDistance: number // The constant distance between the camera and the player
-): void => {
-  // Get the current spherical coordinates of the camera relative to the target (the player)
-  spherical.setFromVector3(camera.position.clone().sub(targetPosition));
+  camera.position.set(x, y, z);
 
-  // Adjust the spherical angles based on mouse movement
-  spherical.theta -= deltaX * rotateSpeed; // Horizontal rotation (around the Y-axis)
-  spherical.phi -= deltaY * rotateSpeed; // Vertical rotation (around the X-axis)
-
-  // Clamp the vertical angle (phi) to prevent flipping the camera upside down
-  spherical.phi = Math.max(0.1, Math.min(Math.PI - 0.1, spherical.phi));
-
-  // Ensure the radius (distance from the target) stays constant
-  spherical.radius = fixedDistance;
-
-  // Convert the spherical coordinates back into a Cartesian vector
-  const newPosition = new THREE.Vector3()
-    .setFromSpherical(spherical)
-    .add(targetPosition);
-
-  // Update the camera's position
-  camera.position.copy(newPosition);
+  // Make the camera look slightly above the player's head
+  const lookAtPosition = characterModel.current.position.clone();
+  lookAtPosition.y += game.cameraLookAtOffset;
+  camera.lookAt(lookAtPosition);
 };

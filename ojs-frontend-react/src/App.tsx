@@ -6,6 +6,7 @@ import {
   World,
   GameProps,
   Reticle,
+  Coordinate,
 } from ".";
 import * as THREE from "three";
 import { useEffect, useRef } from "react";
@@ -14,13 +15,25 @@ import { RapierRigidBody } from "@react-three/rapier";
 
 export const App = () => {
   const game: GameObject = {
+    // State
+    isPointerLocked: false,
+    isWindowActive: true,
+
+    // Settings
     keyboardLayout: "QWERTY",
+
+    // Camera
+    cameraAngleTheta: Math.PI / 2,
+    cameraAnglePhi: Math.PI / 6,
+    cameraRadius: 3,
+    cameraVerticalOffset: 2.5,
+    cameraLookAtOffset: 1,
   };
 
   const player: PlayerObject = {
     characterModel: useRef<THREE.Mesh>(null),
     characterRigidBody: useRef<RapierRigidBody>(null),
-    mouseMovement: useRef<{ x: number; y: number }>({ x: 0, y: 0 }),
+    mouseMovement: useRef<Coordinate>({ x: 0, y: 0 }),
     reticle: useRef<THREE.Mesh>(null),
     moveSpeed: 1,
     health: 100,
@@ -39,9 +52,31 @@ export const App = () => {
       }
     };
 
+    const handlePointerLockChange = () => {
+      game.isPointerLocked = !!document.pointerLockElement;
+    };
+
+    const handleWindowFocus = () => {
+      game.isWindowActive = true;
+    };
+
+    const handleWindowBlur = () => {
+      game.isWindowActive = false;
+    };
+
+    window.addEventListener("focus", handleWindowFocus);
+    window.addEventListener("blur", handleWindowBlur);
     window.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("pointerlockchange", handlePointerLockChange);
+
     return () => {
+      window.removeEventListener("focus", handleWindowFocus);
+      window.removeEventListener("blur", handleWindowBlur);
       window.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener(
+        "pointerlockchange",
+        handlePointerLockChange
+      );
     };
   }, []);
 

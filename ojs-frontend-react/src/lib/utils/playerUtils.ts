@@ -51,8 +51,3 @@ export const movePlayer = (
       return; // Ignore other keys
   }
 };
-
-export const moveTarget = (
-  characterModel: React.RefObject<THREE.Mesh>,
-  target: React.RefObject<THREE.Mesh>
-) => {};
