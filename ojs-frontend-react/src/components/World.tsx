@@ -18,7 +18,6 @@ export const World = ({ player, game }: GameProps) => {
               other.rigidBodyObject.name === "floor"
             ) {
               isOnFloor.current = true;
-              console.log("on collision enter!!!!!!!!!!");
             }
           }}
           onCollisionExit={({ other }) => {
@@ -27,7 +26,6 @@ export const World = ({ player, game }: GameProps) => {
               other.rigidBodyObject.name === "floor"
             ) {
               isOnFloor.current = false;
-              console.log("on collision exit!!!!!!!!!!");
             }
           }}
         >
