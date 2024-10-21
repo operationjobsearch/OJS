@@ -1,18 +1,21 @@
 import * as THREE from "three";
 import { Coordinate, GameObject } from "../..";
 
-export const setCameraAngles = (
+export const moveCamera = (
+  camera: THREE.Camera,
   characterModel: React.RefObject<THREE.Mesh>,
   mouseMovement: React.RefObject<Coordinate>,
   game: GameObject
 ): void => {
   if (
-    !(characterModel.current && mouseMovement.current) ||
-    !game.isPointerLocked ||
-    !game.isWindowActive
-  ) {
+    !(
+      characterModel.current &&
+      mouseMovement.current &&
+      game.isPointerLocked &&
+      game.isWindowActive
+    )
+  )
     return;
-  }
 
   // Capture mouse deltas and reset them after use to avoid momentum-like behavior
   const mouseDeltaX = -mouseMovement.current.x * 0.001;
@@ -30,23 +33,6 @@ export const setCameraAngles = (
 
   game.cameraAngleTheta = newTheta;
   game.cameraAnglePhi = newPhi;
-};
-
-export const moveCamera = (
-  camera: THREE.Camera,
-  characterModel: React.RefObject<THREE.Mesh>,
-  mouseMovement: React.RefObject<Coordinate>,
-  game: GameObject
-): void => {
-  if (
-    !(characterModel.current && mouseMovement.current) ||
-    !game.isPointerLocked ||
-    !game.isWindowActive
-  ) {
-    return;
-  }
-
-  setCameraAngles(characterModel, mouseMovement, game);
 
   // Calculate the new camera position using spherical coordinates
   const x =

@@ -7,6 +7,10 @@ import {
   GameProps,
   Reticle,
   Coordinate,
+  handleMouseMove,
+  handlePointerLockChange,
+  handleWindowFocus,
+  handleWindowBlur,
 } from ".";
 import * as THREE from "three";
 import { useEffect, useRef } from "react";
@@ -23,7 +27,7 @@ export const App = () => {
     keyboardLayout: "QWERTY",
 
     // Camera
-    cameraAngleTheta: Math.PI / 2,
+    cameraAngleTheta: 0,
     cameraAnglePhi: Math.PI / 6,
     cameraRadius: 3,
     cameraVerticalOffset: 2.5,
@@ -45,38 +49,21 @@ export const App = () => {
   };
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (document.pointerLockElement && player.mouseMovement.current) {
-        player.mouseMovement.current.x = e.movementX;
-        player.mouseMovement.current.y = e.movementY;
-      }
-    };
+    const onMouseMove = (e: MouseEvent) => handleMouseMove(e, player);
+    const onPointerLockChange = () => handlePointerLockChange(game);
+    const onFocus = () => handleWindowFocus(game);
+    const onBlur = () => handleWindowBlur(game);
 
-    const handlePointerLockChange = () => {
-      game.isPointerLocked = !!document.pointerLockElement;
-    };
-
-    const handleWindowFocus = () => {
-      game.isWindowActive = true;
-    };
-
-    const handleWindowBlur = () => {
-      game.isWindowActive = false;
-    };
-
-    window.addEventListener("focus", handleWindowFocus);
-    window.addEventListener("blur", handleWindowBlur);
-    window.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("pointerlockchange", handlePointerLockChange);
+    window.addEventListener("focus", onFocus);
+    window.addEventListener("blur", onBlur);
+    window.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("pointerlockchange", onPointerLockChange);
 
     return () => {
-      window.removeEventListener("focus", handleWindowFocus);
-      window.removeEventListener("blur", handleWindowBlur);
-      window.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener(
-        "pointerlockchange",
-        handlePointerLockChange
-      );
+      window.removeEventListener("focus", onFocus);
+      window.removeEventListener("blur", onBlur);
+      window.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("pointerlockchange", onPointerLockChange);
     };
   }, []);
 
