@@ -1,6 +1,8 @@
-import * as THREE from "three";
 import { movePlayer, GameProps } from "..";
+import * as THREE from "three";
 import { forwardRef, useEffect } from "react";
+import { RigidBody } from "@react-three/rapier";
+import { useGLTF, useAnimations, Box } from "@react-three/drei";
 
 export const Player = forwardRef<THREE.Mesh, GameProps>(
   ({ game, player }, ref) => {
@@ -9,7 +11,6 @@ export const Player = forwardRef<THREE.Mesh, GameProps>(
         movePlayer(e, game.keyboardLayout, player);
       };
 
-      console.log("keyboard layout changed to: ", game.keyboardLayout);
       window.addEventListener("keydown", handleKeyDown);
       return () => {
         window.removeEventListener("keydown", handleKeyDown);
@@ -17,10 +18,11 @@ export const Player = forwardRef<THREE.Mesh, GameProps>(
     }, [game.keyboardLayout]);
 
     return (
-      <mesh ref={ref}>
-        <boxGeometry />
-        <meshStandardMaterial />
-      </mesh>
+      <RigidBody>
+        <Box ref={ref} position={[0, 0, 0]}>
+          <meshStandardMaterial />
+        </Box>
+      </RigidBody>
     );
   }
 );

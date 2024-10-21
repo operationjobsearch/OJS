@@ -1,34 +1,59 @@
 import * as THREE from "three";
-import gsap from "gsap";
-import { Coordinate } from "../types";
+import { Coordinate, GameObject } from "../..";
 
 export const moveCamera = (
-  cameraRef: React.RefObject<THREE.PerspectiveCamera>,
-  modelRef: React.RefObject<THREE.Mesh>,
-  mouseRef: React.RefObject<Coordinate>
+  camera: THREE.Camera,
+  characterModel: React.RefObject<THREE.Mesh>,
+  mouseMovement: React.RefObject<Coordinate>,
+  game: GameObject
 ): void => {
-  if (cameraRef.current && modelRef.current && mouseRef.current) {
-    const playerPosition = modelRef.current.position;
+  if (
+    !(
+      characterModel.current &&
+      mouseMovement.current &&
+      game.isPointerLocked &&
+      game.isWindowActive
+    )
+  )
+    return;
 
-    const cameraOffset = new THREE.Vector3(0, 5, 8);
-    const cameraPosition = playerPosition.clone().add(cameraOffset);
-    cameraRef.current.position.lerp(cameraPosition, 0.1);
+  // Capture mouse deltas and reset them after use to avoid momentum-like behavior
+  const mouseDeltaX = -mouseMovement.current.x * 0.001;
+  const mouseDeltaY = mouseMovement.current.y * 0.001;
 
-    const rotationSpeed = 1;
-    const rotationAboutX = mouseRef.current.y * rotationSpeed;
-    const rotationAboutY = -mouseRef.current.x * rotationSpeed;
+  mouseMovement.current.x = 0;
+  mouseMovement.current.y = 0;
 
-    // cameraRef.current.position.y += 0.5 * Math.PI * mouseRef.current.y; // Pivot horizontally around the player
-    // cameraRef.current.position.x += 0.5 * Math.PI * mouseRef.current.x; // Pivot vertically
+  // Update horizontal and vertical angles
+  const newTheta = game.cameraAngleTheta + mouseDeltaX;
+  const newPhi = Math.max(
+    -Math.PI / 3,
+    Math.min(Math.PI / 3, game.cameraAnglePhi + mouseDeltaY)
+  );
 
-    // console.log("camX", cameraRef.current.position.x);
-    // console.log("camY", cameraRef.current.position.y);
+  game.cameraAngleTheta = newTheta;
+  game.cameraAnglePhi = newPhi;
 
-    const focalPoint = new THREE.Vector3(
-      playerPosition.x,
-      playerPosition.y,
-      playerPosition.z
-    );
-    cameraRef.current.lookAt(focalPoint);
-  }
+  // Calculate the new camera position using spherical coordinates
+  const x =
+    characterModel.current.position.x +
+    game.cameraRadius *
+      Math.sin(game.cameraAngleTheta) *
+      Math.cos(game.cameraAnglePhi);
+  const y =
+    characterModel.current.position.y +
+    game.cameraRadius * Math.sin(game.cameraAnglePhi) +
+    game.cameraVerticalOffset;
+  const z =
+    characterModel.current.position.z +
+    game.cameraRadius *
+      Math.cos(game.cameraAngleTheta) *
+      Math.cos(game.cameraAnglePhi);
+
+  camera.position.set(x, y, z);
+
+  // Make the camera look slightly above the player's head
+  const lookAtPosition = characterModel.current.position.clone();
+  lookAtPosition.y += game.cameraLookAtOffset;
+  camera.lookAt(lookAtPosition);
 };
