@@ -1,20 +1,45 @@
-import { movePlayer, GameProps } from "..";
+import {
+  GameProps,
+  Controls,
+  jump,
+  moveForward,
+  moveLeft,
+  moveBackwards,
+  moveRight,
+} from "..";
 import * as THREE from "three";
 import { forwardRef, useEffect } from "react";
 import { RigidBody } from "@react-three/rapier";
-import { useGLTF, useAnimations, Box } from "@react-three/drei";
+import {
+  useGLTF,
+  useAnimations,
+  useKeyboardControls,
+  Box,
+} from "@react-three/drei";
 
 export const Player = forwardRef<THREE.Mesh, GameProps>(
   ({ game, player }, ref) => {
     useEffect(() => {
       const handleKeyDown = (e: KeyboardEvent) => {
-        movePlayer(e, game.keyboardLayout, player);
+        if (e.key === "w") {
+          moveForward(player);
+        }
+        if (e.key === "a") {
+          moveLeft(player);
+        }
+        if (game.keyboardLayout === "QWERTY") {
+          if (e.key === "s") moveBackwards(player);
+          if (e.key === "d") moveRight(player);
+        } else if (game.keyboardLayout === "Colemak") {
+          if (e.key === "r") moveBackwards(player);
+          if (e.key === "s") moveRight(player);
+        }
+        if (e.key === " ") {
+          jump(player);
+        }
       };
 
-      window.addEventListener("keydown", handleKeyDown);
-      return () => {
-        window.removeEventListener("keydown", handleKeyDown);
-      };
+      document.addEventListener("keydown", handleKeyDown);
     }, [game.keyboardLayout]);
 
     return (

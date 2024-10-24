@@ -1,53 +1,54 @@
-import { KeyboardLayout, PlayerObject } from "../..";
-import gsap from "gsap";
-import * as THREE from "three";
+import { Controls, KeyboardLayout, PlayerObject } from "../..";
+import { useKeyboardControls } from "@react-three/drei";
 
-export const movePlayer = (
-  event: KeyboardEvent,
-  keyboardLayout: KeyboardLayout,
-  playerConfig: PlayerObject
-): void => {
-  if (!playerConfig.characterModel.current) return;
+export const movePlayer = (player: PlayerObject): void => {
+  if (!player.characterModel.current) return;
 
-  const currentPos = playerConfig.characterModel.current.position.clone();
+  const currentPos = player.characterModel.current.position.clone();
   const duration = 0.5;
+};
 
-  switch (event.key) {
-    // forward
-    case keyboardLayout === "QWERTY" ? "w" : "w":
-      gsap.to(playerConfig.characterModel.current.position, {
-        z: currentPos.z - playerConfig.moveSpeed,
-        duration,
-      });
-      break;
-    // left
-    case keyboardLayout === "QWERTY" ? "a" : "a":
-      gsap.to(playerConfig.characterModel.current.position, {
-        x: currentPos.x - playerConfig.moveSpeed,
-        duration,
-      });
-      break;
-    // backward
-    case keyboardLayout === "QWERTY" ? "s" : "r":
-      gsap.to(playerConfig.characterModel.current.position, {
-        z: currentPos.z + playerConfig.moveSpeed,
-        duration,
-      });
-      break;
-    // right
-    case keyboardLayout === "QWERTY" ? "d" : "s":
-      gsap.to(playerConfig.characterModel.current.position, {
-        x: currentPos.x + playerConfig.moveSpeed,
-        duration,
-      });
-      break;
-    // case " ": // Jump
-    //   gsap.to(playerConfig.characterModel.current.position, {
-    //     y: currentPos.y + playerConfig.moveSpeed,
-    //     duration,
-    //   });
-    //   break;
-    default:
-      return; // Ignore other keys
+export const moveForward = (player: PlayerObject) => {
+  if (player.rigidBody.current) {
+    player.rigidBody.current.applyImpulse(
+      { x: 0, y: 0, z: -player.impulse },
+      true
+    );
+  }
+};
+
+export const moveLeft = (player: PlayerObject) => {
+  if (player.rigidBody.current) {
+    player.rigidBody.current.applyImpulse(
+      { x: -player.impulse, y: 0, z: 0 },
+      true
+    );
+  }
+};
+
+export const moveBackwards = (player: PlayerObject) => {
+  if (player.rigidBody.current) {
+    player.rigidBody.current.applyImpulse(
+      { x: 0, y: 0, z: player.impulse },
+      true
+    );
+  }
+};
+
+export const moveRight = (player: PlayerObject) => {
+  if (player.rigidBody.current) {
+    player.rigidBody.current.applyImpulse(
+      { x: player.impulse, y: 0, z: 0 },
+      true
+    );
+  }
+};
+
+export const jump = (player: PlayerObject) => {
+  if (!player.characterModel.current) return;
+
+  if (player.rigidBody.current && player.isOnFloor) {
+    player.rigidBody.current.applyImpulse({ x: 0, y: 5, z: 0 }, true);
+    player.isOnFloor = false;
   }
 };

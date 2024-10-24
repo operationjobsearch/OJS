@@ -1,46 +1,21 @@
 import { Player, GameProps } from "..";
-import { Suspense, useEffect, useRef } from "react";
-import { Physics, RapierRigidBody, RigidBody } from "@react-three/rapier";
-import { Box, useKeyboardControls } from "@react-three/drei";
+import { Suspense } from "react";
+import { Physics, RigidBody } from "@react-three/rapier";
+import { Box } from "@react-three/drei";
 
-export const World = (gameProps: GameProps) => {
-  const player = useRef<RapierRigidBody>(null);
-  const isOnFloor = useRef(true);
-
-  const jump = () => {
-    if (player.current && isOnFloor.current) {
-      player.current.applyImpulse({ x: 0, y: 5, z: 0 }, true);
-      isOnFloor.current = false;
-    }
-  };
-
-  const [spacePressed] = useKeyboardControls();
-
-  useEffect(() => {
-    spacePressed(
-      (state) => {
-        console.log("state.jump:", state.jump);
-        return state.jump;
-      },
-      (value) => {
-        console.log("value:", value);
-        if (value) jump();
-      }
-    );
-  }, []);
-
+export const World = ({ game, player }: GameProps) => {
   return (
     <Suspense>
       <Physics>
         <RigidBody
-          ref={player}
+          ref={player.rigidBody}
           colliders="cuboid"
           onCollisionEnter={({ other }) => {
             if (
               other.rigidBodyObject &&
               other.rigidBodyObject.name === "floor"
             ) {
-              isOnFloor.current = true;
+              player.isOnFloor = true;
             }
           }}
           onCollisionExit={({ other }) => {
@@ -48,14 +23,14 @@ export const World = (gameProps: GameProps) => {
               other.rigidBodyObject &&
               other.rigidBodyObject.name === "floor"
             ) {
-              isOnFloor.current = false;
+              player.isOnFloor = false;
             }
           }}
         >
-          <Player ref={gameProps.player.characterModel} {...gameProps} />
+          <Player ref={player.characterModel} {...{ game, player }} />
         </RigidBody>
 
-        <RigidBody colliders="cuboid" type="fixed" name="floor">
+        <RigidBody colliders="cuboid" type="fixed" name="floor" friction={0}>
           <Box position={[0, -1, 0]} args={[10, 1, 10]}>
             <meshStandardMaterial color="hotpink" />
           </Box>

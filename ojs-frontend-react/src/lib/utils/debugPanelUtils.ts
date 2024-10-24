@@ -19,4 +19,5 @@ export const initializePlayerFolder = (
 
   playerFolder.add(player, "moveSpeed");
   playerFolder.add(player, "health", 0, 100);
+  playerFolder.add(player, "impulse");
 };

@@ -11,16 +11,13 @@ import {
   handlePointerLockChange,
   handleWindowFocus,
   handleWindowBlur,
+  Controls,
 } from ".";
 import * as THREE from "three";
 import { useEffect, useRef, useMemo } from "react";
 import { Canvas } from "@react-three/fiber";
 import { RapierRigidBody } from "@react-three/rapier";
 import { KeyboardControls } from "@react-three/drei";
-
-export const Controls = {
-  jump: "jump",
-};
 
 export const App = () => {
   const game: GameObject = {
@@ -41,11 +38,13 @@ export const App = () => {
 
   const player: PlayerObject = {
     characterModel: useRef<THREE.Mesh>(null),
-    characterRigidBody: useRef<RapierRigidBody>(null),
+    rigidBody: useRef<RapierRigidBody>(null),
     mouseMovement: useRef<Coordinate>({ x: 0, y: 0 }),
     reticle: useRef<THREE.Mesh>(null),
+    isOnFloor: true,
     moveSpeed: 1,
     health: 100,
+    impulse: 0.5,
   };
 
   const gameProps: GameProps = {
@@ -53,7 +52,28 @@ export const App = () => {
     player: player,
   };
 
-  const map = useMemo(() => [{ name: Controls.jump, keys: ["Space"] }], []);
+  const map = useMemo(
+    () => [
+      {
+        name: Controls.forward,
+        keys: [game.keyboardLayout === "QWERTY" ? "KeyW" : "KeyW"],
+      },
+      {
+        name: Controls.left,
+        keys: [game.keyboardLayout === "QWERTY" ? "KeyA" : "KeyA"],
+      },
+      {
+        name: Controls.backward,
+        keys: [game.keyboardLayout === "QWERTY" ? "KeyS" : "KeyR"],
+      },
+      {
+        name: Controls.right,
+        keys: [game.keyboardLayout === "QWERTY" ? "KeyD" : "KeyS"],
+      },
+      { name: Controls.jump, keys: ["Space"] },
+    ],
+    [game.keyboardLayout]
+  );
 
   useEffect(() => {
     const onMouseMove = (e: MouseEvent) => handleMouseMove(e, player);

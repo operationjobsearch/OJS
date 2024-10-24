@@ -4,29 +4,39 @@ import * as THREE from "three";
 export type KeyboardLayout = "QWERTY" | "Colemak";
 export type Coordinate = { x: number; y: number };
 
+export enum Controls {
+  forward = "forward",
+  left = "left",
+  backward = "backward",
+  right = "right",
+  jump = "jump",
+}
+
 export interface GameObject {
   // State
-  isWindowActive: boolean;
   isPointerLocked: boolean;
+  isWindowActive: boolean;
 
   // Settings
   keyboardLayout: KeyboardLayout;
 
   // Camera
+  cameraVerticalOffset: number;
+  cameraLookAtOffset: number;
   cameraAngleTheta: number;
   cameraAnglePhi: number;
   cameraRadius: number;
-  cameraVerticalOffset: number;
-  cameraLookAtOffset: number;
 }
 
 export interface PlayerObject {
   characterModel: React.RefObject<THREE.Mesh>;
-  characterRigidBody: React.RefObject<RapierRigidBody>;
-  reticle: React.RefObject<THREE.Mesh>;
+  rigidBody: React.RefObject<RapierRigidBody>;
   mouseMovement: React.RefObject<Coordinate>;
+  reticle: React.RefObject<THREE.Mesh>;
   moveSpeed: number;
   health: number;
+  isOnFloor: boolean;
+  impulse: number;
 }
 
 export interface GameProps {
