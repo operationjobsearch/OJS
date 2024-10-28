@@ -6,32 +6,43 @@ export type Coordinate = { x: number; y: number };
 
 export interface GameObject {
   // State
-  isWindowActive: boolean;
   isPointerLocked: boolean;
+  isWindowActive: boolean;
 
   // Settings
   keyboardLayout: KeyboardLayout;
 
   // Camera
+  cameraVerticalOffset: number;
+  cameraLookAtOffset: number;
   cameraAngleTheta: number;
   cameraAnglePhi: number;
   cameraRadius: number;
-  cameraVerticalOffset: number;
-  cameraLookAtOffset: number;
 }
 
 export interface PlayerObject {
   characterModel: React.RefObject<THREE.Mesh>;
-  characterRigidBody: React.RefObject<RapierRigidBody>;
-  reticle: React.RefObject<THREE.Mesh>;
+  rigidBody: React.RefObject<RapierRigidBody>;
   mouseMovement: React.RefObject<Coordinate>;
+  reticle: React.RefObject<THREE.Mesh>;
   moveSpeed: number;
   health: number;
+  isOnFloor: boolean;
+  impulse: number;
+  controls: ControlsObject;
 }
 
 export interface GameProps {
   player: PlayerObject;
   game: GameObject;
+}
+
+export interface ControlsObject {
+  forward: string;
+  left: string;
+  backward: string;
+  right: string;
+  jump: string;
 }
 
 export interface CameraControllerProps {

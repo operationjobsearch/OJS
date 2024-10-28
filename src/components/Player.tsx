@@ -1,20 +1,17 @@
-import { movePlayer, GameProps } from "..";
+import { GameProps, movePlayer } from "..";
 import * as THREE from "three";
 import { forwardRef, useEffect } from "react";
 import { RigidBody } from "@react-three/rapier";
-import { useGLTF, useAnimations, Box } from "@react-three/drei";
+import { Box } from "@react-three/drei";
 
 export const Player = forwardRef<THREE.Mesh, GameProps>(
   ({ game, player }, ref) => {
     useEffect(() => {
       const handleKeyDown = (e: KeyboardEvent) => {
-        movePlayer(e, game.keyboardLayout, player);
+        movePlayer(player, e.key);
       };
 
-      window.addEventListener("keydown", handleKeyDown);
-      return () => {
-        window.removeEventListener("keydown", handleKeyDown);
-      };
+      document.addEventListener("keydown", handleKeyDown);
     }, [game.keyboardLayout]);
 
     return (

@@ -13,14 +13,9 @@ import {
   handleWindowBlur,
 } from ".";
 import * as THREE from "three";
-import { useEffect, useRef, useMemo } from "react";
+import { useEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import { RapierRigidBody } from "@react-three/rapier";
-import { KeyboardControls } from "@react-three/drei";
-
-export const Controls = {
-  jump: "jump",
-};
 
 export const App = () => {
   const game: GameObject = {
@@ -41,19 +36,20 @@ export const App = () => {
 
   const player: PlayerObject = {
     characterModel: useRef<THREE.Mesh>(null),
-    characterRigidBody: useRef<RapierRigidBody>(null),
+    rigidBody: useRef<RapierRigidBody>(null),
     mouseMovement: useRef<Coordinate>({ x: 0, y: 0 }),
     reticle: useRef<THREE.Mesh>(null),
+    isOnFloor: true,
     moveSpeed: 1,
     health: 100,
+    impulse: 0.5,
+    controls: { forward: "w", left: "a", backward: "s", right: "d", jump: " " },
   };
 
   const gameProps: GameProps = {
     game: game,
     player: player,
   };
-
-  const map = useMemo(() => [{ name: Controls.jump, keys: ["Space"] }], []);
 
   useEffect(() => {
     const onMouseMove = (e: MouseEvent) => handleMouseMove(e, player);
@@ -76,15 +72,13 @@ export const App = () => {
 
   return (
     <div className="canvas" onClick={() => document.body.requestPointerLock()}>
-      <KeyboardControls map={map}>
-        <Canvas>
-          <DebugPanel {...gameProps} />
-          <CameraController {...gameProps} />
-          <Reticle {...gameProps} />
-          <World {...gameProps} />
-          <ambientLight />
-        </Canvas>
-      </KeyboardControls>
+      <Canvas>
+        <DebugPanel {...gameProps} />
+        <CameraController {...gameProps} />
+        <Reticle {...gameProps} />
+        <World {...gameProps} />
+        <ambientLight />
+      </Canvas>
     </div>
   );
 };
