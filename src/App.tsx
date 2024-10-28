@@ -11,13 +11,11 @@ import {
   handlePointerLockChange,
   handleWindowFocus,
   handleWindowBlur,
-  Controls,
 } from ".";
 import * as THREE from "three";
-import { useEffect, useRef, useMemo } from "react";
+import { useEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import { RapierRigidBody } from "@react-three/rapier";
-import { KeyboardControls } from "@react-three/drei";
 
 export const App = () => {
   const game: GameObject = {
@@ -45,35 +43,13 @@ export const App = () => {
     moveSpeed: 1,
     health: 100,
     impulse: 0.5,
+    controls: { forward: "w", left: "a", backward: "s", right: "d", jump: " " },
   };
 
   const gameProps: GameProps = {
     game: game,
     player: player,
   };
-
-  const map = useMemo(
-    () => [
-      {
-        name: Controls.forward,
-        keys: [game.keyboardLayout === "QWERTY" ? "KeyW" : "KeyW"],
-      },
-      {
-        name: Controls.left,
-        keys: [game.keyboardLayout === "QWERTY" ? "KeyA" : "KeyA"],
-      },
-      {
-        name: Controls.backward,
-        keys: [game.keyboardLayout === "QWERTY" ? "KeyS" : "KeyR"],
-      },
-      {
-        name: Controls.right,
-        keys: [game.keyboardLayout === "QWERTY" ? "KeyD" : "KeyS"],
-      },
-      { name: Controls.jump, keys: ["Space"] },
-    ],
-    [game.keyboardLayout]
-  );
 
   useEffect(() => {
     const onMouseMove = (e: MouseEvent) => handleMouseMove(e, player);
@@ -96,15 +72,13 @@ export const App = () => {
 
   return (
     <div className="canvas" onClick={() => document.body.requestPointerLock()}>
-      <KeyboardControls map={map}>
-        <Canvas>
-          <DebugPanel {...gameProps} />
-          <CameraController {...gameProps} />
-          <Reticle {...gameProps} />
-          <World {...gameProps} />
-          <ambientLight />
-        </Canvas>
-      </KeyboardControls>
+      <Canvas>
+        <DebugPanel {...gameProps} />
+        <CameraController {...gameProps} />
+        <Reticle {...gameProps} />
+        <World {...gameProps} />
+        <ambientLight />
+      </Canvas>
     </div>
   );
 };

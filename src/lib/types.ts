@@ -4,14 +4,6 @@ import * as THREE from "three";
 export type KeyboardLayout = "QWERTY" | "Colemak";
 export type Coordinate = { x: number; y: number };
 
-export enum Controls {
-  forward = "forward",
-  left = "left",
-  backward = "backward",
-  right = "right",
-  jump = "jump",
-}
-
 export interface GameObject {
   // State
   isPointerLocked: boolean;
@@ -37,11 +29,20 @@ export interface PlayerObject {
   health: number;
   isOnFloor: boolean;
   impulse: number;
+  controls: ControlsObject;
 }
 
 export interface GameProps {
   player: PlayerObject;
   game: GameObject;
+}
+
+export interface ControlsObject {
+  forward: string;
+  left: string;
+  backward: string;
+  right: string;
+  jump: string;
 }
 
 export interface CameraControllerProps {

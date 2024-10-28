@@ -6,7 +6,7 @@ export const DebugPanel = ({ player, game }: GameProps) => {
   useEffect(() => {
     const gui = new GUI();
 
-    initializeGameFolder(gui, game);
+    initializeGameFolder(gui, game, player);
     initializePlayerFolder(gui, player);
 
     return () => {
