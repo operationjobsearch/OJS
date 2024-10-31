@@ -27,7 +27,7 @@ export const World = ({ game, player }: GameProps) => {
             }
           }}
         >
-          <Player ref={player.characterModel} {...{ game, player }} />
+          <Player {...{ game, player }} />
         </RigidBody>
 
         <RigidBody colliders="cuboid" type="fixed" name="floor" friction={0}>

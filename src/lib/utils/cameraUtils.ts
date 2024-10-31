@@ -1,15 +1,18 @@
 import * as THREE from "three";
 import { Coordinate, GameObject } from "../..";
+import { RapierRigidBody } from "@react-three/rapier";
 
 export const moveCamera = (
   camera: THREE.Camera,
-  characterModel: React.RefObject<THREE.Mesh>,
+  characterModel: React.RefObject<THREE.Object3D>,
+  characterRigidBody: React.RefObject<RapierRigidBody>,
   mouseMovement: React.RefObject<Coordinate>,
   game: GameObject
 ): void => {
   if (
     !(
       characterModel.current &&
+      characterRigidBody.current &&
       mouseMovement.current &&
       game.isPointerLocked &&
       game.isWindowActive
@@ -35,17 +38,19 @@ export const moveCamera = (
   game.cameraAnglePhi = newPhi;
 
   // Calculate the new camera position using spherical coordinates
+  const rigidBodyPos = characterRigidBody.current.translation();
+
   const x =
-    characterModel.current.position.x +
+    rigidBodyPos.x +
     game.cameraRadius *
       Math.sin(game.cameraAngleTheta) *
       Math.cos(game.cameraAnglePhi);
   const y =
-    characterModel.current.position.y +
+    rigidBodyPos.y +
     game.cameraRadius * Math.sin(game.cameraAnglePhi) +
     game.cameraVerticalOffset;
   const z =
-    characterModel.current.position.z +
+    rigidBodyPos.z +
     game.cameraRadius *
       Math.cos(game.cameraAngleTheta) *
       Math.cos(game.cameraAnglePhi);
@@ -53,7 +58,12 @@ export const moveCamera = (
   camera.position.set(x, y, z);
 
   // Make the camera look slightly above the player's head
-  const lookAtPosition = characterModel.current.position.clone();
-  lookAtPosition.y += game.cameraLookAtOffset;
-  camera.lookAt(lookAtPosition);
+  const lookAtPosition = new THREE.Vector3(
+    rigidBodyPos.x,
+    rigidBodyPos.y + game.cameraLookAtOffset,
+    rigidBodyPos.z
+  );
+
+  const lerpTarget = camera.position.clone().lerp(lookAtPosition, 0.05);
+  camera.lookAt(lerpTarget);
 };

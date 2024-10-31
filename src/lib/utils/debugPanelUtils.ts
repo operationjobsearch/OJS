@@ -11,12 +11,14 @@ export const initializeGameFolder = (
   gameFolder
     .add(game, "keyboardLayout", ["QWERTY", "Colemak"])
     .onChange((value: KeyboardLayout) => {
+      const controls = player.controls;
+
       if (value === "QWERTY") {
-        player.controls.backward = "s";
-        player.controls.right = "d";
+        controls.back.value = "s";
+        controls.right.value = "d";
       } else {
-        player.controls.backward = "r";
-        player.controls.right = "s";
+        controls.back.value = "r";
+        controls.right.value = "s";
       }
       console.log("keyboard layout changed to: ", value);
     });
@@ -30,5 +32,6 @@ export const initializePlayerFolder = (
 
   playerFolder.add(player, "moveSpeed");
   playerFolder.add(player, "health", 0, 100);
-  playerFolder.add(player, "impulse");
+  playerFolder.add(player, "movementImpulse");
+  playerFolder.add(player, "jumpImpulse");
 };
