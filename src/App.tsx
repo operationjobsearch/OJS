@@ -55,9 +55,8 @@ export const App = () => {
     },
 
     // Stats
-    movementImpulse: 0.5,
+    velocity: 5,
     jumpImpulse: 1.5,
-    moveSpeed: 1,
     health: 100,
   };
 

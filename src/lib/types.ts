@@ -36,9 +36,8 @@ export interface PlayerObject {
   isRunning: boolean;
 
   // Stats
-  movementImpulse: number;
+  velocity: number;
   jumpImpulse: number;
-  moveSpeed: number;
   health: number;
 }
 

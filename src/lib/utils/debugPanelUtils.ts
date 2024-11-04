@@ -30,8 +30,7 @@ export const initializePlayerFolder = (
 ): void => {
   const playerFolder = panel.addFolder("player");
 
-  playerFolder.add(player, "moveSpeed");
   playerFolder.add(player, "health", 0, 100);
-  playerFolder.add(player, "movementImpulse");
+  playerFolder.add(player, "velocity");
   playerFolder.add(player, "jumpImpulse");
 };

@@ -36,6 +36,13 @@ export const updateModelRotation = (player: PlayerObject) => {
   }
 };
 
+/*
+ * TODO: implement movement w/o setting velocity to zero
+ *
+ * This was done with impulse but linear damping was causing
+ * player movement to be unresponsive/delayed. This was changed to
+ * linear velocity as a temporary fix.
+ */
 export const movePlayer = (
   player: PlayerObject,
   key: string,
@@ -47,19 +54,19 @@ export const movePlayer = (
 
     switch (key) {
       case controls.forward.value:
-        movement.z = -player.movementImpulse;
+        movement.z = isKeyDown ? -player.velocity : 0;
         controls.forward.isPressed = isKeyDown;
         break;
       case controls.left.value:
-        movement.x = -player.movementImpulse;
+        movement.x = isKeyDown ? -player.velocity : 0;
         controls.left.isPressed = isKeyDown;
         break;
       case controls.back.value:
-        movement.z = player.movementImpulse;
+        movement.z = isKeyDown ? player.velocity : 0;
         controls.back.isPressed = isKeyDown;
         break;
       case controls.right.value:
-        movement.x = player.movementImpulse;
+        movement.x = isKeyDown ? player.velocity : 0;
         controls.right.isPressed = isKeyDown;
         break;
       case controls.jump.value:
@@ -73,7 +80,7 @@ export const movePlayer = (
         break;
     }
 
-    player.rigidBody.current?.applyImpulse(movement, true);
+    player.rigidBody.current.setLinvel(movement, true);
   }
 };
 

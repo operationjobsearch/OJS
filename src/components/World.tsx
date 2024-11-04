@@ -1,15 +1,19 @@
 import { Player, GameProps } from "..";
 import { Suspense } from "react";
-import { Physics, RigidBody } from "@react-three/rapier";
+import { CapsuleCollider, Physics, RigidBody } from "@react-three/rapier";
 import { Box } from "@react-three/drei";
 
 export const World = ({ game, player }: GameProps) => {
   return (
     <Suspense>
-      <Physics>
+      <Physics debug>
         <RigidBody
           ref={player.rigidBody}
-          colliders="cuboid"
+          lockRotations
+          linearDamping={0}
+          colliders={false}
+          mass={20}
+          friction={0}
           onCollisionEnter={({ other }) => {
             if (
               other.rigidBodyObject &&
@@ -27,6 +31,12 @@ export const World = ({ game, player }: GameProps) => {
             }
           }}
         >
+          <CapsuleCollider
+            args={[0.1, 0.5]}
+            position={[0, 0.5, 0]}
+            rotation={[Math.PI / 2, 0, 0]}
+            friction={0}
+          />
           <Player {...{ game, player }} />
         </RigidBody>
 

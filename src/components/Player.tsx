@@ -1,6 +1,5 @@
 import { animatePlayer, GameProps, movePlayer, updatePlayerState } from "..";
 import { useEffect } from "react";
-import { RigidBody } from "@react-three/rapier";
 import { useAnimations, useGLTF } from "@react-three/drei";
 
 export const Player = ({ game, player }: GameProps) => {
