@@ -3,6 +3,7 @@ import * as THREE from "three";
 
 export type KeyboardLayout = "QWERTY" | "Colemak";
 export type Coordinate = { x: number; y: number };
+export type KeyState = { value: string; isPressed: boolean };
 
 export interface GameObject {
   // State
@@ -21,15 +22,24 @@ export interface GameObject {
 }
 
 export interface PlayerObject {
-  characterModel: React.RefObject<THREE.Mesh>;
+  // Refs
+  characterModel: React.RefObject<THREE.Object3D>;
   rigidBody: React.RefObject<RapierRigidBody>;
   mouseMovement: React.RefObject<Coordinate>;
   reticle: React.RefObject<THREE.Mesh>;
+
+  // State
+  controls: ControlsObject;
+  modelRotation: number;
+  isOnFloor: boolean;
+  isWalking: boolean;
+  isRunning: boolean;
+
+  // Stats
+  movementImpulse: number;
+  jumpImpulse: number;
   moveSpeed: number;
   health: number;
-  isOnFloor: boolean;
-  impulse: number;
-  controls: ControlsObject;
 }
 
 export interface GameProps {
@@ -38,11 +48,11 @@ export interface GameProps {
 }
 
 export interface ControlsObject {
-  forward: string;
-  left: string;
-  backward: string;
-  right: string;
-  jump: string;
+  forward: KeyState;
+  left: KeyState;
+  back: KeyState;
+  right: KeyState;
+  jump: KeyState;
 }
 
 export interface CameraControllerProps {

@@ -35,15 +35,30 @@ export const App = () => {
   };
 
   const player: PlayerObject = {
-    characterModel: useRef<THREE.Mesh>(null),
+    // Refs
+    characterModel: useRef<THREE.Object3D>(null),
     rigidBody: useRef<RapierRigidBody>(null),
     mouseMovement: useRef<Coordinate>({ x: 0, y: 0 }),
     reticle: useRef<THREE.Mesh>(null),
+
+    // State
+    modelRotation: Math.PI,
+    isWalking: false,
+    isRunning: false,
     isOnFloor: true,
+    controls: {
+      forward: { value: "w", isPressed: false },
+      left: { value: "a", isPressed: false },
+      back: { value: "s", isPressed: false },
+      right: { value: "d", isPressed: false },
+      jump: { value: " ", isPressed: false },
+    },
+
+    // Stats
+    movementImpulse: 0.5,
+    jumpImpulse: 1.5,
     moveSpeed: 1,
     health: 100,
-    impulse: 0.5,
-    controls: { forward: "w", left: "a", backward: "s", right: "d", jump: " " },
   };
 
   const gameProps: GameProps = {
