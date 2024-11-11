@@ -6,7 +6,7 @@ import { Box } from "@react-three/drei";
 export const World = ({ game, player }: GameProps) => {
   return (
     <Suspense>
-      <Physics debug>
+      <Physics debug={true} timeStep={1 / 60}>
         <RigidBody
           ref={player.rigidBody}
           lockRotations

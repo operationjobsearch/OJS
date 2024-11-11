@@ -4,14 +4,8 @@ import { GameProps, moveCamera } from "..";
 export const CameraController = ({ player, game }: GameProps) => {
   const { camera } = useThree();
 
-  useFrame(() => {
-    moveCamera(
-      camera,
-      player.characterModel,
-      player.rigidBody,
-      player.mouseMovement,
-      game
-    );
+  useFrame((state, delta) => {
+    moveCamera(camera, player, game, delta);
   });
 
   return null;

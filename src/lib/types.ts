@@ -19,6 +19,7 @@ export interface GameObject {
   cameraAngleTheta: number;
   cameraAnglePhi: number;
   cameraRadius: number;
+  cameraSpeedRatio: number;
 }
 
 export interface PlayerObject {
@@ -30,6 +31,7 @@ export interface PlayerObject {
 
   // State
   controls: ControlsObject;
+  directions: MovementVectorObject;
   modelRotation: number;
   isOnFloor: boolean;
   isWalking: boolean;
@@ -37,6 +39,7 @@ export interface PlayerObject {
 
   // Stats
   velocity: number;
+  runMultiplier: number;
   jumpImpulse: number;
   health: number;
 }
@@ -47,11 +50,20 @@ export interface GameProps {
 }
 
 export interface ControlsObject {
+  [key: string]: KeyState;
   forward: KeyState;
   left: KeyState;
   back: KeyState;
   right: KeyState;
   jump: KeyState;
+}
+
+export interface MovementVectorObject {
+  [key: string]: THREE.Vector3;
+  forwardVector: THREE.Vector3;
+  leftVector: THREE.Vector3;
+  backVector: THREE.Vector3;
+  rightVector: THREE.Vector3;
 }
 
 export interface CameraControllerProps {

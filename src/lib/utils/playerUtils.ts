@@ -1,38 +1,62 @@
 import * as THREE from "three";
-import { PlayerObject } from "../..";
+import { PlayerObject, ControlsObject, GameObject } from "../..";
 
-export const updatePlayerState = (player: PlayerObject): void => {
-  if (!player.characterModel.current) return;
+export const updatePlayerState = (
+  game: GameObject,
+  player: PlayerObject,
+  camera: THREE.Camera,
+  animations: Record<string, THREE.AnimationAction | null>
+): void => {
+  const { characterModel, controls } = player;
+  if (!characterModel.current) return;
 
-  const controls = player.controls;
   player.isWalking =
     controls.forward.isPressed ||
     controls.left.isPressed ||
     controls.back.isPressed ||
     controls.right.isPressed;
 
-  updateModelRotation(player);
-  player.characterModel.current.rotation.y = player.modelRotation;
+  updateModelRotation(player, game);
+  updateDirectionVectors(player, camera);
+  updateAnimationState(player, animations);
 };
 
-export const updateModelRotation = (player: PlayerObject) => {
-  if (!player.characterModel.current) return;
+export const updateDirectionVectors = (
+  player: PlayerObject,
+  camera: THREE.Camera
+) => {
+  const { forwardVector, leftVector, rightVector, backVector } =
+    player.directions;
 
-  const controls = player.controls;
+  camera.getWorldDirection(forwardVector);
+  forwardVector.y = 0;
 
-  if (player.isWalking) {
-    if (controls.back.isPressed && controls.left.isPressed)
-      player.modelRotation = -Math.PI * 0.25;
-    else if (controls.back.isPressed && controls.right.isPressed)
-      player.modelRotation = Math.PI * 0.25;
-    else if (controls.forward.isPressed && controls.left.isPressed)
-      player.modelRotation = -Math.PI * 0.75;
-    else if (controls.forward.isPressed && controls.right.isPressed)
-      player.modelRotation = Math.PI * 0.75;
-    else if (controls.right.isPressed) player.modelRotation = Math.PI * 0.5;
-    else if (controls.left.isPressed) player.modelRotation = -Math.PI * 0.5;
-    else if (controls.back.isPressed) player.modelRotation = 0;
-    else if (controls.forward.isPressed) player.modelRotation = Math.PI;
+  rightVector.crossVectors(forwardVector, camera.up).normalize();
+  leftVector.copy(rightVector).negate();
+  backVector.copy(forwardVector).negate();
+};
+
+export const updateModelRotation = (
+  player: PlayerObject,
+  game: GameObject
+): void => {
+  const { characterModel, isWalking } = player;
+  const { cameraAngleTheta } = game;
+
+  player.modelRotation = Math.PI + cameraAngleTheta;
+  if (characterModel.current && isWalking)
+    characterModel.current.rotation.y = player.modelRotation;
+};
+
+export const updateAnimationState = (
+  player: PlayerObject,
+  animations: Record<string, THREE.AnimationAction | null>
+): void => {
+  if (player.isWalking && !animations.Walk?.isRunning()) {
+    animations.Walk?.play();
+  }
+  if (!player.isWalking && animations.Walk?.isRunning()) {
+    animations.Walk?.stop();
   }
 };
 
@@ -47,52 +71,42 @@ export const movePlayer = (
   player: PlayerObject,
   key: string,
   isKeyDown: boolean
+  // frameDelta: number
 ): void => {
   if (player.rigidBody.current) {
-    const controls = player.controls;
-    const movement = new THREE.Vector3(0, 0, 0);
+    const { controls, velocity, jumpImpulse, isOnFloor, directions } = player;
+    const impulseVector = new THREE.Vector3(0, 0, 0);
+    var movementVector = new THREE.Vector3(0, 0, 0);
 
-    switch (key) {
-      case controls.forward.value:
-        movement.z = isKeyDown ? -player.velocity : 0;
-        controls.forward.isPressed = isKeyDown;
-        break;
-      case controls.left.value:
-        movement.x = isKeyDown ? -player.velocity : 0;
-        controls.left.isPressed = isKeyDown;
-        break;
-      case controls.back.value:
-        movement.z = isKeyDown ? player.velocity : 0;
-        controls.back.isPressed = isKeyDown;
-        break;
-      case controls.right.value:
-        movement.x = isKeyDown ? player.velocity : 0;
-        controls.right.isPressed = isKeyDown;
-        break;
-      case controls.jump.value:
-        if (player.rigidBody.current && player.isOnFloor) {
-          player.rigidBody.current.applyImpulse(
-            { x: 0, y: player.jumpImpulse, z: 0 },
-            true
-          );
-          player.isOnFloor = false;
-        }
-        break;
+    const directionMap = {
+      [controls.forward.value]: directions.forwardVector,
+      [controls.back.value]: directions.backVector,
+      [controls.left.value]: directions.leftVector,
+      [controls.right.value]: directions.rightVector,
+    };
+
+    if (key === controls.jump.value && isKeyDown && isOnFloor) {
+      impulseVector.y = jumpImpulse;
+      player.isOnFloor = false;
+    } else if (directionMap[key]) {
+      const dirVector = directionMap[key];
+      const moveKey = getMovementKey(controls, key);
+
+      if (moveKey) controls[moveKey].isPressed = isKeyDown;
+      movementVector = isKeyDown
+        ? dirVector.clone().multiplyScalar(velocity)
+        : movementVector;
     }
 
-    player.rigidBody.current.setLinvel(movement, true);
+    player.rigidBody.current.setLinvel(movementVector, true);
+    player.rigidBody.current.applyImpulse(impulseVector, true);
   }
 };
 
-export const animatePlayer = (
-  player: PlayerObject,
-  animations: Record<string, THREE.AnimationAction | null>,
+// Helper function to map `key` value to a control name
+const getMovementKey = (
+  controls: ControlsObject,
   key: string
-): void => {
-  if (player.isWalking && !animations.Walk?.isRunning()) {
-    animations.Walk?.play();
-  }
-  if (!player.isWalking && animations.Walk?.isRunning()) {
-    animations.Walk?.stop();
-  }
+): keyof ControlsObject | undefined => {
+  return Object.keys(controls).find((k) => controls[k].value === key);
 };

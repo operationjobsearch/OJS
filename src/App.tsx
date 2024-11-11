@@ -32,6 +32,7 @@ export const App = () => {
     cameraRadius: 3,
     cameraVerticalOffset: 2.5,
     cameraLookAtOffset: 1,
+    cameraSpeedRatio: 0.1,
   };
 
   const player: PlayerObject = {
@@ -46,6 +47,7 @@ export const App = () => {
     isWalking: false,
     isRunning: false,
     isOnFloor: true,
+
     controls: {
       forward: { value: "w", isPressed: false },
       left: { value: "a", isPressed: false },
@@ -53,9 +55,16 @@ export const App = () => {
       right: { value: "d", isPressed: false },
       jump: { value: " ", isPressed: false },
     },
+    directions: {
+      forwardVector: new THREE.Vector3(),
+      leftVector: new THREE.Vector3(),
+      backVector: new THREE.Vector3(),
+      rightVector: new THREE.Vector3(),
+    },
 
     // Stats
     velocity: 5,
+    runMultiplier: 1.5,
     jumpImpulse: 1.5,
     health: 100,
   };
