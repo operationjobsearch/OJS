@@ -63,7 +63,7 @@ export const App = () => {
     },
 
     // Stats
-    velocity: 5,
+    velocity: 1,
     runMultiplier: 1.5,
     jumpImpulse: 3,
     health: 100,

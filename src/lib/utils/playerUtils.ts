@@ -20,6 +20,7 @@ export const updatePlayerState = (
   updateModelRotation(player, game);
   updateDirectionVectors(player, camera);
   updateAnimationState(player, animations);
+  capVelocity(player);
 };
 
 const updateDirectionVectors = (
@@ -74,8 +75,7 @@ export const movePlayer = (
   const { rigidBody, controls, velocity, jumpImpulse, isOnFloor, directions } =
     player;
   if (rigidBody.current) {
-    const impulseVector = new THREE.Vector3(0, 0, 0);
-    var movementVector = new THREE.Vector3(0, 0, 0);
+    var impulseVector = new THREE.Vector3(0, 0, 0);
 
     const directionMap = {
       [controls.forward.value]: directions.forwardVector,
@@ -86,20 +86,43 @@ export const movePlayer = (
 
     if (key === controls.jump.value && isKeyDown && isOnFloor) {
       impulseVector.y = jumpImpulse;
-      // player.isOnFloor = false;
     } else if (directionMap[key]) {
       const dirVector = directionMap[key];
       const moveKey = getMovementKey(controls, key);
 
       if (moveKey) controls[moveKey].isPressed = isKeyDown;
-      movementVector = isKeyDown
+      impulseVector = isKeyDown
         ? dirVector.clone().multiplyScalar(velocity)
-        : movementVector;
+        : impulseVector;
     }
 
-    rigidBody.current.setLinvel(movementVector, true);
     rigidBody.current.applyImpulse(impulseVector, true);
   }
+};
+
+const capVelocity = (player: PlayerObject) => {
+  const { rigidBody, velocity, isWalking } = player;
+
+  if (!rigidBody.current) return;
+
+  const velWithoutY = new THREE.Vector3(
+    rigidBody.current.linvel().x,
+    0,
+    rigidBody.current.linvel().z
+  );
+
+  // capping fixes excessive velocity
+  // excluding y component ensures jump isn't factored into velocity
+  // sliding still needs to be stopped on key release/change of movement dir
+  if (isWalking && velWithoutY.length() != velocity) {
+    velWithoutY.normalize().multiplyScalar(velocity);
+
+    console.log(velWithoutY.length());
+
+    velWithoutY.y = rigidBody.current.linvel().y;
+  }
+
+  rigidBody.current.setLinvel(velWithoutY, true);
 };
 
 // Helper function to map `key` value to a control name

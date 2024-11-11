@@ -16,11 +16,9 @@ export const Player = ({ game, player }: GameProps) => {
     const handleKeyDown = (e: KeyboardEvent) => {
       movePlayer(player, e.key, true);
     };
-
     const handleKeyUp = (e: KeyboardEvent) => {
       movePlayer(player, e.key, false);
     };
-
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("keyup", handleKeyUp);
   }, [game.keyboardLayout]);

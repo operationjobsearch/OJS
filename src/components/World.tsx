@@ -10,7 +10,7 @@ export const World = ({ game, player }: GameProps) => {
         <RigidBody
           ref={player.rigidBody}
           lockRotations
-          linearDamping={0}
+          linearDamping={2}
           colliders={false}
           mass={20}
           friction={0}
