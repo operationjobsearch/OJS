@@ -1,18 +1,22 @@
 import * as THREE from "three";
-import { Coordinate, GameObject } from "../..";
-import { RapierRigidBody } from "@react-three/rapier";
+import { GameObject, PlayerObject } from "../..";
 
 export const moveCamera = (
   camera: THREE.Camera,
-  characterModel: React.RefObject<THREE.Object3D>,
-  characterRigidBody: React.RefObject<RapierRigidBody>,
-  mouseMovement: React.RefObject<Coordinate>,
-  game: GameObject
+  player: PlayerObject,
+  game: GameObject,
+  frameDelta: number
 ): void => {
+  const { rigidBody, mouseMovement } = player;
+  const {
+    cameraRadius,
+    cameraLookAtOffset,
+    cameraVerticalOffset,
+    cameraSpeedRatio,
+  } = game;
   if (
     !(
-      characterModel.current &&
-      characterRigidBody.current &&
+      rigidBody.current &&
       mouseMovement.current &&
       game.isPointerLocked &&
       game.isWindowActive
@@ -21,37 +25,37 @@ export const moveCamera = (
     return;
 
   // Capture mouse deltas and reset them after use to avoid momentum-like behavior
-  const mouseDeltaX = -mouseMovement.current.x * 0.001;
-  const mouseDeltaY = mouseMovement.current.y * 0.001;
+  const mouseDeltaX = -mouseMovement.current.x * cameraSpeedRatio;
+  const mouseDeltaY = mouseMovement.current.y * cameraSpeedRatio;
 
   mouseMovement.current.x = 0;
   mouseMovement.current.y = 0;
 
   // Update horizontal and vertical angles
-  const newTheta = game.cameraAngleTheta + mouseDeltaX;
+  const newTheta = game.cameraAngleTheta + mouseDeltaX * frameDelta;
   const newPhi = Math.max(
     -Math.PI / 3,
-    Math.min(Math.PI / 3, game.cameraAnglePhi + mouseDeltaY)
+    Math.min(Math.PI / 3, game.cameraAnglePhi + mouseDeltaY * frameDelta)
   );
 
   game.cameraAngleTheta = newTheta;
   game.cameraAnglePhi = newPhi;
 
   // Calculate the new camera position using spherical coordinates
-  const rigidBodyPos = characterRigidBody.current.translation();
+  const rigidBodyPos = rigidBody.current.translation();
 
   const x =
     rigidBodyPos.x +
-    game.cameraRadius *
+    cameraRadius *
       Math.sin(game.cameraAngleTheta) *
       Math.cos(game.cameraAnglePhi);
   const y =
     rigidBodyPos.y +
-    game.cameraRadius * Math.sin(game.cameraAnglePhi) +
-    game.cameraVerticalOffset;
+    cameraRadius * Math.sin(game.cameraAnglePhi) +
+    cameraVerticalOffset;
   const z =
     rigidBodyPos.z +
-    game.cameraRadius *
+    cameraRadius *
       Math.cos(game.cameraAngleTheta) *
       Math.cos(game.cameraAnglePhi);
 
@@ -60,10 +64,12 @@ export const moveCamera = (
   // Make the camera look slightly above the player's head
   const lookAtPosition = new THREE.Vector3(
     rigidBodyPos.x,
-    rigidBodyPos.y + game.cameraLookAtOffset,
+    rigidBodyPos.y + cameraLookAtOffset,
     rigidBodyPos.z
   );
 
-  const lerpTarget = camera.position.clone().lerp(lookAtPosition, 0.05);
+  const lerpTarget = camera.position
+    .clone()
+    .lerp(lookAtPosition, 0.05 * frameDelta);
   camera.lookAt(lerpTarget);
 };

@@ -1,32 +1,32 @@
-import { Player, GameProps } from "..";
+import { Player, GameProps, handleCollisions } from "..";
 import { Suspense } from "react";
-import { Physics, RigidBody } from "@react-three/rapier";
+import { CapsuleCollider, Physics, RigidBody } from "@react-three/rapier";
 import { Box } from "@react-three/drei";
 
 export const World = ({ game, player }: GameProps) => {
   return (
     <Suspense>
-      <Physics>
+      <Physics debug={true} timeStep={1 / 60}>
         <RigidBody
           ref={player.rigidBody}
-          colliders="cuboid"
+          lockRotations
+          linearDamping={2}
+          colliders={false}
+          mass={20}
+          friction={0}
           onCollisionEnter={({ other }) => {
-            if (
-              other.rigidBodyObject &&
-              other.rigidBodyObject.name === "floor"
-            ) {
-              player.isOnFloor = true;
-            }
+            handleCollisions(player, other, true);
           }}
           onCollisionExit={({ other }) => {
-            if (
-              other.rigidBodyObject &&
-              other.rigidBodyObject.name === "floor"
-            ) {
-              player.isOnFloor = false;
-            }
+            handleCollisions(player, other, false);
           }}
         >
+          <CapsuleCollider
+            args={[0.1, 0.5]}
+            position={[0, 0.5, 0]}
+            rotation={[Math.PI / 2, 0, 0]}
+            friction={0}
+          />
           <Player {...{ game, player }} />
         </RigidBody>
 

@@ -1,25 +1,24 @@
-import { animatePlayer, GameProps, movePlayer, updatePlayerState } from "..";
+import { GameProps, movePlayer, updatePlayerState } from "..";
 import { useEffect } from "react";
-import { RigidBody } from "@react-three/rapier";
 import { useAnimations, useGLTF } from "@react-three/drei";
+import { useFrame, useThree } from "@react-three/fiber";
 
 export const Player = ({ game, player }: GameProps) => {
+  const { camera } = useThree();
   const playerModel = useGLTF("./Fox/glTF/Fox.gltf");
   const animations = useAnimations(playerModel.animations, playerModel.scene);
+
+  useFrame((delta) => {
+    updatePlayerState(game, player, camera, animations.actions);
+  });
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       movePlayer(player, e.key, true);
-      updatePlayerState(player);
-      animatePlayer(player, animations.actions, e.key);
     };
-
     const handleKeyUp = (e: KeyboardEvent) => {
       movePlayer(player, e.key, false);
-      updatePlayerState(player);
-      animatePlayer(player, animations.actions, e.key);
     };
-
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("keyup", handleKeyUp);
   }, [game.keyboardLayout]);
