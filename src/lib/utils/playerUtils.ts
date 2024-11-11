@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { PlayerObject, ControlsObject, GameObject } from "../..";
+import { CollisionTarget } from "@react-three/rapier";
 
 export const updatePlayerState = (
   game: GameObject,
@@ -21,10 +22,10 @@ export const updatePlayerState = (
   updateAnimationState(player, animations);
 };
 
-export const updateDirectionVectors = (
+const updateDirectionVectors = (
   player: PlayerObject,
   camera: THREE.Camera
-) => {
+): void => {
   const { forwardVector, leftVector, rightVector, backVector } =
     player.directions;
 
@@ -36,10 +37,7 @@ export const updateDirectionVectors = (
   backVector.copy(forwardVector).negate();
 };
 
-export const updateModelRotation = (
-  player: PlayerObject,
-  game: GameObject
-): void => {
+const updateModelRotation = (player: PlayerObject, game: GameObject): void => {
   const { characterModel, isWalking } = player;
   const { cameraAngleTheta } = game;
 
@@ -48,7 +46,7 @@ export const updateModelRotation = (
     characterModel.current.rotation.y = player.modelRotation;
 };
 
-export const updateAnimationState = (
+const updateAnimationState = (
   player: PlayerObject,
   animations: Record<string, THREE.AnimationAction | null>
 ): void => {
@@ -73,8 +71,9 @@ export const movePlayer = (
   isKeyDown: boolean
   // frameDelta: number
 ): void => {
-  if (player.rigidBody.current) {
-    const { controls, velocity, jumpImpulse, isOnFloor, directions } = player;
+  const { rigidBody, controls, velocity, jumpImpulse, isOnFloor, directions } =
+    player;
+  if (rigidBody.current) {
     const impulseVector = new THREE.Vector3(0, 0, 0);
     var movementVector = new THREE.Vector3(0, 0, 0);
 
@@ -87,7 +86,7 @@ export const movePlayer = (
 
     if (key === controls.jump.value && isKeyDown && isOnFloor) {
       impulseVector.y = jumpImpulse;
-      player.isOnFloor = false;
+      // player.isOnFloor = false;
     } else if (directionMap[key]) {
       const dirVector = directionMap[key];
       const moveKey = getMovementKey(controls, key);
@@ -98,8 +97,8 @@ export const movePlayer = (
         : movementVector;
     }
 
-    player.rigidBody.current.setLinvel(movementVector, true);
-    player.rigidBody.current.applyImpulse(impulseVector, true);
+    rigidBody.current.setLinvel(movementVector, true);
+    rigidBody.current.applyImpulse(impulseVector, true);
   }
 };
 
@@ -109,4 +108,29 @@ const getMovementKey = (
   key: string
 ): keyof ControlsObject | undefined => {
   return Object.keys(controls).find((k) => controls[k].value === key);
+};
+
+export const handleCollisions = (
+  player: PlayerObject,
+  otherObject: CollisionTarget,
+  isCollisionEnter: boolean
+) => {
+  const { rigidBodyObject } = otherObject;
+  if (!rigidBodyObject) return;
+
+  const collisionTargetMap: Record<string, void> = {
+    ["floor"]: handleFloorCollision(player, rigidBodyObject, isCollisionEnter),
+  };
+
+  collisionTargetMap[rigidBodyObject.name];
+};
+
+const handleFloorCollision = (
+  player: PlayerObject,
+  rigidBodyObject: CollisionTarget["rigidBodyObject"],
+  isCollisionEnter: boolean
+) => {
+  if (rigidBodyObject) {
+    player.isOnFloor = isCollisionEnter ? true : false;
+  }
 };

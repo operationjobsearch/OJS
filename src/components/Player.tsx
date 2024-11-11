@@ -8,7 +8,7 @@ export const Player = ({ game, player }: GameProps) => {
   const playerModel = useGLTF("./Fox/glTF/Fox.gltf");
   const animations = useAnimations(playerModel.animations, playerModel.scene);
 
-  useFrame(() => {
+  useFrame((delta) => {
     updatePlayerState(game, player, camera, animations.actions);
   });
 
