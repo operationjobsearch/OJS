@@ -8,19 +8,30 @@ export const updatePlayerState = (
   camera: THREE.Camera,
   animations: Record<string, THREE.AnimationAction | null>
 ): void => {
-  const { characterModel, controls } = player;
-  if (!characterModel.current) return;
+  updateWalkingState(player);
+  updateModelRotation(player, game);
+  updateDirectionVectors(player, camera);
+  updateAnimationState(player, animations);
+  updateVelocity(player);
+};
+
+const updateWalkingState = (player: PlayerObject): void => {
+  const { controls } = player;
 
   player.isWalking =
     controls.forward.isPressed ||
     controls.left.isPressed ||
     controls.back.isPressed ||
     controls.right.isPressed;
+};
 
-  updateModelRotation(player, game);
-  updateDirectionVectors(player, camera);
-  updateAnimationState(player, animations);
-  capVelocity(player);
+const updateModelRotation = (player: PlayerObject, game: GameObject): void => {
+  const { characterModel, isWalking } = player;
+  const { cameraAngleTheta } = game;
+
+  player.modelRotation = Math.PI + cameraAngleTheta;
+  if (characterModel.current && isWalking)
+    characterModel.current.rotation.y = player.modelRotation;
 };
 
 const updateDirectionVectors = (
@@ -38,15 +49,6 @@ const updateDirectionVectors = (
   backVector.copy(forwardVector).negate();
 };
 
-const updateModelRotation = (player: PlayerObject, game: GameObject): void => {
-  const { characterModel, isWalking } = player;
-  const { cameraAngleTheta } = game;
-
-  player.modelRotation = Math.PI + cameraAngleTheta;
-  if (characterModel.current && isWalking)
-    characterModel.current.rotation.y = player.modelRotation;
-};
-
 const updateAnimationState = (
   player: PlayerObject,
   animations: Record<string, THREE.AnimationAction | null>
@@ -59,78 +61,35 @@ const updateAnimationState = (
   }
 };
 
-/*
- * TODO: implement movement w/o setting velocity to zero
- *
- * This was done with impulse but linear damping was causing
- * player movement to be unresponsive/delayed. This was changed to
- * linear velocity as a temporary fix.
- */
-export const movePlayer = (
-  player: PlayerObject,
-  key: string,
-  isKeyDown: boolean
-  // frameDelta: number
-): void => {
-  const { rigidBody, controls, velocity, jumpImpulse, isOnFloor, directions } =
+const updateVelocity = (player: PlayerObject): void => {
+  const { rigidBody, controls, velocity, jumpVelocity, isOnFloor, directions } =
     player;
-  if (rigidBody.current) {
-    var impulseVector = new THREE.Vector3(0, 0, 0);
-
-    const directionMap = {
-      [controls.forward.value]: directions.forwardVector,
-      [controls.back.value]: directions.backVector,
-      [controls.left.value]: directions.leftVector,
-      [controls.right.value]: directions.rightVector,
-    };
-
-    if (key === controls.jump.value && isKeyDown && isOnFloor) {
-      impulseVector.y = jumpImpulse;
-    } else if (directionMap[key]) {
-      const dirVector = directionMap[key];
-      const moveKey = getMovementKey(controls, key);
-
-      if (moveKey) controls[moveKey].isPressed = isKeyDown;
-      impulseVector = isKeyDown
-        ? dirVector.clone().multiplyScalar(velocity)
-        : impulseVector;
-    }
-
-    rigidBody.current.applyImpulse(impulseVector, true);
-  }
-};
-
-const capVelocity = (player: PlayerObject) => {
-  const { rigidBody, velocity, isWalking } = player;
 
   if (!rigidBody.current) return;
 
-  const velWithoutY = new THREE.Vector3(
-    rigidBody.current.linvel().x,
-    0,
-    rigidBody.current.linvel().z
-  );
+  const movementVector = new THREE.Vector3();
 
-  // capping fixes excessive velocity
-  // excluding y component ensures jump isn't factored into velocity
-  // sliding still needs to be stopped on key release/change of movement dir
-  if (isWalking && velWithoutY.length() != velocity) {
-    velWithoutY.normalize().multiplyScalar(velocity);
+  // Add directions for keys that are pressed
+  if (controls.forward.isPressed) movementVector.add(directions.forwardVector);
+  if (controls.back.isPressed) movementVector.add(directions.backVector);
+  if (controls.left.isPressed) movementVector.add(directions.leftVector);
+  if (controls.right.isPressed) movementVector.add(directions.rightVector);
 
-    console.log(velWithoutY.length());
-
-    velWithoutY.y = rigidBody.current.linvel().y;
+  // Normalize for consistent speed if there is any movement
+  if (movementVector.length() > 0) {
+    movementVector.normalize().multiplyScalar(velocity);
   }
 
-  rigidBody.current.setLinvel(velWithoutY, true);
-};
+  // Handle jumping separately
+  const currentVelocity = rigidBody.current.linvel();
+  const newVerticalVelocity =
+    controls.jump.isPressed && isOnFloor ? jumpVelocity : currentVelocity.y;
 
-// Helper function to map `key` value to a control name
-const getMovementKey = (
-  controls: ControlsObject,
-  key: string
-): keyof ControlsObject | undefined => {
-  return Object.keys(controls).find((k) => controls[k].value === key);
+  // Set the new velocity
+  rigidBody.current.setLinvel(
+    { x: movementVector.x, y: newVerticalVelocity, z: movementVector.z },
+    true
+  );
 };
 
 export const handleCollisions = (
@@ -155,5 +114,22 @@ const handleFloorCollision = (
 ) => {
   if (rigidBodyObject) {
     player.isOnFloor = isCollisionEnter ? true : false;
+  }
+};
+
+export const handleKeyEvent = (player: PlayerObject, e: KeyboardEvent) => {
+  const { controls } = player;
+  const movementInputMap: Record<string, keyof ControlsObject> = {
+    [controls.forward.value]: "forward",
+    [controls.back.value]: "back",
+    [controls.left.value]: "left",
+    [controls.right.value]: "right",
+    [controls.jump.value]: "jump",
+  };
+
+  const controlKey = movementInputMap[e.key];
+  if (controlKey) {
+    const control = controls[controlKey];
+    control.isPressed = e.type === "keydown" ? true : false;
   }
 };

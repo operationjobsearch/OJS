@@ -32,5 +32,5 @@ export const initializePlayerFolder = (
 
   playerFolder.add(player, "health", 0, 100);
   playerFolder.add(player, "velocity");
-  playerFolder.add(player, "jumpImpulse");
+  playerFolder.add(player, "jumpVelocity");
 };
