@@ -6,13 +6,14 @@ export const updatePlayerState = (
   game: GameObject,
   player: PlayerObject,
   camera: THREE.Camera,
-  animations: Record<string, THREE.AnimationAction | null>
+  animations: Record<string, THREE.AnimationAction | null>,
+  delta: number
 ): void => {
   updateWalkingState(player);
   updateModelRotation(player, game);
   updateDirectionVectors(player, camera);
-  updateAnimationState(player, animations);
-  // updateVelocity(player);
+  updateAnimationState(player, animations, delta);
+  updateVelocity(player, delta);
 };
 
 const updateWalkingState = (player: PlayerObject): void => {
@@ -51,7 +52,8 @@ const updateDirectionVectors = (
 
 const updateAnimationState = (
   player: PlayerObject,
-  animations: Record<string, THREE.AnimationAction | null>
+  animations: Record<string, THREE.AnimationAction | null>,
+  delta: number
 ): void => {
   if (player.isWalking && !animations.Walk?.isRunning()) {
     animations.Walk?.play();
@@ -61,7 +63,7 @@ const updateAnimationState = (
   }
 };
 
-const updateVelocity = (player: PlayerObject): void => {
+const updateVelocity = (player: PlayerObject, delta: number): void => {
   const { rigidBody, controls, velocity, jumpVelocity, isOnFloor, directions } =
     player;
 

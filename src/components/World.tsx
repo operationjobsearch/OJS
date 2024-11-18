@@ -11,7 +11,7 @@ export const World = ({ game, player }: GameProps) => {
 
         <RigidBody colliders="cuboid" type="fixed" name="floor" friction={0}>
           <Box position={[0, -1, 0]} args={[10, 1, 10]}>
-            <meshStandardMaterial color="hotpink" />
+            <meshStandardMaterial color="blue" />
           </Box>
         </RigidBody>
       </Physics>

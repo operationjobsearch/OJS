@@ -5,7 +5,7 @@ export const moveCamera = (
   camera: THREE.Camera,
   player: PlayerObject,
   game: GameObject,
-  frameDelta: number
+  delta: number
 ): void => {
   const { rigidBody, mouseMovement } = player;
   const {
@@ -32,10 +32,10 @@ export const moveCamera = (
   mouseMovement.current.y = 0;
 
   // Update horizontal and vertical angles
-  const newTheta = game.cameraAngleTheta + mouseDeltaX * frameDelta;
+  const newTheta = game.cameraAngleTheta + mouseDeltaX * delta;
   const newPhi = Math.max(
     -Math.PI / 3,
-    Math.min(Math.PI / 3, game.cameraAnglePhi + mouseDeltaY * frameDelta)
+    Math.min(Math.PI / 3, game.cameraAnglePhi + mouseDeltaY * delta)
   );
 
   game.cameraAngleTheta = newTheta;
@@ -68,8 +68,5 @@ export const moveCamera = (
     rigidBodyPos.z
   );
 
-  const lerpTarget = camera.position
-    .clone()
-    .lerp(lookAtPosition, 0.05 * frameDelta);
-  camera.lookAt(lerpTarget);
+  camera.lookAt(lookAtPosition);
 };
