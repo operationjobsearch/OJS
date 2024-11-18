@@ -1,7 +1,13 @@
-import { GameProps, handleKeyEvent, updatePlayerState } from "..";
+import {
+  GameProps,
+  handleCollisions,
+  handleKeyEvent,
+  updatePlayerState,
+} from "..";
 import { useEffect } from "react";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
+import { CapsuleCollider, RigidBody } from "@react-three/rapier";
 
 export const Player = ({ game, player }: GameProps) => {
   const { camera } = useThree();
@@ -25,18 +31,41 @@ export const Player = ({ game, player }: GameProps) => {
     };
   }, []);
 
-  useFrame((delta) => {
+  useFrame((state, delta) => {
+    state.setFrameloop();
     updatePlayerState(game, player, camera, animations.actions);
+    console.log(delta);
   });
 
   return (
     <>
-      <primitive
-        ref={player.characterModel}
-        object={playerModel.scene}
-        scale={0.01}
-        rotation-y={Math.PI}
-      />
+      <RigidBody
+        ref={player.rigidBody}
+        lockRotations
+        linearDamping={2}
+        colliders={false}
+        mass={20}
+        friction={0}
+        onCollisionEnter={({ other }) => {
+          handleCollisions(player, other, true);
+        }}
+        onCollisionExit={({ other }) => {
+          handleCollisions(player, other, false);
+        }}
+      >
+        <CapsuleCollider
+          args={[0.1, 0.5]}
+          position={[0, 0.5, 0]}
+          rotation={[Math.PI / 2, 0, 0]}
+          friction={0}
+        />
+        <primitive
+          ref={player.characterModel}
+          object={playerModel.scene}
+          scale={0.01}
+          rotation-y={Math.PI}
+        />
+      </RigidBody>
     </>
   );
 };

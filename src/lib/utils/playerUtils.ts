@@ -12,7 +12,7 @@ export const updatePlayerState = (
   updateModelRotation(player, game);
   updateDirectionVectors(player, camera);
   updateAnimationState(player, animations);
-  updateVelocity(player);
+  // updateVelocity(player);
 };
 
 const updateWalkingState = (player: PlayerObject): void => {
