@@ -20,6 +20,7 @@ import { RapierRigidBody } from "@react-three/rapier";
 export const App = () => {
   const game: GameObject = {
     // State
+    frameInterval: 1 / 60,
     isPointerLocked: false,
     isWindowActive: true,
 

@@ -7,6 +7,7 @@ export type KeyState = { value: string; isPressed: boolean };
 
 export interface GameObject {
   // State
+  frameInterval: number;
   isPointerLocked: boolean;
   isWindowActive: boolean;
 
