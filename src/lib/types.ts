@@ -36,11 +36,12 @@ export interface PlayerObject {
   isOnFloor: boolean;
   isWalking: boolean;
   isRunning: boolean;
+  canMove: boolean;
 
   // Stats
   velocity: number;
   runMultiplier: number;
-  jumpImpulse: number;
+  jumpVelocity: number;
   health: number;
 }
 

@@ -47,6 +47,7 @@ export const App = () => {
     isWalking: false,
     isRunning: false,
     isOnFloor: true,
+    canMove: true,
 
     controls: {
       forward: { value: "w", isPressed: false },
@@ -63,9 +64,9 @@ export const App = () => {
     },
 
     // Stats
-    velocity: 1,
+    velocity: 3,
     runMultiplier: 1.5,
-    jumpImpulse: 3,
+    jumpVelocity: 5,
     health: 100,
   };
 
