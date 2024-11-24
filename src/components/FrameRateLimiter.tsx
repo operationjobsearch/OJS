@@ -15,6 +15,8 @@ export const FrameRateLimiter = ({ fps = 60 }: { fps: number }) => {
       raf = requestAnimationFrame(tick);
       elapsed = t - then;
       if (elapsed > interval) {
+        // @ts-ignore
+        // Reason: `advance` is safe to call without arguments in this specific context.
         advance();
         then = t - (elapsed % interval);
       }
