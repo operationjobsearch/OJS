@@ -7,7 +7,7 @@ export type KeyState = { value: string; isPressed: boolean };
 
 export interface GameObject {
   // State
-  frameInterval: number;
+  fps: number;
   isPointerLocked: boolean;
   isWindowActive: boolean;
 
@@ -68,6 +68,6 @@ export interface MovementVectorObject {
   rightVector: THREE.Vector3;
 }
 
-export interface CameraControllerProps {
+export interface CameraProps {
   characterModel: React.RefObject<THREE.Mesh>;
 }

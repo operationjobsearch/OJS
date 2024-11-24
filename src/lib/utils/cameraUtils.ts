@@ -5,7 +5,7 @@ export const moveCamera = (
   camera: THREE.Camera,
   player: PlayerObject,
   game: GameObject,
-  delta: number
+  frameTime: number
 ): void => {
   const { rigidBody, mouseMovement } = player;
   const {
@@ -24,18 +24,18 @@ export const moveCamera = (
   )
     return;
 
-  // Capture mouse deltas and reset them after use to avoid momentum-like behavior
-  const mouseDeltaX = -mouseMovement.current.x * cameraSpeedRatio;
-  const mouseDeltaY = mouseMovement.current.y * cameraSpeedRatio;
+  // Capture mouse frameTimes and reset them after use to avoid momentum-like behavior
+  const mouseframeTimeX = -mouseMovement.current.x * cameraSpeedRatio;
+  const mouseframeTimeY = mouseMovement.current.y * cameraSpeedRatio;
 
   mouseMovement.current.x = 0;
   mouseMovement.current.y = 0;
 
   // Update horizontal and vertical angles
-  const newTheta = game.cameraAngleTheta + mouseDeltaX * delta;
+  const newTheta = game.cameraAngleTheta + mouseframeTimeX * frameTime;
   const newPhi = Math.max(
     -Math.PI / 3,
-    Math.min(Math.PI / 3, game.cameraAnglePhi + mouseDeltaY * delta)
+    Math.min(Math.PI / 3, game.cameraAnglePhi + mouseframeTimeY * frameTime)
   );
 
   game.cameraAngleTheta = newTheta;

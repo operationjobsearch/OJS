@@ -20,6 +20,7 @@ export const Player = ({ game, player }: GameProps) => {
   const rigidBodyProps: RigidBodyProps = {
     lockRotations: true,
     colliders: false,
+    linearDamping: 5,
     onCollisionEnter: ({ other }) => {
       handleCollisions(player, other, true);
     },
@@ -46,11 +47,14 @@ export const Player = ({ game, player }: GameProps) => {
   }, []);
 
   useFrame((state, delta) => {
+    console.log("frame delta", delta);
+    // const frameTime = Math.min(delta, 0.016);
+    // updatePlayerState(game, player, camera, animations.actions, frameTime);
     updatePlayerState(game, player, camera, animations.actions, delta);
   });
 
   return (
-    <RigidBody ref={player.rigidBody} {...rigidBodyProps} >
+    <RigidBody ref={player.rigidBody} {...rigidBodyProps}>
       <CapsuleCollider
         args={[0.1, 0.5]}
         position={[0, 0.5, 0]}

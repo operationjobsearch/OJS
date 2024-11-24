@@ -6,7 +6,7 @@ import { Box } from "@react-three/drei";
 export const World = ({ game, player }: GameProps) => {
   return (
     <Suspense>
-      <Physics debug={true} timeStep={game.frameInterval}>
+      <Physics debug={true} timeStep={1 / game.fps}>
         <Player {...{ game, player }} />
 
         <RigidBody colliders="cuboid" type="fixed" name="floor" friction={0}>
