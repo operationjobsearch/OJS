@@ -33,7 +33,7 @@ export const App = () => {
     cameraAnglePhi: Math.PI / 6,
     cameraRadius: 3,
     cameraVerticalOffset: 2.5,
-    cameraLookAtOffset: 1,
+    cameraLookAtOffset: 1.25,
     cameraSpeedRatio: 0.1,
   };
 
@@ -42,7 +42,6 @@ export const App = () => {
     characterModel: useRef<THREE.Object3D>(null),
     rigidBody: useRef<RapierRigidBody>(null),
     mouseMovement: useRef<Coordinate>({ x: 0, y: 0 }),
-    reticle: useRef<THREE.Mesh>(null),
 
     // State
     modelRotation: Math.PI,
@@ -70,6 +69,8 @@ export const App = () => {
     runMultiplier: 1.5,
     jumpVelocity: 5,
     health: 100,
+    projectileVelocity: 10,
+    projectileDamage: 5,
   };
 
   const gameProps: GameProps = {
@@ -102,10 +103,10 @@ export const App = () => {
         <FrameRateLimiter fps={game.fps} />
         <DebugPanel {...gameProps} />
         <Camera {...gameProps} />
-        <Reticle {...gameProps} />
         <World {...gameProps} />
         <ambientLight />
       </Canvas>
+      <Reticle {...gameProps} />
     </div>
   );
 };

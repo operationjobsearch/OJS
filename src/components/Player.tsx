@@ -2,6 +2,7 @@ import {
   GameProps,
   handleCollisions,
   handleKeyEvent,
+  handleMouseEvent,
   updatePlayerState,
 } from "..";
 import { useEffect } from "react";
@@ -38,6 +39,10 @@ export const Player = ({ game, player }: GameProps) => {
       handleKeyEvent(player, e);
     };
 
+    const handleMouseDown = (e: MouseEvent) => {
+      handleMouseEvent(player, e);
+    };
+
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("keyup", handleKeyUp);
     return () => {
@@ -47,9 +52,6 @@ export const Player = ({ game, player }: GameProps) => {
   }, []);
 
   useFrame((state, delta) => {
-    console.log("frame delta", delta);
-    // const frameTime = Math.min(delta, 0.016);
-    // updatePlayerState(game, player, camera, animations.actions, frameTime);
     updatePlayerState(game, player, camera, animations.actions, delta);
   });
 

@@ -24,3 +24,16 @@ body {
   height: 100vh;
   background-color: black;
 }
+
+.reticle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10; /* Ensure it's above the scene */
+  pointer-events: none; /* Allow clicks to pass through */
+  width: 5px; /* Adjust the size as needed */
+  height: 5px;
+  background-color: white; /* Set the reticle color */
+  border-radius: 50%; /* Makes it circular */
+}

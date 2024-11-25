@@ -1,3 +1,4 @@
+import { Vector } from "@dimforge/rapier3d";
 import { RapierRigidBody } from "@react-three/rapier";
 import * as THREE from "three";
 
@@ -28,7 +29,6 @@ export interface PlayerObject {
   characterModel: React.RefObject<THREE.Object3D>;
   rigidBody: React.RefObject<RapierRigidBody>;
   mouseMovement: React.RefObject<Coordinate>;
-  reticle: React.RefObject<THREE.Mesh>;
 
   // State
   controls: ControlsObject;
@@ -44,11 +44,8 @@ export interface PlayerObject {
   runMultiplier: number;
   jumpVelocity: number;
   health: number;
-}
-
-export interface GameProps {
-  player: PlayerObject;
-  game: GameObject;
+  projectileVelocity: number;
+  projectileDamage: number;
 }
 
 export interface ControlsObject {
@@ -68,6 +65,20 @@ export interface MovementVectorObject {
   rightVector: THREE.Vector3;
 }
 
+export interface GameProps {
+  player: PlayerObject;
+  game: GameObject;
+}
+
 export interface CameraProps {
   characterModel: React.RefObject<THREE.Mesh>;
+}
+
+export interface ProjectileProps {
+  key: string;
+  position?: Vector;
+  direction: THREE.Vector3;
+  velocity: number;
+  isFriendly: boolean;
+  onExpire?: CallableFunction;
 }

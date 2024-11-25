@@ -9,6 +9,9 @@ export const updatePlayerState = (
   animations: Record<string, THREE.AnimationAction | null>,
   frameTime: number
 ): void => {
+  const { isPointerLocked, isWindowActive } = game;
+  if (!(isPointerLocked && isWindowActive)) return;
+
   updateWalkingState(player);
   updateModelRotation(player, game);
   updateDirectionVectors(player, camera);
@@ -134,4 +137,8 @@ export const handleKeyEvent = (player: PlayerObject, e: KeyboardEvent) => {
     const control = controls[controlKey];
     control.isPressed = e.type === "keydown" ? true : false;
   }
+};
+
+export const handleMouseEvent = (player: PlayerObject, e: MouseEvent) => {
+  // player.directions.forwardVector
 };

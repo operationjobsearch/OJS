@@ -4,6 +4,7 @@ export { Camera } from "./components/Camera";
 export { DebugPanel } from "./components/DebugPanel";
 export { Player } from "./components/Player";
 export { Reticle } from "./components/Reticle";
+export { Projectile } from "./components/Projectile";
 export { FrameRateLimiter } from "./components/FrameRateLimiter";
 export { World } from "./components/World";
 
