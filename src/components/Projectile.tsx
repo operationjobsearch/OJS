@@ -17,6 +17,11 @@ export const Projectile = ({
   useFrame((_, delta) => {});
 
   useEffect(() => {
+    const projectileVector = new THREE.Vector3();
+    projectileVector.add(direction);
+    projectileVector.normalize().multiplyScalar(5);
+    projectileRigidBody.current?.setLinvel(projectileVector, true);
+
     const timeout = setTimeout(() => {
       if (onExpire) onExpire();
     }, 3000);
@@ -25,7 +30,13 @@ export const Projectile = ({
   }, []);
 
   return (
-    <RigidBody ref={projectileRigidBody} colliders="ball">
+    <RigidBody
+      ref={projectileRigidBody}
+      colliders="ball"
+      lockRotations={true}
+      gravityScale={0}
+      position={position}
+    >
       <mesh ref={projectileModel}>
         <sphereGeometry args={[0.1, 16, 16]} />
         <meshStandardMaterial color="red" />

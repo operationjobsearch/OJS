@@ -4,34 +4,30 @@ import {
   Projectile,
   ProjectileProps,
   handleMouseEvent,
+  createProjectile,
 } from "..";
 import { Suspense, useCallback, useEffect, useState } from "react";
 import { Physics, RigidBody } from "@react-three/rapier";
 import { Box } from "@react-three/drei";
 import * as THREE from "three";
+import { useThree } from "@react-three/fiber";
 
 export const World = ({ game, player }: GameProps) => {
+  const { camera } = useThree();
   const [projectiles, setProjectiles] = useState<any[]>([]);
 
-  const fireProjectile = useCallback(() => {
-    const newProjectile: ProjectileProps = {
-      key: `${Date.now()}-${Math.random()}`,
-      position: player.rigidBody.current?.translation(),
-      direction: player.directions.forwardVector,
-      velocity: player.projectileVelocity,
-      isFriendly: true,
-    };
-
+  const fireProjectile = useCallback((newProjectile: ProjectileProps) => {
     setProjectiles((prev) => [...prev, newProjectile]);
   }, []);
 
-  const removeProjectile = useCallback((id: string) => {
+  const removeProjectile = useCallback((id: number) => {
     setProjectiles((prev) => prev.filter((p) => p.id !== id));
   }, []);
 
   useEffect(() => {
     const handleMouseDown = (e: MouseEvent) => {
-      fireProjectile();
+      if (!(game.isPointerLocked && game.isWindowActive)) return;
+      fireProjectile(createProjectile(player, camera, true));
       console.log(projectiles);
     };
 
@@ -39,7 +35,7 @@ export const World = ({ game, player }: GameProps) => {
     return () => {
       document.removeEventListener("click", handleMouseDown);
     };
-  }, []);
+  }, [projectiles]);
 
   return (
     <Suspense>
@@ -49,6 +45,7 @@ export const World = ({ game, player }: GameProps) => {
         {projectiles.map((projectile) => (
           <Projectile
             key={projectile.id}
+            id={projectile.id}
             position={projectile.position}
             direction={projectile.direction}
             velocity={projectile.speed}

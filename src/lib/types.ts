@@ -75,8 +75,8 @@ export interface CameraProps {
 }
 
 export interface ProjectileProps {
-  key: string;
-  position?: Vector;
+  id: number;
+  position: THREE.Vector3;
   direction: THREE.Vector3;
   velocity: number;
   isFriendly: boolean;
