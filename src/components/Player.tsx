@@ -2,6 +2,7 @@ import {
   GameProps,
   handleCollisions,
   handleKeyEvent,
+  handleMouseEvent,
   updatePlayerState,
 } from "..";
 import { useEffect } from "react";
@@ -20,6 +21,7 @@ export const Player = ({ game, player }: GameProps) => {
   const rigidBodyProps: RigidBodyProps = {
     lockRotations: true,
     colliders: false,
+    linearDamping: 5,
     onCollisionEnter: ({ other }) => {
       handleCollisions(player, other, true);
     },
@@ -37,6 +39,10 @@ export const Player = ({ game, player }: GameProps) => {
       handleKeyEvent(player, e);
     };
 
+    const handleMouseDown = (e: MouseEvent) => {
+      handleMouseEvent(player, e);
+    };
+
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("keyup", handleKeyUp);
     return () => {
@@ -50,7 +56,7 @@ export const Player = ({ game, player }: GameProps) => {
   });
 
   return (
-    <RigidBody ref={player.rigidBody} {...rigidBodyProps} >
+    <RigidBody ref={player.rigidBody} {...rigidBodyProps}>
       <CapsuleCollider
         args={[0.1, 0.5]}
         position={[0, 0.5, 0]}

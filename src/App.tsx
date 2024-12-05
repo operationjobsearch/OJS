@@ -1,11 +1,12 @@
 import {
   GameObject,
   PlayerObject,
-  CameraController,
+  Camera,
   DebugPanel,
   World,
   GameProps,
   Reticle,
+  FrameRateLimiter,
   Coordinate,
   handleMouseMove,
   handlePointerLockChange,
@@ -20,7 +21,7 @@ import { RapierRigidBody } from "@react-three/rapier";
 export const App = () => {
   const game: GameObject = {
     // State
-    frameInterval: 1 / 60,
+    fps: 60,
     isPointerLocked: false,
     isWindowActive: true,
 
@@ -32,7 +33,7 @@ export const App = () => {
     cameraAnglePhi: Math.PI / 6,
     cameraRadius: 3,
     cameraVerticalOffset: 2.5,
-    cameraLookAtOffset: 1,
+    cameraLookAtOffset: 1.25,
     cameraSpeedRatio: 0.1,
   };
 
@@ -41,7 +42,6 @@ export const App = () => {
     characterModel: useRef<THREE.Object3D>(null),
     rigidBody: useRef<RapierRigidBody>(null),
     mouseMovement: useRef<Coordinate>({ x: 0, y: 0 }),
-    reticle: useRef<THREE.Mesh>(null),
 
     // State
     modelRotation: Math.PI,
@@ -65,10 +65,12 @@ export const App = () => {
     },
 
     // Stats
-    velocity: 3,
+    velocity: 200,
     runMultiplier: 1.5,
     jumpVelocity: 5,
     health: 100,
+    projectileVelocity: 10,
+    projectileDamage: 5,
   };
 
   const gameProps: GameProps = {
@@ -98,12 +100,13 @@ export const App = () => {
   return (
     <div className="canvas" onClick={() => document.body.requestPointerLock()}>
       <Canvas>
+        <FrameRateLimiter fps={game.fps} />
         <DebugPanel {...gameProps} />
-        <CameraController {...gameProps} />
-        <Reticle {...gameProps} />
+        <Camera {...gameProps} />
         <World {...gameProps} />
         <ambientLight />
       </Canvas>
+      <Reticle {...gameProps} />
     </div>
   );
 };

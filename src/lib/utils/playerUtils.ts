@@ -7,13 +7,16 @@ export const updatePlayerState = (
   player: PlayerObject,
   camera: THREE.Camera,
   animations: Record<string, THREE.AnimationAction | null>,
-  delta: number
+  frameTime: number
 ): void => {
+  const { isPointerLocked, isWindowActive } = game;
+  if (!(isPointerLocked && isWindowActive)) return;
+
   updateWalkingState(player);
   updateModelRotation(player, game);
   updateDirectionVectors(player, camera);
-  updateAnimationState(player, animations, delta);
-  updateVelocity(player, delta);
+  updateAnimationState(player, animations, frameTime);
+  updateVelocity(player, frameTime);
 };
 
 const updateWalkingState = (player: PlayerObject): void => {
@@ -53,7 +56,7 @@ const updateDirectionVectors = (
 const updateAnimationState = (
   player: PlayerObject,
   animations: Record<string, THREE.AnimationAction | null>,
-  delta: number
+  frameTime: number
 ): void => {
   if (player.isWalking && !animations.Walk?.isRunning()) {
     animations.Walk?.play();
@@ -63,7 +66,7 @@ const updateAnimationState = (
   }
 };
 
-const updateVelocity = (player: PlayerObject, delta: number): void => {
+const updateVelocity = (player: PlayerObject, frameTime: number): void => {
   const { rigidBody, controls, velocity, jumpVelocity, isOnFloor, directions } =
     player;
 
@@ -79,7 +82,7 @@ const updateVelocity = (player: PlayerObject, delta: number): void => {
 
   // Normalize for consistent speed if there is any movement
   if (movementVector.length() > 0) {
-    movementVector.normalize().multiplyScalar(velocity);
+    movementVector.normalize().multiplyScalar(velocity * frameTime);
   }
 
   // Handle jumping separately

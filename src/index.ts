@@ -1,9 +1,11 @@
 // Components
 export { App } from "./App";
-export { CameraController } from "./components/CameraController";
+export { Camera } from "./components/Camera";
 export { DebugPanel } from "./components/DebugPanel";
 export { Player } from "./components/Player";
 export { Reticle } from "./components/Reticle";
+export { Projectile } from "./components/Projectile";
+export { FrameRateLimiter } from "./components/FrameRateLimiter";
 export { World } from "./components/World";
 
 // Utils
@@ -12,4 +14,5 @@ export * from "./lib/utils/appUtils";
 export * from "./lib/utils/generalUtils";
 export * from "./lib/utils/cameraUtils";
 export * from "./lib/utils/playerUtils";
+export * from "./lib/utils/projectileUtils";
 export * from "./lib/utils/debugPanelUtils";
