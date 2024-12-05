@@ -138,7 +138,3 @@ export const handleKeyEvent = (player: PlayerObject, e: KeyboardEvent) => {
     control.isPressed = e.type === "keydown" ? true : false;
   }
 };
-
-export const handleMouseEvent = (player: PlayerObject, e: MouseEvent) => {
-  // player.directions.forwardVector
-};
