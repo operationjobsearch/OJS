@@ -2,7 +2,6 @@ import {
   GameProps,
   handleCollisions,
   handleKeyEvent,
-  handleMouseEvent,
   updatePlayerState,
 } from "..";
 import { useEffect } from "react";
