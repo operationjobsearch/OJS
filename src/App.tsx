@@ -24,10 +24,9 @@ import { RapierRigidBody } from "@react-three/rapier";
  * The App function is a React functional component. It's defined as an arrow function.
  *
  * React functional components are reusable JS/TS functions that return React elements using JSX/TSX
- * to render the defined UI that gets shown on the website.
- *  throughout the app by calling copies of it to
- * reduce duplicating code. JSX and TSX are supersets of JS and TS that allows
- * one to write HTML-like markup within React.
+ * to render the defined UI that gets shown on the website. They can be reused anywhere throughout
+ * the app by calling copies of it to reduce duplicating code. JSX and TSX are supersets of JS and TS
+ * that allows one to write HTML-like markup within React.
  *
  * A normal function has an 'arguments' object that can be accessed in the function as a local
  * variable. Normal functions also have a 'this' variable initialization because of hoisting which is
