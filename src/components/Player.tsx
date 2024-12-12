@@ -38,9 +38,7 @@ export const Player = ({ game, player }: GameProps) => {
       handleKeyEvent(player, e);
     };
 
-    const handleMouseDown = (e: MouseEvent) => {
-      handleMouseEvent(player, e);
-    };
+    const handleMouseDown = (e: MouseEvent) => {};
 
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("keyup", handleKeyUp);
