@@ -39,6 +39,26 @@ import { RapierRigidBody } from "@react-three/rapier";
  * get hoisted like normal functions and have a slightly different syntax.
  */
 
+/**
+ * ----------------------------------------------HOOKS-----------------------------------------------
+ *
+ * React Hooks are a way to add functionality to functional components in React. Before Hooks,
+ * functional components were limited compared to class components, but Hooks add the ability to use
+ * state, lifecycle methods, and other React features in functional components.
+ *
+ * TODO: REVISIT and finish UseEffect explanation
+ * UseEffect(() => {}, [dependencies]): performs side effects in functional components, e.g. fetching
+ * data. Re-runs every time the dependency array is changed. A re-render is only triggered when the
+ * reference to an object in the dependency array changes because the checks for changes are done
+ * with shallow comparison. When side effects need to be stopped or a component is unmounted, the
+ * cleanup function is used to prevent errors.
+ *
+ * UseRef(initialValue): takes a value of any type and returns a reference object with a 'current'
+ * property that is initially set to the value provided. The 'ref.current' property is mutable.
+ * Changing 'ref.current' doesn't trigger re-renders. If you pass a ref object to react as a ref
+ * attribute on a JSX or TSX node, React will set the object's 'current' property.
+ */
+
 export const App = () => {
   const game: GameObject = {
     // State
