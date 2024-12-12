@@ -18,6 +18,28 @@ import { useEffect, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import { RapierRigidBody } from "@react-three/rapier";
 
+/**
+ * --------------------------------------------FUNCTIONS---------------------------------------------
+ *
+ * The App function is a React functional component. It's defined as an arrow function.
+ *
+ * React functional components are reusable JS/TS functions that return React elements using JSX/TSX
+ * to render the defined UI that gets shown on the website.
+ *  throughout the app by calling copies of it to
+ * reduce duplicating code. JSX and TSX are supersets of JS and TS that allows
+ * one to write HTML-like markup within React.
+ *
+ * A normal function has an 'arguments' object that can be accessed in the function as a local
+ * variable. Normal functions also have a 'this' variable initialization because of hoisting which is
+ * the concept of a variable or function being lifted to the top of its global or local scope before
+ * the whole code is executed.
+ *
+ * Arrow functions cannot be used as constructors and cannot be 'declared'. Function declarations
+ * involve the 'function' keyword and a name for the function. Function 'expression' occurs when
+ * you make a function and no name is assigned; arrow functions are anonymous functions. They do not
+ * get hoisted like normal functions and have a slightly different syntax.
+ */
+
 export const App = () => {
   const game: GameObject = {
     // State
