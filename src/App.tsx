@@ -14,7 +14,7 @@ import {
   handleWindowBlur,
 } from ".";
 import * as THREE from "three";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { RapierRigidBody } from "@react-three/rapier";
 
@@ -46,17 +46,37 @@ import { RapierRigidBody } from "@react-three/rapier";
  * functional components were limited compared to class components, but Hooks add the ability to use
  * state, lifecycle methods, and other React features in functional components.
  *
- * TODO: REVISIT and finish UseEffect explanation
  * UseEffect(() => {}, [dependencies]): performs side effects in functional components, e.g. fetching
- * data. Re-runs every time the dependency array is changed. A re-render is only triggered when the
- * reference to an object in the dependency array changes because the checks for changes are done
- * with shallow comparison. When side effects need to be stopped or a component is unmounted, the
- * cleanup function is used to prevent errors.
+ * data. Runs after rendering. A re-render is only triggered when the reference to an object in the
+ * dependency array changes because the checks for changes are done with referential equality unless
+ * the value in the dependency array is a primitive value like a string or a number. When side
+ * effects need to be stopped or a component is unmounted, the cleanup function is used to prevent
+ * errors in the return.
  *
  * UseRef(initialValue): takes a value of any type and returns a reference object with a 'current'
  * property that is initially set to the value provided. The 'ref.current' property is mutable.
  * Changing 'ref.current' doesn't trigger re-renders. If you pass a ref object to react as a ref
  * attribute on a JSX or TSX node, React will set the object's 'current' property.
+ */
+
+/**
+ * ----------------------------------------------EVENTS-----------------------------------------------
+ *
+ * Events are actions that happen in the system you are programming, which the system tells you about
+ * so your code can react to them. The system produces a signal of some kind when an event occurs,
+ * and provides a mechanism by which an action can be automatically taken when the event occurs.
+ * Events are fired inside the browser window, and tend to be attached to a specific item that
+ * resides in it. This might be a single element, a set of elements, the HTML document loaded in the
+ * current tab, or the entire browser window.
+ *
+ * Event handlers and listeners work together; event listeners "listen" for the event occurring and
+ * handlers are the code that is run in response to it happening. Event listeners can be added with
+ * the "addEventListener()" method of the EventTarget interface which sets up a function that will
+ * be called whenever the specified event is delivered to the target. If the function or object is
+ * already in the list of event listeners for this target, the function or object is not added a
+ * second time. If there is an event listener inside another listener, the inner one will not be
+ * triggered. Event listeners can be removed with the "removeEventListener()" method of the
+ * EventTarget interface.
  */
 
 export const App = () => {
