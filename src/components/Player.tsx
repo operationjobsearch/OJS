@@ -2,7 +2,6 @@ import {
   GameProps,
   handleCollisions,
   handleKeyEvent,
-  handleMouseEvent,
   updatePlayerState,
 } from "..";
 import { useEffect } from "react";
@@ -37,10 +36,6 @@ export const Player = ({ game, player }: GameProps) => {
 
     const handleKeyUp = (e: KeyboardEvent) => {
       handleKeyEvent(player, e);
-    };
-
-    const handleMouseDown = (e: MouseEvent) => {
-      handleMouseEvent(player, e);
     };
 
     document.addEventListener("keydown", handleKeyDown);

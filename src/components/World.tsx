@@ -3,7 +3,6 @@ import {
   GameProps,
   Projectile,
   ProjectileProps,
-  handleMouseEvent,
   createProjectile,
 } from "..";
 import { Suspense, useCallback, useEffect, useState } from "react";
