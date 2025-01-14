@@ -1,7 +1,9 @@
 import { Canvas, useThree } from "@react-three/fiber";
 import { useLayoutEffect, useRef } from "react";
+import { useGameStore } from "../";
 
-export const FrameRateLimiter = ({ fps = 60 }: { fps: number }) => {
+export const FrameRateLimiter = () => {
+  const { fps } = useGameStore();
   const { advance, set, frameloop: initFrameloop } = useThree();
 
   useLayoutEffect(() => {

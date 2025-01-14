@@ -1,4 +1,3 @@
-import { Vector } from "@dimforge/rapier3d";
 import { RapierRigidBody } from "@react-three/rapier";
 import * as THREE from "three";
 
@@ -8,13 +7,19 @@ export type KeyState = { value: string; isPressed: boolean };
 
 export interface GameObject {
   // State
-  fps: number;
+  fpsLimit: number;
   isPointerLocked: boolean;
   isWindowActive: boolean;
 
+  setFocus: () => void;
+  setBlur: () => void;
+  setPointerLockChange: () => void;
+
   // Settings
   keyboardLayout: KeyboardLayout;
+}
 
+export interface CameraObject {
   // Camera
   cameraVerticalOffset: number;
   cameraLookAtOffset: number;
@@ -22,13 +27,23 @@ export interface GameObject {
   cameraAnglePhi: number;
   cameraRadius: number;
   cameraSpeedRatio: number;
+
+  setCameraAngles: (frameTime: number, mouseMovement: Coordinate) => void;
+  setCameraPosition: (
+    camera: THREE.Camera,
+    playerRigidBody: React.RefObject<RapierRigidBody> | null
+  ) => void;
 }
 
 export interface PlayerObject {
   // Refs
-  characterModel: React.RefObject<THREE.Object3D>;
-  rigidBody: React.RefObject<RapierRigidBody>;
-  mouseMovement: React.RefObject<Coordinate>;
+  characterModel: React.RefObject<THREE.Object3D> | null;
+  rigidBody: React.RefObject<RapierRigidBody> | null;
+  mouseMovement: Coordinate;
+
+  setCharacterModel: (characterModel: React.RefObject<THREE.Object3D>) => void;
+  setRigidBody: (rigidBody: React.RefObject<RapierRigidBody>) => void;
+  setMouseMovement: (e: MouseEvent) => void;
 
   // State
   controls: ControlsObject;
@@ -38,6 +53,15 @@ export interface PlayerObject {
   isWalking: boolean;
   isRunning: boolean;
   canMove: boolean;
+
+  setIsWalking: (controls: ControlsObject) => void;
+  setModelRotation: (cameraAngleTheta: number) => void;
+  setDirectionVectors: (camera: THREE.Camera) => void;
+  setAnimationState: (
+    animations: Record<string, THREE.AnimationAction | null>,
+    frameTime: number
+  ) => void;
+  setVelocity: (frameTime: number) => void;
 
   // Stats
   velocity: number;
@@ -63,11 +87,6 @@ export interface MovementVectorObject {
   leftVector: THREE.Vector3;
   backVector: THREE.Vector3;
   rightVector: THREE.Vector3;
-}
-
-export interface GameProps {
-  player: PlayerObject;
-  game: GameObject;
 }
 
 export interface CameraProps {

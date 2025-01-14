@@ -1,3 +1,8 @@
+// Data
+export { useGameStore } from "./lib/stores/gameStore";
+export { usePlayerStore } from "./lib/stores/playerStore";
+export { useCameraStore } from "./lib/stores/cameraStore";
+
 // Components
 export { App } from "./App";
 export { Camera } from "./components/Camera";
@@ -10,8 +15,6 @@ export { World } from "./components/World";
 
 // Utils
 export * from "./lib/types";
-export * from "./lib/utils/appUtils";
-export * from "./lib/utils/generalUtils";
 export * from "./lib/utils/cameraUtils";
 export * from "./lib/utils/playerUtils";
 export * from "./lib/utils/projectileUtils";

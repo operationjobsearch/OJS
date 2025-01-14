@@ -1,11 +1,14 @@
 import { useFrame, useThree } from "@react-three/fiber";
-import { GameProps, moveCamera } from "..";
+import { useCameraStore, usePlayerStore } from "..";
 
-export const Camera = ({ player, game }: GameProps) => {
+export const Camera = () => {
   const { camera } = useThree();
+  const { mouseMovement, rigidBody } = usePlayerStore();
+  const { setCameraAngles, setCameraPosition } = useCameraStore();
 
-  useFrame((state, delta) => {
-    moveCamera(camera, player, game, delta);
+  useFrame((_, delta) => {
+    setCameraAngles(delta, mouseMovement);
+    setCameraPosition(camera, rigidBody);
   });
 
   return null;

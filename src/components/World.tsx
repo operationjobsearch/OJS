@@ -1,18 +1,21 @@
 import {
   Player,
-  GameProps,
   Projectile,
   ProjectileProps,
   createProjectile,
+  useGameStore,
+  usePlayerStore,
 } from "..";
 import { Suspense, useCallback, useEffect, useState } from "react";
 import { Physics, RigidBody } from "@react-three/rapier";
 import { Box } from "@react-three/drei";
-import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
 
-export const World = ({ game, player }: GameProps) => {
+export const World = () => {
   const { camera } = useThree();
+  const { rigidBody, projectileVelocity } = usePlayerStore();
+  const { isPointerLocked, isWindowActive, fpsLimit } = useGameStore();
+
   const [projectiles, setProjectiles] = useState<any[]>([]);
 
   const fireProjectile = useCallback((newProjectile: ProjectileProps) => {
@@ -25,8 +28,10 @@ export const World = ({ game, player }: GameProps) => {
 
   useEffect(() => {
     const handleMouseDown = (e: MouseEvent) => {
-      if (!(game.isPointerLocked && game.isWindowActive)) return;
-      fireProjectile(createProjectile(player, camera, true));
+      if (!(isPointerLocked && isWindowActive)) return;
+      fireProjectile(
+        createProjectile(rigidBody, projectileVelocity, camera, true)
+      );
       console.log(projectiles);
     };
 
@@ -38,8 +43,8 @@ export const World = ({ game, player }: GameProps) => {
 
   return (
     <Suspense>
-      <Physics debug={true} timeStep={1 / game.fps}>
-        <Player {...{ game, player }} />
+      <Physics debug={true} timeStep={1 / fpsLimit}>
+        <Player />
         {/* Render all projectiles */}
         {projectiles.map((projectile) => (
           <Projectile

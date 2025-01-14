@@ -1,8 +1,8 @@
 import {
-  GameProps,
   handleCollisions,
   handleKeyEvent,
-  updatePlayerState,
+  useCameraStore,
+  usePlayerStore,
 } from "..";
 import { useEffect } from "react";
 import { useAnimations, useGLTF } from "@react-three/drei";
@@ -13,29 +13,43 @@ import {
   RigidBodyProps,
 } from "@react-three/rapier";
 
-export const Player = ({ game, player }: GameProps) => {
+export const Player = () => {
   const { camera } = useThree();
+  const { cameraAngleTheta } = useCameraStore();
+  const {
+    rigidBody,
+    characterModel,
+    controls,
+    isOnFloor,
+    setIsWalking,
+    setModelRotation,
+    setDirectionVectors,
+    setAnimationState,
+    setVelocity,
+  } = usePlayerStore();
+
   const playerModel = useGLTF("./Fox/glTF/Fox.gltf");
   const animations = useAnimations(playerModel.animations, playerModel.scene);
+
   const rigidBodyProps: RigidBodyProps = {
     lockRotations: true,
     colliders: false,
     linearDamping: 5,
     onCollisionEnter: ({ other }) => {
-      handleCollisions(player, other, true);
+      handleCollisions(isOnFloor, other, true);
     },
     onCollisionExit: ({ other }) => {
-      handleCollisions(player, other, false);
+      handleCollisions(isOnFloor, other, false);
     },
   };
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      handleKeyEvent(player, e);
+      handleKeyEvent(controls, e);
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
-      handleKeyEvent(player, e);
+      handleKeyEvent(controls, e);
     };
 
     document.addEventListener("keydown", handleKeyDown);
@@ -46,12 +60,16 @@ export const Player = ({ game, player }: GameProps) => {
     };
   }, []);
 
-  useFrame((state, delta) => {
-    updatePlayerState(game, player, camera, animations.actions, delta);
+  useFrame((_, delta) => {
+    setIsWalking(controls);
+    setModelRotation(cameraAngleTheta);
+    setDirectionVectors(camera);
+    setAnimationState(animations.actions, delta);
+    setVelocity(delta);
   });
 
   return (
-    <RigidBody ref={player.rigidBody} {...rigidBodyProps}>
+    <RigidBody ref={rigidBody} {...rigidBodyProps}>
       <CapsuleCollider
         args={[0.1, 0.5]}
         position={[0, 0.5, 0]}
@@ -59,7 +77,7 @@ export const Player = ({ game, player }: GameProps) => {
         friction={0}
       />
       <primitive
-        ref={player.characterModel}
+        ref={characterModel}
         object={playerModel.scene}
         scale={0.01}
         rotation-y={Math.PI}
