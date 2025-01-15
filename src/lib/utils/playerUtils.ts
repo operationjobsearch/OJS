@@ -85,7 +85,7 @@ export const updateVelocity = (
   );
 };
 
-export const handleCollisions = (
+export const handleCollision = (
   isOnFloor: boolean,
   otherObject: CollisionTarget,
   isCollisionEnter: boolean

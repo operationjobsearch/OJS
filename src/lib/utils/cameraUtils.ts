@@ -31,6 +31,8 @@ export const updateCameraAnglePhi = (
   return newPhi;
 };
 
+// TODO: find a balance between smoothness and responsiveness using
+// interpolation, look ahead, easing, etc
 export const moveCamera = (
   camera: THREE.Camera,
   cameraRadius: number,
@@ -38,7 +40,8 @@ export const moveCamera = (
   cameraVerticalOffset: number,
   cameraAngleTheta: number,
   cameraAnglePhi: number,
-  rigidBody: React.RefObject<RapierRigidBody> | null
+  rigidBody: React.RefObject<RapierRigidBody> | null,
+  dampingFactor: number
 ): void => {
   if (
     !(
@@ -63,14 +66,24 @@ export const moveCamera = (
     rigidBodyPos.z +
     cameraRadius * Math.cos(cameraAngleTheta) * Math.cos(cameraAnglePhi);
 
-  camera.position.set(x, y, z);
+  // Smoothly interpolate to the target position
+  camera.position.x += (x - camera.position.x) * dampingFactor;
+  camera.position.y += (y - camera.position.y) * dampingFactor;
+  camera.position.z += (z - camera.position.z) * dampingFactor;
 
-  // Make the camera look slightly above the player's head
-  const lookAtPosition = new THREE.Vector3(
+  // Interpolate the lookAt target
+  const lookAtTarget = new THREE.Vector3(
     rigidBodyPos.x,
     rigidBodyPos.y + cameraLookAtOffset,
     rigidBodyPos.z
   );
 
-  camera.lookAt(lookAtPosition);
+  camera.lookAt(
+    new THREE.Vector3(
+      camera.position.x + (lookAtTarget.x - camera.position.x) * dampingFactor,
+      camera.position.y + (lookAtTarget.y - camera.position.y) * dampingFactor,
+      camera.position.z + (lookAtTarget.z - camera.position.z) * dampingFactor
+    )
+  );
+  // camera.lookAt(lookAtTarget);
 };

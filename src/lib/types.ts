@@ -1,4 +1,5 @@
-import { RapierRigidBody } from "@react-three/rapier";
+import { CollisionTarget, RapierRigidBody } from "@react-three/rapier";
+import Stats from "stats.js";
 import * as THREE from "three";
 
 export type KeyboardLayout = "QWERTY" | "Colemak";
@@ -7,6 +8,7 @@ export type KeyState = { value: string; isPressed: boolean };
 
 export interface GameObject {
   // State
+  stats: Stats;
   fpsLimit: number;
   isPointerLocked: boolean;
   isWindowActive: boolean;
@@ -27,6 +29,7 @@ export interface CameraObject {
   cameraAnglePhi: number;
   cameraRadius: number;
   cameraSpeedRatio: number;
+  dampingFactor: number;
 
   setCameraAngles: (frameTime: number, mouseMovement: Coordinate) => void;
   setCameraPosition: (
@@ -62,6 +65,11 @@ export interface PlayerObject {
     frameTime: number
   ) => void;
   setVelocity: (frameTime: number) => void;
+
+  handleCollisions: (
+    otherObject: CollisionTarget,
+    isCollisionEnter: boolean
+  ) => void;
 
   // Stats
   velocity: number;

@@ -39,7 +39,7 @@ export const World = () => {
     return () => {
       document.removeEventListener("click", handleMouseDown);
     };
-  }, [projectiles]);
+  }, [projectiles, rigidBody]);
 
   return (
     <Suspense>

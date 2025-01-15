@@ -3,26 +3,17 @@ import {
   DebugPanel,
   World,
   Reticle,
-  FrameRateLimiter,
   useGameStore,
   usePlayerStore,
 } from ".";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
-import { RapierRigidBody } from "@react-three/rapier";
-import * as THREE from "three";
 
 export const App = () => {
-  const { setMouseMovement, setCharacterModel, setRigidBody } =
-    usePlayerStore();
+  const { setMouseMovement } = usePlayerStore();
   const { setFocus, setBlur, setPointerLockChange } = useGameStore();
-  const rigidBody = useRef<RapierRigidBody>(null);
-  const characterModel = useRef<THREE.Object3D>(null);
 
   useEffect(() => {
-    setRigidBody(rigidBody);
-    setCharacterModel(characterModel);
-
     window.addEventListener("focus", setFocus);
     window.addEventListener("blur", setBlur);
     window.addEventListener("mousemove", setMouseMovement);
@@ -39,7 +30,6 @@ export const App = () => {
   return (
     <div className="canvas" onClick={() => document.body.requestPointerLock()}>
       <Canvas>
-        <FrameRateLimiter />
         <DebugPanel />
         <Camera />
         <World />

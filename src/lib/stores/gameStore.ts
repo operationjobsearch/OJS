@@ -1,9 +1,11 @@
 import { create } from "zustand";
 import { GameObject } from "../..";
+import Stats from "stats.js";
 
 export const useGameStore = create<GameObject>()((set) => ({
   // State
-  fpsLimit: 60,
+  stats: new Stats(),
+  fpsLimit: 144,
   isPointerLocked: false,
   isWindowActive: true,
 

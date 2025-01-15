@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { create } from "zustand";
 import {
   ControlsObject,
+  handleCollision,
   PlayerObject,
   updateAnimationState,
   updateDirectionVectors,
@@ -9,6 +10,7 @@ import {
   updateVelocity,
   updateWalkingState,
 } from "../..";
+import { CollisionTarget } from "@react-three/rapier";
 
 export const usePlayerStore = create<PlayerObject>()((set, get) => ({
   // Refs
@@ -74,6 +76,14 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
       directions,
       frameTime
     );
+  },
+
+  handleCollisions: (
+    otherObject: CollisionTarget,
+    isCollisionEnter: boolean
+  ) => {
+    const { isOnFloor } = get();
+    handleCollision(isOnFloor, otherObject, isCollisionEnter);
   },
 
   controls: {
