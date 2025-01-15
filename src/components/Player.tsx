@@ -33,8 +33,6 @@ export const Player = () => {
 
   const rigidBody = useRef<RapierRigidBody>(null);
   const characterModel = useRef<THREE.Object3D>(null);
-  // TODO: add update interval tracker to game store for global use
-  const lastUpdateTime = useRef(0);
 
   const playerModel = useGLTF("./Fox/glTF/Fox.gltf");
   const animations = useAnimations(playerModel.animations, playerModel.scene);
@@ -72,19 +70,11 @@ export const Player = () => {
   }, []);
 
   useFrame((_, delta) => {
-    const updateInterval = 1 / fpsLimit;
-    lastUpdateTime.current += delta;
-
-    if (lastUpdateTime.current >= updateInterval) {
-      setIsWalking(controls);
-      setModelRotation(cameraAngleTheta);
-      setDirectionVectors(camera);
-      setAnimationState(animations.actions, delta);
-      setVelocity(delta);
-
-      // Reset the last update time
-      lastUpdateTime.current = 0;
-    }
+    setIsWalking(controls);
+    setModelRotation(cameraAngleTheta);
+    setDirectionVectors(camera);
+    setAnimationState(animations.actions, delta);
+    setVelocity(delta);
   });
 
   return (
