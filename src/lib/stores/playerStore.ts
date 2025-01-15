@@ -2,7 +2,6 @@ import * as THREE from "three";
 import { create } from "zustand";
 import {
   ControlsObject,
-  handleCollision,
   PlayerObject,
   updateAnimationState,
   updateDirectionVectors,
