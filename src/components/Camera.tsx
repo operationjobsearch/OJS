@@ -14,6 +14,11 @@ export const Camera = () => {
   }, []);
 
   useFrame((_, delta) => {
+    // TODO: remove stats.js and add current fps component with value in gameStore?
+    // include min, max, and avg fps
+    // console.log("frameTime", delta);
+    console.log("fps", 1 / delta);
+
     stats.begin();
 
     setCameraAngles(delta, mouseMovement);

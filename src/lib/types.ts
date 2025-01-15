@@ -70,6 +70,10 @@ export interface PlayerObject {
     otherObject: CollisionTarget,
     isCollisionEnter: boolean
   ) => void;
+  handleFloorCollision: (
+    rigidBodyObject: CollisionTarget["rigidBodyObject"],
+    isCollisionEnter: boolean
+  ) => void;
 
   // Stats
   velocity: number;

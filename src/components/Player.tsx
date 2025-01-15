@@ -1,9 +1,4 @@
-import {
-  handleKeyEvent,
-  useCameraStore,
-  useGameStore,
-  usePlayerStore,
-} from "..";
+import { handleKeyEvent, useCameraStore, usePlayerStore } from "..";
 import { useEffect, useRef } from "react";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
@@ -17,7 +12,6 @@ import * as THREE from "three";
 
 export const Player = () => {
   const { camera } = useThree();
-  const { fpsLimit } = useGameStore();
   const { cameraAngleTheta } = useCameraStore();
   const {
     controls,

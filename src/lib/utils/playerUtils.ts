@@ -85,35 +85,6 @@ export const updateVelocity = (
   );
 };
 
-export const handleCollision = (
-  isOnFloor: boolean,
-  otherObject: CollisionTarget,
-  isCollisionEnter: boolean
-) => {
-  const { rigidBodyObject } = otherObject;
-  if (!rigidBodyObject) return;
-
-  const collisionTargetMap: Record<string, void> = {
-    ["floor"]: handleFloorCollision(
-      isOnFloor,
-      rigidBodyObject,
-      isCollisionEnter
-    ),
-  };
-
-  collisionTargetMap[rigidBodyObject.name];
-};
-
-const handleFloorCollision = (
-  isOnFloor: boolean,
-  rigidBodyObject: CollisionTarget["rigidBodyObject"],
-  isCollisionEnter: boolean
-) => {
-  if (rigidBodyObject) {
-    isOnFloor = isCollisionEnter ? true : false;
-  }
-};
-
 export const handleKeyEvent = (controls: ControlsObject, e: KeyboardEvent) => {
   const movementInputMap: Record<string, keyof ControlsObject> = {
     [controls.forward.value]: "forward",

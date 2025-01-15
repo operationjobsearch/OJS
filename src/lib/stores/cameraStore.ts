@@ -7,7 +7,6 @@ import {
   updateCameraAnglePhi,
   updateCameraAngleTheta,
 } from "../..";
-import { RigidBody } from "@dimforge/rapier3d";
 import { RapierRigidBody } from "@react-three/rapier";
 
 export const useCameraStore = create<CameraObject>()((set, get) => ({
@@ -17,7 +16,7 @@ export const useCameraStore = create<CameraObject>()((set, get) => ({
   cameraRadius: 3,
   cameraVerticalOffset: 2.5,
   cameraLookAtOffset: 1.25,
-  cameraSpeedRatio: 0.5,
+  cameraSpeedRatio: 0.35,
   dampingFactor: 0.1,
 
   setCameraAngles: (frameTime: number, mouseMovement: Coordinate) => {

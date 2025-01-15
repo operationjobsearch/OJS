@@ -82,8 +82,21 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
     otherObject: CollisionTarget,
     isCollisionEnter: boolean
   ) => {
-    const { isOnFloor } = get();
-    handleCollision(isOnFloor, otherObject, isCollisionEnter);
+    const { handleFloorCollision } = get();
+    const { rigidBodyObject } = otherObject;
+    if (!rigidBodyObject) return;
+
+    const collisionTargetMap: Record<string, void> = {
+      ["floor"]: handleFloorCollision(rigidBodyObject, isCollisionEnter),
+    };
+    collisionTargetMap[rigidBodyObject.name];
+  },
+
+  handleFloorCollision: (
+    rigidBodyObject: CollisionTarget["rigidBodyObject"],
+    isCollisionEnter: boolean
+  ) => {
+    if (rigidBodyObject) set(() => ({ isOnFloor: isCollisionEnter }));
   },
 
   controls: {
