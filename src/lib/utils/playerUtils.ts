@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { PlayerObject, ControlsObject, MovementVectorObject } from "../..";
-import { CollisionTarget, RapierRigidBody } from "@react-three/rapier";
+import { RapierRigidBody } from "@react-three/rapier";
 
 export const updateWalkingState = (controls: ControlsObject): boolean => {
   return ["forward", "left", "back", "right"].some(
@@ -100,5 +100,3 @@ export const handleKeyEvent = (controls: ControlsObject, e: KeyboardEvent) => {
     control.isPressed = e.type === "keydown" ? true : false;
   }
 };
-
-export const handleMouseEvent = () => {};

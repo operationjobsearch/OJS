@@ -1,6 +1,7 @@
 // Data
 export { useGameStore } from "./lib/stores/gameStore";
 export { usePlayerStore } from "./lib/stores/playerStore";
+export { useProjectileStore } from "./lib/stores/projectileStore";
 export { useCameraStore } from "./lib/stores/cameraStore";
 
 // Components

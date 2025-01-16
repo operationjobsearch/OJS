@@ -1,4 +1,3 @@
-import { useFrame } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { ProjectileProps } from "../lib/types";
@@ -14,12 +13,10 @@ export const Projectile = ({
   const projectileRigidBody = useRef<RapierRigidBody>(null);
   const projectileModel = useRef<THREE.Mesh>(null);
 
-  useFrame((_, delta) => {});
-
   useEffect(() => {
     const projectileVector = new THREE.Vector3();
     projectileVector.add(direction);
-    projectileVector.normalize().multiplyScalar(5);
+    projectileVector.normalize().multiplyScalar(velocity);
     projectileRigidBody.current?.setLinvel(projectileVector, true);
 
     const timeout = setTimeout(() => {

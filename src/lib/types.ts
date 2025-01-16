@@ -43,31 +43,43 @@ export interface CameraObject {
 
 export interface PlayerObject {
   // Refs
-  characterModel: React.RefObject<THREE.Object3D> | null;
   rigidBody: React.RefObject<RapierRigidBody> | null;
+  characterModel: React.RefObject<THREE.Object3D> | null;
   mouseMovement: Coordinate;
 
+  // State
+  isFiring: boolean;
+  isWalking: boolean;
+  modelRotation: number;
+  directions: MovementVectorObject;
+  controls: ControlsObject;
+  isOnFloor: boolean;
+  isRunning: boolean;
+  canMove: boolean;
+
+  // Stats
+  velocity: number;
+  runMultiplier: number;
+  jumpVelocity: number;
+  health: number;
+  projectileVelocity: number;
+  projectileDamage: number;
+
+  // Functions
   setCharacterModel: (characterModel: React.RefObject<THREE.Object3D>) => void;
   setRigidBody: (rigidBody: React.RefObject<RapierRigidBody>) => void;
   setMouseMovement: (e: MouseEvent) => void;
 
-  // State
-  controls: ControlsObject;
-  directions: MovementVectorObject;
-  modelRotation: number;
-  isOnFloor: boolean;
-  isWalking: boolean;
-  isRunning: boolean;
-  canMove: boolean;
-
+  setIsFiring: (isMouseDown: boolean) => void;
   setIsWalking: (controls: ControlsObject) => void;
+
   setModelRotation: (cameraAngleTheta: number) => void;
   setDirectionVectors: (camera: THREE.Camera) => void;
+  setVelocity: (frameTime: number) => void;
   setAnimationState: (
     animations: Record<string, THREE.AnimationAction | null>,
     frameTime: number
   ) => void;
-  setVelocity: (frameTime: number) => void;
 
   handleCollisions: (
     otherObject: CollisionTarget,
@@ -77,14 +89,12 @@ export interface PlayerObject {
     rigidBodyObject: CollisionTarget["rigidBodyObject"],
     isCollisionEnter: boolean
   ) => void;
+}
 
-  // Stats
-  velocity: number;
-  runMultiplier: number;
-  jumpVelocity: number;
-  health: number;
-  projectileVelocity: number;
-  projectileDamage: number;
+export interface ProjectileObject {
+  projectiles: ProjectileProps[];
+  spawnProjectile: (newProjectile: ProjectileProps) => void;
+  destroyProjectile: (id: number) => void;
 }
 
 export interface ControlsObject {

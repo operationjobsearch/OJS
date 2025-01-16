@@ -1,18 +1,10 @@
-import {
-  Player,
-  Projectile,
-  ProjectileProps,
-  createProjectile,
-  useGameStore,
-  usePlayerStore,
-} from "..";
-import { Suspense, useCallback, useEffect, useState } from "react";
+import { Player, useGameStore } from "..";
+import { Suspense } from "react";
 import { Physics, RigidBody } from "@react-three/rapier";
 import { Box } from "@react-three/drei";
-import { useThree } from "@react-three/fiber";
 
 export const World = () => {
-  const { isDebugEnabled, fpsLimit } = useGameStore();
+  const { isDebugEnabled } = useGameStore();
 
   return (
     <Suspense>

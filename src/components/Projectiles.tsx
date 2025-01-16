@@ -1,49 +1,51 @@
-import { useThree } from "@react-three/fiber";
-import { useCallback, useEffect, useState } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
+import { useEffect } from "react";
 import {
   createProjectile,
   Projectile,
-  ProjectileProps,
   useGameStore,
   usePlayerStore,
+  useProjectileStore,
 } from "..";
 
 export const Projectiles = () => {
   const { camera } = useThree();
-  const { rigidBody, projectileVelocity } = usePlayerStore();
   const { isPointerLocked, isWindowActive } = useGameStore();
-
-  // TODO: give this an actual type
-  const [projectiles, setProjectiles] = useState<any[]>([]);
-
-  const fireProjectile = useCallback(
-    (newProjectile: ProjectileProps) => {
-      setProjectiles((prev) => [...prev, newProjectile]);
-    },
-    [rigidBody]
-  );
-
-  const removeProjectile = useCallback(
-    (id: number) => {
-      setProjectiles((prev) => prev.filter((p) => p.id !== id));
-    },
-    [rigidBody]
-  );
+  const { projectiles, spawnProjectile, destroyProjectile } =
+    useProjectileStore();
+  const { rigidBody, projectileVelocity, isFiring, setIsFiring } =
+    usePlayerStore();
 
   useEffect(() => {
-    const handleMouseDown = (e: MouseEvent) => {
-      if (!(isPointerLocked && isWindowActive)) return;
-      fireProjectile(
-        createProjectile(rigidBody, projectileVelocity, camera, true)
-      );
-      console.log(projectiles);
+    const handleMouseUp = () => {
+      setIsFiring(false);
     };
 
-    document.addEventListener("click", handleMouseDown);
+    const handleMouseDown = () => {
+      setIsFiring(true);
+    };
+
+    document.addEventListener("mouseup", handleMouseUp);
+    document.addEventListener("mousedown", handleMouseDown);
     return () => {
-      document.removeEventListener("click", handleMouseDown);
+      document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("mousedown", handleMouseDown);
     };
   }, [rigidBody, projectiles, isPointerLocked, isWindowActive]);
+
+  useFrame(() => {
+    // TODO: throttle this with a rate of fire or attack speed
+    // also determine if destroy is properly disposing of projectiles
+    if (isFiring) {
+      const newProjectile = createProjectile(
+        rigidBody,
+        projectileVelocity,
+        camera,
+        true
+      );
+      spawnProjectile(newProjectile);
+    }
+  });
 
   return (
     <>
@@ -54,9 +56,9 @@ export const Projectiles = () => {
           id={projectile.id}
           position={projectile.position}
           direction={projectile.direction}
-          velocity={projectile.speed}
+          velocity={projectile.velocity}
           isFriendly={projectile.isFriendly}
-          onExpire={() => removeProjectile(projectile.id)}
+          onExpire={() => destroyProjectile(projectile.id)}
         />
       ))}
     </>
