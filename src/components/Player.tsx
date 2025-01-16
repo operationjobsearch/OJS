@@ -1,4 +1,9 @@
-import { handleKeyEvent, useCameraStore, usePlayerStore } from "..";
+import {
+  Projectiles,
+  handleKeyEvent,
+  useCameraStore,
+  usePlayerStore,
+} from "..";
 import { useEffect, useRef } from "react";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
@@ -44,6 +49,7 @@ export const Player = () => {
   };
 
   useEffect(() => {
+    // initialize null properties on player object
     setRigidBody(rigidBody);
     setCharacterModel(characterModel);
 
@@ -72,19 +78,22 @@ export const Player = () => {
   });
 
   return (
-    <RigidBody ref={rigidBody} {...rigidBodyProps}>
-      <CapsuleCollider
-        args={[0.1, 0.5]}
-        position={[0, 0.5, 0]}
-        rotation={[Math.PI / 2, 0, 0]}
-        friction={0}
-      />
-      <primitive
-        ref={characterModel}
-        object={playerModel.scene}
-        scale={0.01}
-        rotation-y={Math.PI}
-      />
-    </RigidBody>
+    <>
+      <RigidBody ref={rigidBody} {...rigidBodyProps}>
+        <CapsuleCollider
+          args={[0.1, 0.5]}
+          position={[0, 0.5, 0]}
+          rotation={[Math.PI / 2, 0, 0]}
+          friction={0}
+        />
+        <primitive
+          ref={characterModel}
+          object={playerModel.scene}
+          scale={0.01}
+          rotation-y={Math.PI}
+        />
+      </RigidBody>
+      <Projectiles />
+    </>
   );
 };

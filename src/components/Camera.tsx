@@ -17,7 +17,7 @@ export const Camera = () => {
     // TODO: remove stats.js and add current fps component with value in gameStore?
     // include min, max, and avg fps
     // console.log("frameTime", delta);
-    console.log("fps", 1 / delta);
+    // console.log("fps", 1 / delta);
 
     stats.begin();
 

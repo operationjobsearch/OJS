@@ -18,7 +18,10 @@ export interface GameObject {
   setPointerLockChange: () => void;
 
   // Settings
+  isDebugEnabled: boolean;
   keyboardLayout: KeyboardLayout;
+
+  setDebugMode: (isEnabled: boolean) => void;
 }
 
 export interface CameraObject {

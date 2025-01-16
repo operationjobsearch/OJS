@@ -100,3 +100,5 @@ export const handleKeyEvent = (controls: ControlsObject, e: KeyboardEvent) => {
     control.isPressed = e.type === "keydown" ? true : false;
   }
 };
+
+export const handleMouseEvent = () => {};

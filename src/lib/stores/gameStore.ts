@@ -15,5 +15,8 @@ export const useGameStore = create<GameObject>()((set) => ({
     set({ isPointerLocked: !!document.pointerLockElement }),
 
   // Settings
+  isDebugEnabled: true,
   keyboardLayout: "QWERTY",
+
+  setDebugMode: (isEnabled) => set({ isDebugEnabled: isEnabled }),
 }));

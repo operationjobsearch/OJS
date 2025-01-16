@@ -19,7 +19,7 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
 
   setRigidBody: (rigidBody) => set({ rigidBody }),
   setCharacterModel: (characterModel) => set({ characterModel }),
-  setMouseMovement: (e: MouseEvent) => {
+  setMouseMovement: (e) => {
     if (document.pointerLockElement)
       set({ mouseMovement: { x: e.movementX, y: e.movementY } });
   },
@@ -31,11 +31,11 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
   isOnFloor: true,
   canMove: true,
 
-  setIsWalking: (controls: ControlsObject) =>
+  setIsWalking: (controls) =>
     set(() => ({
       isWalking: updateWalkingState(controls),
     })),
-  setModelRotation: (cameraAngleTheta: number) => {
+  setModelRotation: (cameraAngleTheta) => {
     const { characterModel, modelRotation, isWalking } = get();
     set(() => ({
       modelRotation: updateModelRotation(
@@ -46,18 +46,15 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
       ),
     }));
   },
-  setDirectionVectors: (camera: THREE.Camera) => {
+  setDirectionVectors: (camera) => {
     const { directions } = get();
     updateDirectionVectors(directions, camera);
   },
-  setAnimationState: (
-    animations: Record<string, THREE.AnimationAction | null>,
-    frameTime: number
-  ) => {
+  setAnimationState: (animations, frameTime) => {
     const { isWalking } = get();
     updateAnimationState(isWalking, animations, frameTime);
   },
-  setVelocity: (frameTime: number) => {
+  setVelocity: (frameTime) => {
     const {
       rigidBody,
       controls,
@@ -77,10 +74,7 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
     );
   },
 
-  handleCollisions: (
-    otherObject: CollisionTarget,
-    isCollisionEnter: boolean
-  ) => {
+  handleCollisions: (otherObject, isCollisionEnter) => {
     const { handleFloorCollision } = get();
     const { rigidBodyObject } = otherObject;
     if (!rigidBodyObject) return;
@@ -91,10 +85,7 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
     collisionTargetMap[rigidBodyObject.name];
   },
 
-  handleFloorCollision: (
-    rigidBodyObject: CollisionTarget["rigidBodyObject"],
-    isCollisionEnter: boolean
-  ) => {
+  handleFloorCollision: (rigidBodyObject, isCollisionEnter) => {
     if (rigidBodyObject) set(() => ({ isOnFloor: isCollisionEnter }));
   },
 

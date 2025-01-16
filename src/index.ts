@@ -10,6 +10,7 @@ export { DebugPanel } from "./components/DebugPanel";
 export { Player } from "./components/Player";
 export { Reticle } from "./components/Reticle";
 export { Projectile } from "./components/Projectile";
+export { Projectiles } from "./components/Projectiles";
 export { World } from "./components/World";
 
 // Utils
