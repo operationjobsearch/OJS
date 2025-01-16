@@ -1,6 +1,6 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useCameraStore, useGameStore, usePlayerStore } from "..";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 export const Camera = () => {
   const { camera } = useThree();
