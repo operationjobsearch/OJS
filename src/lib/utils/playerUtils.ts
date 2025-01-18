@@ -1,49 +1,32 @@
 import * as THREE from "three";
-import { PlayerObject, ControlsObject, GameObject } from "../..";
-import { CollisionTarget } from "@react-three/rapier";
+import { PlayerObject, ControlsObject, MovementVectorObject } from "../..";
+import { RapierRigidBody } from "@react-three/rapier";
 
-export const updatePlayerState = (
-  game: GameObject,
-  player: PlayerObject,
-  camera: THREE.Camera,
-  animations: Record<string, THREE.AnimationAction | null>,
-  frameTime: number
-): void => {
-  const { isPointerLocked, isWindowActive } = game;
-  if (!(isPointerLocked && isWindowActive)) return;
-
-  updateWalkingState(player);
-  updateModelRotation(player, game);
-  updateDirectionVectors(player, camera);
-  updateAnimationState(player, animations, frameTime);
-  updateVelocity(player, frameTime);
+export const updateWalkingState = (controls: ControlsObject): boolean => {
+  return ["forward", "left", "back", "right"].some(
+    (key) => controls[key].isPressed
+  );
 };
 
-const updateWalkingState = (player: PlayerObject): void => {
-  const { controls } = player;
+export const updateModelRotation = (
+  characterModel: React.RefObject<THREE.Object3D> | null,
+  modelRotation: number,
+  isWalking: boolean,
+  cameraAngleTheta: number
+): number => {
+  modelRotation = Math.PI + cameraAngleTheta;
 
-  player.isWalking =
-    controls.forward.isPressed ||
-    controls.left.isPressed ||
-    controls.back.isPressed ||
-    controls.right.isPressed;
+  if (characterModel && characterModel.current && isWalking)
+    characterModel.current.rotation.y = modelRotation;
+
+  return modelRotation;
 };
 
-const updateModelRotation = (player: PlayerObject, game: GameObject): void => {
-  const { characterModel, isWalking } = player;
-  const { cameraAngleTheta } = game;
-
-  player.modelRotation = Math.PI + cameraAngleTheta;
-  if (characterModel.current && isWalking)
-    characterModel.current.rotation.y = player.modelRotation;
-};
-
-const updateDirectionVectors = (
-  player: PlayerObject,
+export const updateDirectionVectors = (
+  directions: PlayerObject["directions"],
   camera: THREE.Camera
 ): void => {
-  const { forwardVector, leftVector, rightVector, backVector } =
-    player.directions;
+  const { forwardVector, leftVector, rightVector, backVector } = directions;
 
   camera.getWorldDirection(forwardVector);
   forwardVector.y = 0;
@@ -53,24 +36,29 @@ const updateDirectionVectors = (
   backVector.copy(forwardVector).negate();
 };
 
-const updateAnimationState = (
-  player: PlayerObject,
+export const updateAnimationState = (
+  isWalking: boolean,
   animations: Record<string, THREE.AnimationAction | null>,
   frameTime: number
 ): void => {
-  if (player.isWalking && !animations.Walk?.isRunning()) {
+  if (isWalking && !animations.Walk?.isRunning()) {
     animations.Walk?.play();
   }
-  if (!player.isWalking && animations.Walk?.isRunning()) {
+  if (!isWalking && animations.Walk?.isRunning()) {
     animations.Walk?.stop();
   }
 };
 
-const updateVelocity = (player: PlayerObject, frameTime: number): void => {
-  const { rigidBody, controls, velocity, jumpVelocity, isOnFloor, directions } =
-    player;
-
-  if (!rigidBody.current) return;
+export const updateVelocity = (
+  rigidBody: React.RefObject<RapierRigidBody> | null,
+  controls: ControlsObject,
+  velocity: number,
+  jumpVelocity: number,
+  isOnFloor: boolean,
+  directions: MovementVectorObject,
+  frameTime: number
+): void => {
+  if (!rigidBody || !rigidBody.current) return;
 
   const movementVector = new THREE.Vector3();
 
@@ -97,33 +85,7 @@ const updateVelocity = (player: PlayerObject, frameTime: number): void => {
   );
 };
 
-export const handleCollisions = (
-  player: PlayerObject,
-  otherObject: CollisionTarget,
-  isCollisionEnter: boolean
-) => {
-  const { rigidBodyObject } = otherObject;
-  if (!rigidBodyObject) return;
-
-  const collisionTargetMap: Record<string, void> = {
-    ["floor"]: handleFloorCollision(player, rigidBodyObject, isCollisionEnter),
-  };
-
-  collisionTargetMap[rigidBodyObject.name];
-};
-
-const handleFloorCollision = (
-  player: PlayerObject,
-  rigidBodyObject: CollisionTarget["rigidBodyObject"],
-  isCollisionEnter: boolean
-) => {
-  if (rigidBodyObject) {
-    player.isOnFloor = isCollisionEnter ? true : false;
-  }
-};
-
-export const handleKeyEvent = (player: PlayerObject, e: KeyboardEvent) => {
-  const { controls } = player;
+export const handleKeyEvent = (controls: ControlsObject, e: KeyboardEvent) => {
   const movementInputMap: Record<string, keyof ControlsObject> = {
     [controls.forward.value]: "forward",
     [controls.back.value]: "back",

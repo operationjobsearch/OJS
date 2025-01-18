@@ -1,8 +1,16 @@
-import { GameProps, initializeGameFolder, initializePlayerFolder } from "..";
+import {
+  initializeGameFolder,
+  initializePlayerFolder,
+  useGameStore,
+  usePlayerStore,
+} from "..";
 import GUI from "lil-gui";
 import { useEffect } from "react";
 
-export const DebugPanel = ({ player, game }: GameProps) => {
+export const DebugPanel = () => {
+  const game = useGameStore();
+  const player = usePlayerStore();
+
   useEffect(() => {
     const gui = new GUI();
 

@@ -1,5 +1,3 @@
-import { GameProps } from "..";
-
-export const Reticle = ({ player }: GameProps) => {
+export const Reticle = () => {
   return <div className="reticle" />;
 };

@@ -1,5 +1,5 @@
-import { Vector } from "@dimforge/rapier3d";
-import { RapierRigidBody } from "@react-three/rapier";
+import { CollisionTarget, RapierRigidBody } from "@react-three/rapier";
+import Stats from "stats.js";
 import * as THREE from "three";
 
 export type KeyboardLayout = "QWERTY" | "Colemak";
@@ -8,13 +8,23 @@ export type KeyState = { value: string; isPressed: boolean };
 
 export interface GameObject {
   // State
-  fps: number;
+  stats: Stats;
+  fpsLimit: number;
   isPointerLocked: boolean;
   isWindowActive: boolean;
 
+  setFocus: () => void;
+  setBlur: () => void;
+  setPointerLockChange: () => void;
+
   // Settings
+  isDebugEnabled: boolean;
   keyboardLayout: KeyboardLayout;
 
+  setDebugMode: (isEnabled: boolean) => void;
+}
+
+export interface CameraObject {
   // Camera
   cameraVerticalOffset: number;
   cameraLookAtOffset: number;
@@ -22,20 +32,28 @@ export interface GameObject {
   cameraAnglePhi: number;
   cameraRadius: number;
   cameraSpeedRatio: number;
+  dampingFactor: number;
+
+  setCameraAngles: (frameTime: number, mouseMovement: Coordinate) => void;
+  setCameraPosition: (
+    camera: THREE.Camera,
+    playerRigidBody: React.RefObject<RapierRigidBody> | null
+  ) => void;
 }
 
 export interface PlayerObject {
   // Refs
-  characterModel: React.RefObject<THREE.Object3D>;
-  rigidBody: React.RefObject<RapierRigidBody>;
-  mouseMovement: React.RefObject<Coordinate>;
+  rigidBody: React.RefObject<RapierRigidBody> | null;
+  characterModel: React.RefObject<THREE.Object3D> | null;
+  mouseMovement: Coordinate;
 
   // State
-  controls: ControlsObject;
-  directions: MovementVectorObject;
-  modelRotation: number;
-  isOnFloor: boolean;
+  isFiring: boolean;
   isWalking: boolean;
+  modelRotation: number;
+  directions: MovementVectorObject;
+  controls: ControlsObject;
+  isOnFloor: boolean;
   isRunning: boolean;
   canMove: boolean;
 
@@ -46,6 +64,37 @@ export interface PlayerObject {
   health: number;
   projectileVelocity: number;
   projectileDamage: number;
+
+  // Functions
+  setCharacterModel: (characterModel: React.RefObject<THREE.Object3D>) => void;
+  setRigidBody: (rigidBody: React.RefObject<RapierRigidBody>) => void;
+  setMouseMovement: (e: MouseEvent) => void;
+
+  setIsFiring: (isMouseDown: boolean) => void;
+  setIsWalking: (controls: ControlsObject) => void;
+
+  setModelRotation: (cameraAngleTheta: number) => void;
+  setDirectionVectors: (camera: THREE.Camera) => void;
+  setVelocity: (frameTime: number) => void;
+  setAnimationState: (
+    animations: Record<string, THREE.AnimationAction | null>,
+    frameTime: number
+  ) => void;
+
+  handleCollisions: (
+    otherObject: CollisionTarget,
+    isCollisionEnter: boolean
+  ) => void;
+  handleFloorCollision: (
+    rigidBodyObject: CollisionTarget["rigidBodyObject"],
+    isCollisionEnter: boolean
+  ) => void;
+}
+
+export interface ProjectileObject {
+  projectiles: ProjectileProps[];
+  spawnProjectile: (newProjectile: ProjectileProps) => void;
+  destroyProjectile: (id: number) => void;
 }
 
 export interface ControlsObject {
@@ -63,11 +112,6 @@ export interface MovementVectorObject {
   leftVector: THREE.Vector3;
   backVector: THREE.Vector3;
   rightVector: THREE.Vector3;
-}
-
-export interface GameProps {
-  player: PlayerObject;
-  game: GameObject;
 }
 
 export interface CameraProps {
