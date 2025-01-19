@@ -58,14 +58,14 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
       isWalking: updateWalkingState(controls),
     })),
 
-  setModelRotation: (cameraAngleTheta) => {
+  setModelRotation: (θ) => {
     const { characterModel, modelRotation, isWalking } = get();
     set(() => ({
       modelRotation: updateModelRotation(
         characterModel,
         modelRotation,
         isWalking,
-        cameraAngleTheta
+        θ
       ),
     }));
   },

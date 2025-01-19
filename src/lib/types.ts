@@ -28,8 +28,8 @@ export interface CameraObject {
   // Camera
   cameraVerticalOffset: number;
   cameraLookAtOffset: number;
-  cameraAngleTheta: number;
-  cameraAnglePhi: number;
+  θ: number;
+  φ: number;
   cameraRadius: number;
   cameraSpeedRatio: number;
   dampingFactor: number;
@@ -73,7 +73,7 @@ export interface PlayerObject {
   setIsFiring: (isMouseDown: boolean) => void;
   setIsWalking: (controls: ControlsObject) => void;
 
-  setModelRotation: (cameraAngleTheta: number) => void;
+  setModelRotation: (θ: number) => void;
   setDirectionVectors: (camera: THREE.Camera) => void;
   setVelocity: (frameTime: number) => void;
   setAnimationState: (

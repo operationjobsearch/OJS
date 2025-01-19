@@ -17,7 +17,7 @@ import * as THREE from "three";
 
 export const Player = () => {
   const { camera } = useThree();
-  const { cameraAngleTheta } = useCameraStore();
+  const { θ } = useCameraStore();
   const {
     controls,
     setIsWalking,
@@ -71,7 +71,7 @@ export const Player = () => {
 
   useFrame((_, delta) => {
     setIsWalking(controls);
-    setModelRotation(cameraAngleTheta);
+    setModelRotation(θ);
     setDirectionVectors(camera);
     setAnimationState(animations.actions, delta);
     setVelocity(delta);
