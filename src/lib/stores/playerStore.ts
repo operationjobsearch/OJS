@@ -45,7 +45,7 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
   runMultiplier: 1.5,
   jumpVelocity: 10,
   health: 100,
-  attackSpeed: 5,
+  attackSpeed: 3,
   projectileVelocity: 10,
   projectileDamage: 5,
 
