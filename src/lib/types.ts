@@ -2,6 +2,11 @@ import { CollisionTarget, RapierRigidBody } from "@react-three/rapier";
 import Stats from "stats.js";
 import * as THREE from "three";
 
+export enum RenderOrders {
+  base,
+  hud,
+}
+
 export type KeyboardLayout = "QWERTY" | "Colemak";
 export type Coordinate = { x: number; y: number };
 export type KeyState = { value: string; isPressed: boolean };
@@ -45,12 +50,14 @@ export interface PlayerObject {
   // Refs
   rigidBody: React.RefObject<RapierRigidBody> | null;
   characterModel: React.RefObject<THREE.Object3D> | null;
+  reticle: React.RefObject<THREE.Object3D> | null;
   mouseMovement: Coordinate;
 
   // State
   isFiring: boolean;
   isWalking: boolean;
   modelRotation: number;
+  lastProjectile: number;
   directions: MovementVectorObject;
   controls: ControlsObject;
   isOnFloor: boolean;
@@ -62,15 +69,19 @@ export interface PlayerObject {
   runMultiplier: number;
   jumpVelocity: number;
   health: number;
+  attackSpeed: number;
   projectileVelocity: number;
   projectileDamage: number;
+  playerColliderRadius: number;
 
   // Functions
   setCharacterModel: (characterModel: React.RefObject<THREE.Object3D>) => void;
   setRigidBody: (rigidBody: React.RefObject<RapierRigidBody>) => void;
+  setReticle: (reticle: React.RefObject<THREE.Mesh>) => void;
   setMouseMovement: (e: MouseEvent) => void;
 
   setIsFiring: (isMouseDown: boolean) => void;
+  setLastProjectile: (timeStamp: number) => void;
   setIsWalking: (controls: ControlsObject) => void;
 
   setModelRotation: (θ: number) => void;

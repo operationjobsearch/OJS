@@ -43,14 +43,7 @@ export const moveCamera = (
   rigidBody: React.RefObject<RapierRigidBody> | null,
   dampingFactor: number
 ): void => {
-  if (
-    !(
-      (rigidBody && rigidBody.current) //&&
-      //game.isPointerLocked &&
-      //game.isWindowActive
-    )
-  )
-    return;
+  if (!(rigidBody && rigidBody.current)) return;
 
   // Calculate the new camera position using spherical coordinates
   const rigidBodyPos = rigidBody.current.translation();
@@ -78,5 +71,4 @@ export const moveCamera = (
       camera.position.z + (lookAtTarget.z - camera.position.z) * dampingFactor
     )
   );
-  // camera.lookAt(lookAtTarget);
 };

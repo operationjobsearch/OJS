@@ -14,8 +14,8 @@ export const useCameraStore = create<CameraObject>()((set, get) => ({
   θ: 0,
   φ: Math.PI / 6,
   cameraRadius: 3,
-  cameraVerticalOffset: 2.5,
-  cameraLookAtOffset: 1.25,
+  cameraVerticalOffset: 1,
+  cameraLookAtOffset: 1.75,
   cameraSpeedRatio: 0.35,
   dampingFactor: 0.1,
 

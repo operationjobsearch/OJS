@@ -1,5 +1,6 @@
 import {
   Projectiles,
+  Reticle,
   handleKeyEvent,
   useCameraStore,
   usePlayerStore,
@@ -20,6 +21,7 @@ export const Player = () => {
   const { θ } = useCameraStore();
   const {
     controls,
+    playerColliderRadius,
     setIsWalking,
     setModelRotation,
     setDirectionVectors,
@@ -81,7 +83,7 @@ export const Player = () => {
     <>
       <RigidBody ref={rigidBody} {...rigidBodyProps}>
         <CapsuleCollider
-          args={[0.1, 0.5]}
+          args={[0.1, playerColliderRadius]}
           position={[0, 0.5, 0]}
           rotation={[Math.PI / 2, 0, 0]}
           friction={0}
@@ -93,6 +95,7 @@ export const Player = () => {
           rotation-y={Math.PI}
         />
       </RigidBody>
+      <Reticle />
       <Projectiles />
     </>
   );
