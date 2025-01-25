@@ -13,6 +13,7 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
   // Refs
   rigidBody: null,
   characterModel: null,
+  reticle: null,
   mouseMovement: { x: 0, y: 0 },
 
   // State
@@ -22,6 +23,8 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
   isOnFloor: true,
   canMove: true,
   modelRotation: Math.PI,
+  lastProjectile: 0,
+  playerColliderRadius: 0.5,
 
   controls: {
     forward: { value: "w", isPressed: false },
@@ -38,34 +41,37 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
   },
 
   // Stats
-  velocity: 300,
+  velocity: 500,
   runMultiplier: 1.5,
-  jumpVelocity: 5,
+  jumpVelocity: 10,
   health: 100,
+  attackSpeed: 3,
   projectileVelocity: 10,
   projectileDamage: 5,
 
   setRigidBody: (rigidBody) => set({ rigidBody }),
   setCharacterModel: (characterModel) => set({ characterModel }),
+  setReticle: (reticle) => set({ reticle }),
   setMouseMovement: (e) => {
     if (document.pointerLockElement)
       set({ mouseMovement: { x: e.movementX, y: e.movementY } });
   },
 
   setIsFiring: (isMouseDown) => set({ isFiring: isMouseDown }),
+  setLastProjectile: (timeStamp) => set({ lastProjectile: timeStamp }),
   setIsWalking: (controls) =>
     set(() => ({
       isWalking: updateWalkingState(controls),
     })),
 
-  setModelRotation: (cameraAngleTheta) => {
+  setModelRotation: (θ) => {
     const { characterModel, modelRotation, isWalking } = get();
     set(() => ({
       modelRotation: updateModelRotation(
         characterModel,
         modelRotation,
         isWalking,
-        cameraAngleTheta
+        θ
       ),
     }));
   },

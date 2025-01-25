@@ -2,22 +2,22 @@ import * as THREE from "three";
 import { Coordinate } from "../..";
 import { RapierRigidBody } from "@react-three/rapier";
 
-export const updateCameraAngleTheta = (
+export const updateTheta = (
   mouseMovement: Coordinate,
-  cameraAngleTheta: number,
+  θ: number,
   cameraSpeedRatio: number,
   frameTime: number
 ): number => {
   const mouseFrameTimeX = -mouseMovement.x * cameraSpeedRatio;
   mouseMovement.x = 0;
 
-  const newTheta = cameraAngleTheta + mouseFrameTimeX * frameTime;
+  const newTheta = θ + mouseFrameTimeX * frameTime;
   return newTheta;
 };
 
-export const updateCameraAnglePhi = (
+export const updatePhi = (
   mouseMovement: Coordinate,
-  cameraAnglePhi: number,
+  φ: number,
   cameraSpeedRatio: number,
   frameTime: number
 ): number => {
@@ -26,7 +26,7 @@ export const updateCameraAnglePhi = (
 
   const newPhi = Math.max(
     -Math.PI / 3,
-    Math.min(Math.PI / 3, cameraAnglePhi + mouseFrameTimeY * frameTime)
+    Math.min(Math.PI / 3, φ + mouseFrameTimeY * frameTime)
   );
   return newPhi;
 };
@@ -38,33 +38,19 @@ export const moveCamera = (
   cameraRadius: number,
   cameraLookAtOffset: number,
   cameraVerticalOffset: number,
-  cameraAngleTheta: number,
-  cameraAnglePhi: number,
+  θ: number,
+  φ: number,
   rigidBody: React.RefObject<RapierRigidBody> | null,
   dampingFactor: number
 ): void => {
-  if (
-    !(
-      (rigidBody && rigidBody.current) //&&
-      //game.isPointerLocked &&
-      //game.isWindowActive
-    )
-  )
-    return;
+  if (!(rigidBody && rigidBody.current)) return;
 
   // Calculate the new camera position using spherical coordinates
   const rigidBodyPos = rigidBody.current.translation();
 
-  const x =
-    rigidBodyPos.x +
-    cameraRadius * Math.sin(cameraAngleTheta) * Math.cos(cameraAnglePhi);
-  const y =
-    rigidBodyPos.y +
-    cameraRadius * Math.sin(cameraAnglePhi) +
-    cameraVerticalOffset;
-  const z =
-    rigidBodyPos.z +
-    cameraRadius * Math.cos(cameraAngleTheta) * Math.cos(cameraAnglePhi);
+  const x = rigidBodyPos.x + cameraRadius * Math.sin(θ) * Math.cos(φ);
+  const y = rigidBodyPos.y + cameraRadius * Math.sin(φ) + cameraVerticalOffset;
+  const z = rigidBodyPos.z + cameraRadius * Math.cos(θ) * Math.cos(φ);
 
   // Smoothly interpolate to the target position
   camera.position.x += (x - camera.position.x) * dampingFactor;
@@ -85,5 +71,4 @@ export const moveCamera = (
       camera.position.z + (lookAtTarget.z - camera.position.z) * dampingFactor
     )
   );
-  // camera.lookAt(lookAtTarget);
 };

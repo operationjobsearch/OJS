@@ -1,11 +1,4 @@
-import {
-  Camera,
-  DebugPanel,
-  World,
-  Reticle,
-  useGameStore,
-  usePlayerStore,
-} from ".";
+import { Camera, DebugPanel, World, useGameStore, usePlayerStore } from ".";
 import { useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
 
@@ -35,7 +28,6 @@ export const App = () => {
         <World />
         <ambientLight />
       </Canvas>
-      <Reticle />
     </div>
   );
 };

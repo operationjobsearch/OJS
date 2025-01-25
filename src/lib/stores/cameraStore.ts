@@ -4,37 +4,27 @@ import {
   CameraObject,
   Coordinate,
   moveCamera,
-  updateCameraAnglePhi,
-  updateCameraAngleTheta,
+  updatePhi,
+  updateTheta,
 } from "../..";
 import { RapierRigidBody } from "@react-three/rapier";
 
 export const useCameraStore = create<CameraObject>()((set, get) => ({
   // Camera
-  cameraAngleTheta: 0,
-  cameraAnglePhi: Math.PI / 6,
+  θ: 0,
+  φ: Math.PI / 6,
   cameraRadius: 3,
-  cameraVerticalOffset: 2.5,
-  cameraLookAtOffset: 1.25,
+  cameraVerticalOffset: 1,
+  cameraLookAtOffset: 1.75,
   cameraSpeedRatio: 0.35,
   dampingFactor: 0.1,
 
   setCameraAngles: (frameTime: number, mouseMovement: Coordinate) => {
-    const { cameraAngleTheta, cameraAnglePhi, cameraSpeedRatio } = get();
+    const { θ, φ, cameraSpeedRatio } = get();
 
     set(() => ({
-      cameraAngleTheta: updateCameraAngleTheta(
-        mouseMovement,
-        cameraAngleTheta,
-        cameraSpeedRatio,
-        frameTime
-      ),
-      cameraAnglePhi: updateCameraAnglePhi(
-        mouseMovement,
-        cameraAnglePhi,
-        cameraSpeedRatio,
-        frameTime
-      ),
+      θ: updateTheta(mouseMovement, θ, cameraSpeedRatio, frameTime),
+      φ: updatePhi(mouseMovement, φ, cameraSpeedRatio, frameTime),
     }));
   },
 
@@ -46,8 +36,8 @@ export const useCameraStore = create<CameraObject>()((set, get) => ({
       cameraRadius,
       cameraLookAtOffset,
       cameraVerticalOffset,
-      cameraAngleTheta,
-      cameraAnglePhi,
+      θ,
+      φ,
       dampingFactor,
     } = get();
     moveCamera(
@@ -55,8 +45,8 @@ export const useCameraStore = create<CameraObject>()((set, get) => ({
       cameraRadius,
       cameraLookAtOffset,
       cameraVerticalOffset,
-      cameraAngleTheta,
-      cameraAnglePhi,
+      θ,
+      φ,
       playerRigidBody,
       dampingFactor
     );

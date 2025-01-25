@@ -12,9 +12,9 @@ export const updateModelRotation = (
   characterModel: React.RefObject<THREE.Object3D> | null,
   modelRotation: number,
   isWalking: boolean,
-  cameraAngleTheta: number
+  θ: number
 ): number => {
-  modelRotation = Math.PI + cameraAngleTheta;
+  modelRotation = Math.PI + θ;
 
   if (characterModel && characterModel.current && isWalking)
     characterModel.current.rotation.y = modelRotation;

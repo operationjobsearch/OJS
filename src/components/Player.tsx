@@ -1,5 +1,6 @@
 import {
   Projectiles,
+  Reticle,
   handleKeyEvent,
   useCameraStore,
   usePlayerStore,
@@ -17,9 +18,10 @@ import * as THREE from "three";
 
 export const Player = () => {
   const { camera } = useThree();
-  const { cameraAngleTheta } = useCameraStore();
+  const { θ } = useCameraStore();
   const {
     controls,
+    playerColliderRadius,
     setIsWalking,
     setModelRotation,
     setDirectionVectors,
@@ -71,7 +73,7 @@ export const Player = () => {
 
   useFrame((_, delta) => {
     setIsWalking(controls);
-    setModelRotation(cameraAngleTheta);
+    setModelRotation(θ);
     setDirectionVectors(camera);
     setAnimationState(animations.actions, delta);
     setVelocity(delta);
@@ -81,7 +83,7 @@ export const Player = () => {
     <>
       <RigidBody ref={rigidBody} {...rigidBodyProps}>
         <CapsuleCollider
-          args={[0.1, 0.5]}
+          args={[0.1, playerColliderRadius]}
           position={[0, 0.5, 0]}
           rotation={[Math.PI / 2, 0, 0]}
           friction={0}
@@ -93,6 +95,7 @@ export const Player = () => {
           rotation-y={Math.PI}
         />
       </RigidBody>
+      <Reticle />
       <Projectiles />
     </>
   );
