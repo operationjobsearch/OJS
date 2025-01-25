@@ -4,7 +4,6 @@ import {
   PlayerObject,
   updateAnimationState,
   updateDirectionVectors,
-  updateModelRotation,
   updateVelocity,
   updateWalkingState,
 } from "../..";
@@ -65,15 +64,9 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
     })),
 
   setModelRotation: (θ) => {
-    const { characterModel, modelRotation, isWalking } = get();
-    set(() => ({
-      modelRotation: updateModelRotation(
-        characterModel,
-        modelRotation,
-        isWalking,
-        θ
-      ),
-    }));
+    set({
+      modelRotation: Math.PI + θ,
+    });
   },
   setDirectionVectors: (camera) => {
     const { directions } = get();

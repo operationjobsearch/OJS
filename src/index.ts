@@ -1,6 +1,7 @@
 // Data
 export { useGameStore } from "./lib/stores/gameStore";
 export { usePlayerStore } from "./lib/stores/playerStore";
+export { useEnemyStore } from "./lib/stores/enemyStore";
 export { useProjectileStore } from "./lib/stores/projectileStore";
 export { useCameraStore } from "./lib/stores/cameraStore";
 
@@ -10,6 +11,8 @@ export { Camera } from "./components/Camera";
 export { DebugPanel } from "./components/DebugPanel";
 export { Player } from "./components/Player";
 export { Reticle } from "./components/Reticle";
+export { Enemy } from "./components/Enemy";
+export { Enemies } from "./components/Enemies";
 export { Projectile } from "./components/Projectile";
 export { Projectiles } from "./components/Projectiles";
 export { World } from "./components/World";

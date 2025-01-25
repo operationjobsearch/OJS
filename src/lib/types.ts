@@ -7,6 +7,11 @@ export enum RenderOrders {
   hud,
 }
 
+export enum EnemyTypes {
+  jobPosting,
+  ghostJob,
+}
+
 export type KeyboardLayout = "QWERTY" | "Colemak";
 export type Coordinate = { x: number; y: number };
 export type KeyState = { value: string; isPressed: boolean };
@@ -102,6 +107,12 @@ export interface PlayerObject {
   ) => void;
 }
 
+export interface EnemyObject {
+  enemies: EnemyProps[];
+  spawnEnemy: (newEnemy: EnemyProps) => void;
+  destroyEnemy: (id: number) => void;
+}
+
 export interface ProjectileObject {
   projectiles: ProjectileProps[];
   spawnProjectile: (newProjectile: ProjectileProps) => void;
@@ -135,5 +146,12 @@ export interface ProjectileProps {
   direction: THREE.Vector3;
   velocity: number;
   isFriendly: boolean;
+  onExpire?: CallableFunction;
+}
+
+export interface EnemyProps {
+  id: number;
+  type: EnemyTypes | null;
+  rigidBody: React.RefObject<RapierRigidBody> | null;
   onExpire?: CallableFunction;
 }

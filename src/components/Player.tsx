@@ -8,12 +8,7 @@ import {
 import { useEffect, useRef } from "react";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
-import {
-  CapsuleCollider,
-  RapierRigidBody,
-  RigidBody,
-  RigidBodyProps,
-} from "@react-three/rapier";
+import { RapierRigidBody, RigidBody } from "@react-three/rapier";
 import * as THREE from "three";
 
 export const Player = () => {
@@ -21,7 +16,7 @@ export const Player = () => {
   const { θ } = useCameraStore();
   const {
     controls,
-    playerColliderRadius,
+    modelRotation,
     setIsWalking,
     setModelRotation,
     setDirectionVectors,
@@ -37,18 +32,6 @@ export const Player = () => {
 
   const playerModel = useGLTF("./Fox/glTF/Fox.gltf");
   const animations = useAnimations(playerModel.animations, playerModel.scene);
-
-  const rigidBodyProps: RigidBodyProps = {
-    lockRotations: true,
-    colliders: false,
-    linearDamping: 5,
-    onCollisionEnter: ({ other }) => {
-      handleCollisions(other, true);
-    },
-    onCollisionExit: ({ other }) => {
-      handleCollisions(other, false);
-    },
-  };
 
   useEffect(() => {
     // initialize null properties on player object
@@ -81,18 +64,23 @@ export const Player = () => {
 
   return (
     <>
-      <RigidBody ref={rigidBody} {...rigidBodyProps}>
-        <CapsuleCollider
-          args={[0.1, playerColliderRadius]}
-          position={[0, 0.5, 0]}
-          rotation={[Math.PI / 2, 0, 0]}
-          friction={0}
-        />
+      <RigidBody
+        ref={rigidBody}
+        lockRotations={true}
+        linearDamping={5}
+        onCollisionEnter={({ other }) => {
+          handleCollisions(other, true);
+        }}
+        onCollisionExit={({ other }) => {
+          handleCollisions(other, false);
+        }}
+        colliders={"cuboid"}
+        rotation={[0, modelRotation, 0]}
+      >
         <primitive
           ref={characterModel}
           object={playerModel.scene}
           scale={0.01}
-          rotation-y={Math.PI}
         />
       </RigidBody>
       <Reticle />

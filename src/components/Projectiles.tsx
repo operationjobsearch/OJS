@@ -60,20 +60,11 @@ export const Projectiles = () => {
     }
   });
 
-  return (
-    <>
-      {/* Render all projectiles */}
-      {projectiles.map((projectile) => (
-        <Projectile
-          key={projectile.id}
-          id={projectile.id}
-          position={projectile.position}
-          direction={projectile.direction}
-          velocity={projectile.velocity}
-          isFriendly={projectile.isFriendly}
-          onExpire={() => destroyProjectile(projectile.id)}
-        />
-      ))}
-    </>
-  );
+  return projectiles.map((projectile) => (
+    <Projectile
+      {...projectile}
+      key={projectile.id}
+      onExpire={() => destroyProjectile(projectile.id)}
+    />
+  ));
 };

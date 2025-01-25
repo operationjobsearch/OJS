@@ -8,20 +8,6 @@ export const updateWalkingState = (controls: ControlsObject): boolean => {
   );
 };
 
-export const updateModelRotation = (
-  characterModel: React.RefObject<THREE.Object3D> | null,
-  modelRotation: number,
-  isWalking: boolean,
-  θ: number
-): number => {
-  modelRotation = Math.PI + θ;
-
-  if (characterModel && characterModel.current && isWalking)
-    characterModel.current.rotation.y = modelRotation;
-
-  return modelRotation;
-};
-
 export const updateDirectionVectors = (
   directions: PlayerObject["directions"],
   camera: THREE.Camera
