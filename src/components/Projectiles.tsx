@@ -56,7 +56,6 @@ export const Projectiles = () => {
         true
       );
       spawnProjectile(newProjectile);
-      console.log(reticle.current.position);
     }
   });
 
