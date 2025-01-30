@@ -36,8 +36,8 @@ export interface GameObject {
 
 export interface CameraObject {
   // Camera
-  cameraVerticalOffset: number;
-  cameraLookAtOffset: number;
+  positionOffsetY: number;
+  lookAtOffsetY: number;
   θ: number;
   φ: number;
   cameraRadius: number;

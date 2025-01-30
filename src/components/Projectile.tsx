@@ -1,7 +1,11 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { ProjectileProps } from "../lib/types";
-import { RapierRigidBody, RigidBody } from "@react-three/rapier";
+import {
+  CoefficientCombineRule,
+  RapierRigidBody,
+  RigidBody,
+} from "@react-three/rapier";
 
 export const Projectile = ({
   position,
@@ -32,7 +36,10 @@ export const Projectile = ({
       colliders="ball"
       lockRotations={true}
       gravityScale={0}
+      restitution={0}
+      restitutionCombineRule={CoefficientCombineRule.Min}
       position={position}
+      name="resume"
     >
       <mesh ref={projectileModel}>
         <sphereGeometry args={[0.1, 16, 16]} />

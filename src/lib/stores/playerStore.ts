@@ -23,7 +23,7 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
   canMove: true,
   modelRotation: Math.PI,
   lastProjectile: 0,
-  playerColliderRadius: 0.5,
+  playerColliderRadius: 1,
 
   controls: {
     forward: { value: "w", isPressed: false },
@@ -45,7 +45,7 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
   jumpVelocity: 10,
   health: 100,
   attackSpeed: 3,
-  projectileVelocity: 10,
+  projectileVelocity: 30,
   projectileDamage: 5,
 
   setRigidBody: (rigidBody) => set({ rigidBody }),

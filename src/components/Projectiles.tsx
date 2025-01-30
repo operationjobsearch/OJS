@@ -9,7 +9,6 @@ import {
 } from "..";
 
 export const Projectiles = () => {
-  const { camera } = useThree();
   const { isPointerLocked, isWindowActive } = useGameStore();
   const { projectiles, spawnProjectile, destroyProjectile } =
     useProjectileStore();
@@ -51,7 +50,6 @@ export const Projectiles = () => {
         rigidBody,
         projectileVelocity,
         playerColliderRadius,
-        camera,
         reticle.current,
         true
       );

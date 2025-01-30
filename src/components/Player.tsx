@@ -67,7 +67,6 @@ export const Player = () => {
       <RigidBody
         ref={rigidBody}
         lockRotations={true}
-        linearDamping={5}
         onCollisionEnter={({ other }) => {
           handleCollisions(other, true);
         }}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { EnemyProps } from "../lib/types";
 import { useGLTF } from "@react-three/drei";
 import { CapsuleCollider, RigidBody } from "@react-three/rapier";
@@ -6,6 +6,8 @@ import { Projectiles } from "..";
 
 export const Enemy = ({ id, type, rigidBody }: EnemyProps) => {
   const enemyModel = useGLTF("./hamburger.glb");
+
+  useEffect(() => {}, []);
 
   return (
     <>
