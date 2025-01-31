@@ -19,7 +19,9 @@ export const Player = () => {
     setCharacterModel,
     setRigidBody,
     setIsFiringPrimary,
-    setIsFiringSecondary,
+    setIsChargingSecondary,
+    setShouldFireSecondary,
+    setChargeStartTime,
     handleCollisions,
   } = usePlayerStore();
 
@@ -42,11 +44,17 @@ export const Player = () => {
     };
     const handleMouseUp = (e: MouseEvent) => {
       if (e.button === 0) setIsFiringPrimary(false);
-      if (e.button === 2) setIsFiringSecondary(false);
+      if (e.button === 2) {
+        setIsChargingSecondary(false);
+        setShouldFireSecondary(true);
+      }
     };
     const handleMouseDown = (e: MouseEvent) => {
       if (e.button === 0) setIsFiringPrimary(true);
-      if (e.button === 2) setIsFiringSecondary(true);
+      if (e.button === 2) {
+        setChargeStartTime(performance.now());
+        setIsChargingSecondary(true);
+      }
     };
 
     document.addEventListener("mouseup", handleMouseUp);

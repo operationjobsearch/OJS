@@ -22,6 +22,7 @@ export const getHitId = (camera: THREE.Camera, scene: THREE.Scene): number => {
 export const getChargedAttackDamage = (chargeStartTime: number): number => {
   const attackStats = AttackConfig[AttackTypes.Secondary];
   const chargeDuration = (performance.now() - chargeStartTime) / 1000;
+  console.log("charge time", chargeDuration);
   const chargeMultiplier = Math.min(
     chargeDuration,
     attackStats.chargeMultiplier!
@@ -32,13 +33,13 @@ export const getChargedAttackDamage = (chargeStartTime: number): number => {
 
 export const canFirePrimaryAttack = (
   isFiringPrimary: boolean,
-  isFiringSecondary: boolean,
+  isChargingSecondary: boolean,
   lastAttack: number,
   attackSpeed: number
 ): boolean => {
   const elapsedTime = (performance.now() - lastAttack) / 1000;
   const offCooldown = elapsedTime >= 1 / attackSpeed;
-  return offCooldown && isFiringPrimary && !isFiringSecondary;
+  return offCooldown && isFiringPrimary && !isChargingSecondary;
 };
 
 // export const createAllyProjectile = (

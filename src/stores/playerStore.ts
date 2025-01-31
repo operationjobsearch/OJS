@@ -17,7 +17,8 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
 
   // State
   isFiringPrimary: false,
-  isFiringSecondary: false,
+  isChargingSecondary: false,
+  shouldFireSecondary: false,
   isWalking: false,
   isRunning: false,
   isOnFloor: true,
@@ -59,12 +60,12 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
   },
 
   setIsFiringPrimary: (isFiring) => set({ isFiringPrimary: isFiring }),
-  setIsFiringSecondary: (isCharging) =>
-    set({
-      isFiringSecondary: isCharging,
-      chargeStartTime: isCharging ? performance.now() : 0,
-    }),
   setLastAttack: (timeStamp) => set({ lastAttack: timeStamp }),
+  setIsChargingSecondary: (isCharging) =>
+    set({ isChargingSecondary: isCharging }),
+  setChargeStartTime: (timeStamp) => set({ chargeStartTime: timeStamp }),
+  setShouldFireSecondary: (shouldFire) =>
+    set({ shouldFireSecondary: shouldFire }),
   setIsWalking: (controls) =>
     set(() => ({
       isWalking: updateWalkingState(controls),

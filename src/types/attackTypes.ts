@@ -25,8 +25,8 @@ export const AttackConfig: Record<AttackTypes, AttackStats> = {
   },
   [AttackTypes.Secondary]: {
     type: AttackTypes.Secondary,
-    baseDamage: 5,
-    chargeMultiplier: 5,
+    baseDamage: 50,
+    chargeMultiplier: 3,
   },
   [AttackTypes.Enemy1]: {
     type: AttackTypes.Enemy1,

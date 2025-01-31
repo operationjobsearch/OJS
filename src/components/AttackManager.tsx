@@ -19,18 +19,31 @@ export const AttackManager = () => {
   const { projectiles, spawnProjectile, destroyProjectile } = useAttackStore();
   const {
     isFiringPrimary,
-    isFiringSecondary,
+    isChargingSecondary,
     chargeStartTime,
     attackSpeed,
     lastAttack,
+    shouldFireSecondary,
     setLastAttack,
+    setShouldFireSecondary,
   } = usePlayerStore();
+  ``;
+  useEffect(() => {
+    if (shouldFireSecondary) {
+      const attackTargetId = getHitId(camera, scene);
+      console.log("attack target", attackTargetId);
+      const dmg = getChargedAttackDamage(chargeStartTime);
+      console.log("secondary atk damage", dmg);
+      damageEnemy(attackTargetId, dmg);
+      setShouldFireSecondary(false);
+    }
+  }, [shouldFireSecondary, chargeStartTime]);
 
   useFrame((state, delta) => {
     if (
       canFirePrimaryAttack(
         isFiringPrimary,
-        isFiringSecondary,
+        isChargingSecondary,
         lastAttack,
         attackSpeed
       )
@@ -38,13 +51,6 @@ export const AttackManager = () => {
       setLastAttack(performance.now());
       const attackTargetId = getHitId(camera, scene);
       damageEnemy(attackTargetId, AttackConfig[AttackTypes.Primary].baseDamage);
-    }
-
-    if (isFiringSecondary) {
-      const attackTargetId = getHitId(camera, scene);
-      const dmg = getChargedAttackDamage(chargeStartTime);
-      console.log("damage", dmg);
-      damageEnemy(attackTargetId, dmg);
     }
   });
 

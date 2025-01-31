@@ -13,7 +13,8 @@ export interface PlayerObject {
 
   // State
   isFiringPrimary: boolean;
-  isFiringSecondary: boolean;
+  isChargingSecondary: boolean;
+  shouldFireSecondary: boolean;
   isWalking: boolean;
   modelRotation: number;
   lastAttack: number;
@@ -41,7 +42,9 @@ export interface PlayerObject {
   setMouseMovement: (e: MouseEvent) => void;
 
   setIsFiringPrimary: (isLeftClickDown: boolean) => void;
-  setIsFiringSecondary: (isRightClickDown: boolean) => void;
+  setIsChargingSecondary: (isRightClickDown: boolean) => void;
+  setChargeStartTime: (timeStamp: number) => void;
+  setShouldFireSecondary: (wasRightClickReleased: boolean) => void;
   setLastAttack: (timeStamp: number) => void;
   setIsWalking: (controls: ControlsObject) => void;
 
