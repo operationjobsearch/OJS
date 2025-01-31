@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import { ProjectileProps } from "../lib/types";
+import { ProjectileProps } from "..";
 import {
   CoefficientCombineRule,
   RapierRigidBody,

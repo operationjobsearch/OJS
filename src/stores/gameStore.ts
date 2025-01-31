@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { GameObject } from "../..";
+import { GameObject } from "..";
 import Stats from "stats.js";
 
 export const useGameStore = create<GameObject>()((set) => ({

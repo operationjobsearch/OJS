@@ -1,10 +1,4 @@
-import {
-  Projectiles,
-  Reticle,
-  handleKeyEvent,
-  useCameraStore,
-  usePlayerStore,
-} from "..";
+import { Reticle, handleKeyEvent, useCameraStore, usePlayerStore } from "..";
 import { useEffect, useRef } from "react";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
@@ -24,10 +18,12 @@ export const Player = () => {
     setVelocity,
     setCharacterModel,
     setRigidBody,
+    setIsFiringPrimary,
+    setIsFiringSecondary,
     handleCollisions,
   } = usePlayerStore();
 
-  const rigidBody = useRef<RapierRigidBody>(null);
+  const rb = useRef<RapierRigidBody>(null);
   const characterModel = useRef<THREE.Object3D>(null);
 
   const playerModel = useGLTF("./Fox/glTF/Fox.gltf");
@@ -35,20 +31,31 @@ export const Player = () => {
 
   useEffect(() => {
     // initialize null properties on player object
-    setRigidBody(rigidBody);
+    setRigidBody(rb);
     setCharacterModel(characterModel);
 
     const handleKeyDown = (e: KeyboardEvent) => {
       handleKeyEvent(controls, e);
     };
-
     const handleKeyUp = (e: KeyboardEvent) => {
       handleKeyEvent(controls, e);
     };
+    const handleMouseUp = (e: MouseEvent) => {
+      if (e.button === 0) setIsFiringPrimary(false);
+      if (e.button === 2) setIsFiringSecondary(false);
+    };
+    const handleMouseDown = (e: MouseEvent) => {
+      if (e.button === 0) setIsFiringPrimary(true);
+      if (e.button === 2) setIsFiringSecondary(true);
+    };
 
+    document.addEventListener("mouseup", handleMouseUp);
+    document.addEventListener("mousedown", handleMouseDown);
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("keyup", handleKeyUp);
     return () => {
+      document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("mousedown", handleMouseDown);
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("keyup", handleKeyUp);
     };
@@ -65,14 +72,10 @@ export const Player = () => {
   return (
     <>
       <RigidBody
-        ref={rigidBody}
+        ref={rb}
         lockRotations={true}
-        onCollisionEnter={({ other }) => {
-          handleCollisions(other, true);
-        }}
-        onCollisionExit={({ other }) => {
-          handleCollisions(other, false);
-        }}
+        onCollisionEnter={(o) => handleCollisions(o, true)}
+        onCollisionExit={(o) => handleCollisions(o, false)}
         colliders={"cuboid"}
         rotation={[0, modelRotation, 0]}
       >
@@ -83,7 +86,6 @@ export const Player = () => {
         />
       </RigidBody>
       <Reticle />
-      <Projectiles />
     </>
   );
 };

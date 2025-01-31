@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Coordinate } from "../..";
+import { Coordinate } from "..";
 import { RapierRigidBody } from "@react-three/rapier";
 
 export const updateTheta = (

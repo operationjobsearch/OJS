@@ -1,7 +1,7 @@
 import { create } from "zustand";
-import { ProjectileObject } from "../types";
+import { AttackFactory } from "..";
 
-export const useProjectileStore = create<ProjectileObject>()((set, get) => ({
+export const useAttackStore = create<AttackFactory>()((set, get) => ({
   projectiles: [],
   spawnProjectile: (newProjectile) => {
     const { projectiles } = get();

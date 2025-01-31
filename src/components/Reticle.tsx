@@ -11,7 +11,7 @@ export const Reticle = () => {
 
   useEffect(() => {
     setReticle(reticle);
-    reticle.current!.renderOrder = RenderOrders.hud;
+    reticle.current!.renderOrder = RenderOrders.Hud;
   }, []);
 
   useFrame(() => {

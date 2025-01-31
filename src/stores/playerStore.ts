@@ -6,7 +6,7 @@ import {
   updateDirectionVectors,
   updateVelocity,
   updateWalkingState,
-} from "../..";
+} from "..";
 
 export const usePlayerStore = create<PlayerObject>()((set, get) => ({
   // Refs
@@ -16,13 +16,14 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
   mouseMovement: { x: 0, y: 0 },
 
   // State
-  isFiring: false,
+  isFiringPrimary: false,
+  isFiringSecondary: false,
   isWalking: false,
   isRunning: false,
   isOnFloor: true,
   canMove: true,
   modelRotation: Math.PI,
-  lastProjectile: 0,
+  lastAttack: 0,
   playerColliderRadius: 1,
 
   controls: {
@@ -45,6 +46,7 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
   jumpVelocity: 10,
   health: 100,
   attackSpeed: 3,
+  chargeStartTime: 0,
   projectileVelocity: 30,
   projectileDamage: 5,
 
@@ -56,8 +58,13 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
       set({ mouseMovement: { x: e.movementX, y: e.movementY } });
   },
 
-  setIsFiring: (isMouseDown) => set({ isFiring: isMouseDown }),
-  setLastProjectile: (timeStamp) => set({ lastProjectile: timeStamp }),
+  setIsFiringPrimary: (isFiring) => set({ isFiringPrimary: isFiring }),
+  setIsFiringSecondary: (isCharging) =>
+    set({
+      isFiringSecondary: isCharging,
+      chargeStartTime: isCharging ? performance.now() : 0,
+    }),
+  setLastAttack: (timeStamp) => set({ lastAttack: timeStamp }),
   setIsWalking: (controls) =>
     set(() => ({
       isWalking: updateWalkingState(controls),

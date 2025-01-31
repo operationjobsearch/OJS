@@ -1,28 +1,52 @@
-import React, { useEffect } from "react";
-import { EnemyProps } from "../lib/types";
+import * as THREE from "three";
+import { useEffect, useRef, useState } from "react";
+import { EnemyProps, EnemyTypes } from "..";
 import { useGLTF } from "@react-three/drei";
-import { CapsuleCollider, RigidBody } from "@react-three/rapier";
-import { Projectiles } from "..";
+import {
+  CapsuleCollider,
+  RapierRigidBody,
+  RigidBody,
+} from "@react-three/rapier";
+import {
+  createEnemyProjectile,
+  EnemyFactory,
+  useEnemyStore,
+  usePlayerStore,
+  useAttackStore,
+} from "..";
+import { useFrame } from "@react-three/fiber";
 
-export const Enemy = ({ id, type, rigidBody }: EnemyProps) => {
+export const Enemy = ({ id, rigidBody, position, attackSpeed }: EnemyProps) => {
   const enemyModel = useGLTF("./hamburger.glb");
+  const rb = useRef<RapierRigidBody>(null);
+  const playerRb = usePlayerStore((p) => p.rigidBody);
+  const { handleCollisions, setEnemyRb } = useEnemyStore();
+  const { spawnProjectile } = useAttackStore();
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    // set id on
+    if (enemyModel.scene) {
+      enemyModel.scene.traverse((c) => {
+        if (c instanceof THREE.Mesh) c.userData.enemyId = id;
+      });
+    }
+
+    setEnemyRb(id, rb);
+  }, [rigidBody, enemyModel, id]);
+
+  useFrame((state) => {});
 
   return (
     <>
       <RigidBody
-        ref={rigidBody}
+        ref={rb}
         lockRotations={true}
         colliders={"cuboid"}
-        position={[3, 0, 3]}
+        position={position}
+        onCollisionEnter={(o) => handleCollisions(id, o, true)}
+        onCollisionExit={(o) => handleCollisions(id, o, false)}
       >
-        <primitive
-          object={enemyModel.scene}
-          scale={0.1}
-          rotation-y={Math.PI}
-          //   position={[3, 0, 3]}
-        />
+        <primitive object={enemyModel.scene} scale={0.1} rotation-y={Math.PI} />
       </RigidBody>
     </>
   );

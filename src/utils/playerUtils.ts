@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { PlayerObject, ControlsObject, MovementVectorObject } from "../..";
+import { PlayerObject, ControlsObject, MovementVectorObject } from "..";
 import { RapierRigidBody } from "@react-three/rapier";
 
 export const updateWalkingState = (controls: ControlsObject): boolean => {

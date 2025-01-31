@@ -6,7 +6,7 @@ import {
   moveCamera,
   updatePhi,
   updateTheta,
-} from "../..";
+} from "..";
 import { RapierRigidBody } from "@react-three/rapier";
 
 export const useCameraStore = create<CameraObject>()((set, get) => ({
