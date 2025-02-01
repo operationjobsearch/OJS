@@ -11,6 +11,7 @@ export const App = () => {
     window.addEventListener("blur", setBlur);
     window.addEventListener("mousemove", setMouseMovement);
     document.addEventListener("pointerlockchange", setPointerLockChange);
+    
 
     return () => {
       window.removeEventListener("focus", setFocus);

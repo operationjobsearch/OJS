@@ -10,11 +10,13 @@ export const useGameStore = create<GameObject>()((set) => ({
   isWindowActive: true,
   isGameOver: false,
   currentStage: 1,
+  isPaused: false,
 
   setFocus: () => set({ isWindowActive: true }),
   setBlur: () => set({ isWindowActive: false }),
   setPointerLockChange: () =>
     set({ isPointerLocked: !!document.pointerLockElement }),
+  setPaused: (isPaused) => {set({ isPaused: isPaused });},
   setGameOver: (isOver) => set({ isGameOver: isOver }),
   setGameStage: (stage) => set({ currentStage: stage }),
 

@@ -215,12 +215,14 @@ export interface GameObject {
   isWindowActive: boolean;
   isGameOver: boolean;
   currentStage: GameStage;
+  isPaused: boolean;
 
   setFocus: () => void;
   setBlur: () => void;
   setPointerLockChange: () => void;
   setGameStage: (stage: GameStage) => void;
   setGameOver: (isOver: boolean) => void;
+  setPaused: (isPaused: boolean) => void;
 
   // Settings
   isDebugEnabled: boolean;
