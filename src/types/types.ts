@@ -53,7 +53,6 @@ export const AttackConfig: Record<string, AttackStats> = {
     baseDamage: 10,
   },
 };
-
 //#endregion
 
 //#region Player
@@ -137,7 +136,6 @@ export interface MovementVectorObject {
   backVector: THREE.Vector3;
   rightVector: THREE.Vector3;
 }
-
 //#endregion
 
 //#region Enemy
@@ -168,7 +166,6 @@ export interface EnemyProps {
 
   health: number;
   attackSpeed: number;
-  lastAttack: number;
 }
 
 export const EnemyConfig: Record<EnemyTypes, EnemyProps> = {
@@ -178,9 +175,8 @@ export const EnemyConfig: Record<EnemyTypes, EnemyProps> = {
     attackType: AttackTypes.JobPostingAtk,
     rigidBody: null,
     position: new THREE.Vector3(),
-    lastAttack: 0,
 
-    attackSpeed: 2,
+    attackSpeed: 1,
     health: 100,
   },
   [EnemyTypes.GhostJob]: {
@@ -189,13 +185,11 @@ export const EnemyConfig: Record<EnemyTypes, EnemyProps> = {
     attackType: AttackTypes.GhostJobAtk,
     rigidBody: null,
     position: new THREE.Vector3(),
-    lastAttack: 0,
 
-    attackSpeed: 4,
+    attackSpeed: 2,
     health: 150,
   },
 };
-
 //#endregion
 
 //#region Game
@@ -267,7 +261,6 @@ export const SpawnConfig: Record<GameStage, StageConfig> = {
     spawnInterval: 3,
   },
 };
-
 //#endregion
 
 //#region Camera

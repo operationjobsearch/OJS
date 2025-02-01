@@ -20,6 +20,7 @@ export const Enemy = ({ id, rigidBody, position, attackSpeed }: EnemyProps) => {
   const rb = useRef<RapierRigidBody>(null);
   const baseModel = useGLTF("./hamburger.glb");
   const enemyModel = useRef<THREE.Group>(baseModel.scene.clone());
+  const lastAttackTime = useRef<number>(performance.now());
 
   useEffect(() => {
     console.log("init enemy: ", id);
@@ -32,7 +33,18 @@ export const Enemy = ({ id, rigidBody, position, attackSpeed }: EnemyProps) => {
     setEnemyRb(id, rb);
   }, []);
 
-  useFrame((state) => {});
+  useFrame(() => {
+    if (!playerRb?.current || !rb.current) return;
+
+    const now = performance.now();
+    const elapsedTime = (now - lastAttackTime.current) / 1000;
+
+    if (elapsedTime >= 1 / attackSpeed) {
+      const projectile = createEnemyProjectile(rb, playerRb, 10, 1);
+      // spawnProjectile(projectile);
+      lastAttackTime.current = now; // Reset attack cooldown
+    }
+  });
 
   return (
     <>
