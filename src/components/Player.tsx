@@ -1,4 +1,10 @@
-import { Reticle, handleKeyEvent, useCameraStore, usePlayerStore } from "..";
+import {
+  Reticle,
+  handleKeyEvent,
+  useCameraStore,
+  useGameStore,
+  usePlayerStore,
+} from "..";
 import { useEffect, useRef } from "react";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
@@ -8,6 +14,7 @@ import * as THREE from "three";
 export const Player = () => {
   const { camera } = useThree();
   const { θ } = useCameraStore();
+  const { isPaused } = useGameStore();
   const {
     controls,
     modelRotation,
@@ -70,11 +77,13 @@ export const Player = () => {
   }, []);
 
   useFrame((_, delta) => {
-    setIsWalking(controls);
-    setModelRotation(θ);
-    setDirectionVectors(camera);
-    setAnimationState(animations.actions, delta);
-    setVelocity(delta);
+    if (!isPaused) {
+      setIsWalking(controls);
+      setModelRotation(θ);
+      setDirectionVectors(camera);
+      setAnimationState(animations.actions, delta);
+      setVelocity(delta);
+    }
   });
 
   return (

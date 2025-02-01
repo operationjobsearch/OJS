@@ -4,11 +4,11 @@ import { Physics, RigidBody } from "@react-three/rapier";
 import { Box } from "@react-three/drei";
 
 export const World = () => {
-  const { isDebugEnabled } = useGameStore();
+  const { isDebugEnabled, isPaused } = useGameStore();
 
   return (
     <Suspense>
-      <Physics debug={isDebugEnabled} timeStep={"vary"}>
+      <Physics debug={isDebugEnabled} timeStep={"vary"} paused={isPaused}>
         <Player />
         <EnemyManager />
         <AttackManager />

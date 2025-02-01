@@ -2,19 +2,18 @@ import { create } from "zustand";
 import { GameObject, GameStage } from "..";
 import Stats from "stats.js";
 
-export const useGameStore = create<GameObject>()((set) => ({
+export const useGameStore = create<GameObject>()((set, get) => ({
   // State
   stats: new Stats(),
   fpsLimit: 144,
-  isPointerLocked: false,
-  isWindowActive: true,
   isGameOver: false,
   currentStage: 1,
+  isPaused: false,
 
-  setFocus: () => set({ isWindowActive: true }),
-  setBlur: () => set({ isWindowActive: false }),
+  setBlur: () => set({ isPaused: true }),
   setPointerLockChange: () =>
-    set({ isPointerLocked: !!document.pointerLockElement }),
+    set({ isPaused: !Boolean(document.pointerLockElement) }),
+  setPaused: (pausedState) => set({ isPaused: pausedState }),
   setGameOver: (isOver) => set({ isGameOver: isOver }),
   setGameStage: (stage) => set({ currentStage: stage }),
 
@@ -24,3 +23,4 @@ export const useGameStore = create<GameObject>()((set) => ({
 
   setDebugMode: (isEnabled) => set({ isDebugEnabled: isEnabled }),
 }));
+
