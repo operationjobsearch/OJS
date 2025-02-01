@@ -26,7 +26,8 @@ export const EnemyManager = () => {
 
     instantSpawns.forEach((enemy) => spawnEnemy(createEnemy(enemy)));
 
-    for (let i = 0; i < remainingSpawns.length; i++) {
+    const delayedSpawns = remainingSpawns.length;
+    for (let i = 0; i < delayedSpawns; i++) {
       // TODO: add timer before executing spawn based on spawnConf.spawnInterval
       spawnEnemy(createEnemy(remainingSpawns[0]));
       remainingSpawns = remainingSpawns.slice(1);
