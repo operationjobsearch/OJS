@@ -10,10 +10,11 @@ import {
   AttackConfig,
   getHitId,
   getChargedAttackDamage,
+  useGameStore,
 } from "..";
 
 export const AttackManager = () => {
-  // const { isPaused } = useGameStore();
+  const { isPaused } = useGameStore();
   const { camera, scene } = useThree();
   const { damageEnemy } = useEnemyStore();
   const { projectiles, spawnProjectile, destroyProjectile } = useAttackStore();
@@ -29,7 +30,7 @@ export const AttackManager = () => {
   } = usePlayerStore();
   ``;
   useEffect(() => {
-    if (shouldFireSecondary) {
+    if (!isPaused && shouldFireSecondary) {
       const attackTargetId = getHitId(camera, scene);
       console.log("attack target", attackTargetId);
       const dmg = getChargedAttackDamage(chargeStartTime);
@@ -37,7 +38,7 @@ export const AttackManager = () => {
       damageEnemy(attackTargetId, dmg);
       setShouldFireSecondary(false);
     }
-  }, [shouldFireSecondary, chargeStartTime]);
+  }, [shouldFireSecondary, chargeStartTime, isPaused]);
 
   useFrame((state, delta) => {
     if (
@@ -45,7 +46,8 @@ export const AttackManager = () => {
         isFiringPrimary,
         isChargingSecondary,
         lastAttack,
-        attackSpeed
+        attackSpeed,
+        isPaused
       )
     ) {
       setLastAttack(performance.now());

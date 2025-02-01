@@ -41,7 +41,7 @@ export const Enemy = ({ id, rigidBody, position, attackSpeed }: EnemyProps) => {
 
     if (elapsedTime >= 1 / attackSpeed) {
       const projectile = createEnemyProjectile(rb, playerRb, 10, 1);
-      // spawnProjectile(projectile);
+      spawnProjectile(projectile);
       lastAttackTime.current = now; // Reset attack cooldown
     }
   });
