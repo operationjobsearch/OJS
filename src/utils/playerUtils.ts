@@ -1,25 +1,11 @@
 import * as THREE from "three";
-import { PlayerObject, ControlsObject, MovementVectorObject } from "../..";
+import { PlayerObject, ControlsObject, MovementVectorObject } from "..";
 import { RapierRigidBody } from "@react-three/rapier";
 
 export const updateWalkingState = (controls: ControlsObject): boolean => {
   return ["forward", "left", "back", "right"].some(
     (key) => controls[key].isPressed
   );
-};
-
-export const updateModelRotation = (
-  characterModel: React.RefObject<THREE.Object3D> | null,
-  modelRotation: number,
-  isWalking: boolean,
-  θ: number
-): number => {
-  modelRotation = Math.PI + θ;
-
-  if (characterModel && characterModel.current && isWalking)
-    characterModel.current.rotation.y = modelRotation;
-
-  return modelRotation;
 };
 
 export const updateDirectionVectors = (

@@ -1,8 +1,9 @@
-// Data
-export { useGameStore } from "./lib/stores/gameStore";
-export { usePlayerStore } from "./lib/stores/playerStore";
-export { useProjectileStore } from "./lib/stores/projectileStore";
-export { useCameraStore } from "./lib/stores/cameraStore";
+// Stores
+export { useGameStore } from "./stores/gameStore";
+export { usePlayerStore } from "./stores/playerStore";
+export { useEnemyStore } from "./stores/enemyStore";
+export { useAttackStore } from "./stores/attackStore";
+export { useCameraStore } from "./stores/cameraStore";
 
 // Components
 export { App } from "./App";
@@ -10,13 +11,18 @@ export { Camera } from "./components/Camera";
 export { DebugPanel } from "./components/DebugPanel";
 export { Player } from "./components/Player";
 export { Reticle } from "./components/Reticle";
+export { Enemy } from "./components/Enemy";
+export { EnemyManager } from "./components/EnemyManager";
 export { Projectile } from "./components/Projectile";
-export { Projectiles } from "./components/Projectiles";
+export { AttackManager } from "./components/AttackManager";
 export { World } from "./components/World";
 
 // Utils
-export * from "./lib/types";
-export * from "./lib/utils/cameraUtils";
-export * from "./lib/utils/playerUtils";
-export * from "./lib/utils/projectileUtils";
-export * from "./lib/utils/debugPanelUtils";
+export * from "./utils/cameraUtils";
+export * from "./utils/playerUtils";
+export * from "./utils/enemyUtils";
+export * from "./utils/attackUtils";
+export * from "./utils/debugPanelUtils";
+
+// Types
+export * from "./types/types";

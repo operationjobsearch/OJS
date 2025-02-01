@@ -4,10 +4,9 @@ import {
   PlayerObject,
   updateAnimationState,
   updateDirectionVectors,
-  updateModelRotation,
   updateVelocity,
   updateWalkingState,
-} from "../..";
+} from "..";
 
 export const usePlayerStore = create<PlayerObject>()((set, get) => ({
   // Refs
@@ -17,14 +16,16 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
   mouseMovement: { x: 0, y: 0 },
 
   // State
-  isFiring: false,
+  isFiringPrimary: false,
+  isChargingSecondary: false,
+  shouldFireSecondary: false,
   isWalking: false,
   isRunning: false,
   isOnFloor: true,
   canMove: true,
   modelRotation: Math.PI,
-  lastProjectile: 0,
-  playerColliderRadius: 0.5,
+  lastAttack: 0,
+  playerColliderRadius: 1,
 
   controls: {
     forward: { value: "w", isPressed: false },
@@ -43,10 +44,11 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
   // Stats
   velocity: 500,
   runMultiplier: 1.5,
-  jumpVelocity: 10,
+  jumpVelocity: 7,
   health: 100,
   attackSpeed: 3,
-  projectileVelocity: 10,
+  chargeStartTime: 0,
+  projectileVelocity: 30,
   projectileDamage: 5,
 
   setRigidBody: (rigidBody) => set({ rigidBody }),
@@ -57,23 +59,22 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
       set({ mouseMovement: { x: e.movementX, y: e.movementY } });
   },
 
-  setIsFiring: (isMouseDown) => set({ isFiring: isMouseDown }),
-  setLastProjectile: (timeStamp) => set({ lastProjectile: timeStamp }),
+  setIsFiringPrimary: (isFiring) => set({ isFiringPrimary: isFiring }),
+  setLastAttack: (timeStamp) => set({ lastAttack: timeStamp }),
+  setIsChargingSecondary: (isCharging) =>
+    set({ isChargingSecondary: isCharging }),
+  setChargeStartTime: (timeStamp) => set({ chargeStartTime: timeStamp }),
+  setShouldFireSecondary: (shouldFire) =>
+    set({ shouldFireSecondary: shouldFire }),
   setIsWalking: (controls) =>
     set(() => ({
       isWalking: updateWalkingState(controls),
     })),
 
   setModelRotation: (θ) => {
-    const { characterModel, modelRotation, isWalking } = get();
-    set(() => ({
-      modelRotation: updateModelRotation(
-        characterModel,
-        modelRotation,
-        isWalking,
-        θ
-      ),
-    }));
+    set({
+      modelRotation: Math.PI + θ,
+    });
   },
   setDirectionVectors: (camera) => {
     const { directions } = get();

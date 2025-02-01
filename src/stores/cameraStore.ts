@@ -6,16 +6,16 @@ import {
   moveCamera,
   updatePhi,
   updateTheta,
-} from "../..";
+} from "..";
 import { RapierRigidBody } from "@react-three/rapier";
 
 export const useCameraStore = create<CameraObject>()((set, get) => ({
   // Camera
   θ: 0,
   φ: Math.PI / 6,
-  cameraRadius: 3,
-  cameraVerticalOffset: 1,
-  cameraLookAtOffset: 1.75,
+  cameraRadius: 2.5,
+  positionOffsetY: 1.75, // how far above the player the camera is positioned
+  lookAtOffsetY: 1.5, // how far above the player the camera is looking
   cameraSpeedRatio: 0.35,
   dampingFactor: 0.1,
 
@@ -34,8 +34,8 @@ export const useCameraStore = create<CameraObject>()((set, get) => ({
   ) => {
     const {
       cameraRadius,
-      cameraLookAtOffset,
-      cameraVerticalOffset,
+      lookAtOffsetY,
+      positionOffsetY,
       θ,
       φ,
       dampingFactor,
@@ -43,8 +43,8 @@ export const useCameraStore = create<CameraObject>()((set, get) => ({
     moveCamera(
       camera,
       cameraRadius,
-      cameraLookAtOffset,
-      cameraVerticalOffset,
+      lookAtOffsetY,
+      positionOffsetY,
       θ,
       φ,
       playerRigidBody,

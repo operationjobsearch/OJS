@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { Coordinate } from "../..";
+import { Coordinate } from "..";
 import { RapierRigidBody } from "@react-three/rapier";
 
 export const updateTheta = (
@@ -36,8 +36,8 @@ export const updatePhi = (
 export const moveCamera = (
   camera: THREE.Camera,
   cameraRadius: number,
-  cameraLookAtOffset: number,
-  cameraVerticalOffset: number,
+  lookAtOffsetY: number,
+  positionOffsetY: number,
   θ: number,
   φ: number,
   rigidBody: React.RefObject<RapierRigidBody> | null,
@@ -49,7 +49,7 @@ export const moveCamera = (
   const rigidBodyPos = rigidBody.current.translation();
 
   const x = rigidBodyPos.x + cameraRadius * Math.sin(θ) * Math.cos(φ);
-  const y = rigidBodyPos.y + cameraRadius * Math.sin(φ) + cameraVerticalOffset;
+  const y = rigidBodyPos.y + cameraRadius * Math.sin(φ) + positionOffsetY;
   const z = rigidBodyPos.z + cameraRadius * Math.cos(θ) * Math.cos(φ);
 
   // Smoothly interpolate to the target position
@@ -60,7 +60,7 @@ export const moveCamera = (
   // Interpolate the lookAt target
   const lookAtTarget = new THREE.Vector3(
     rigidBodyPos.x,
-    rigidBodyPos.y + cameraLookAtOffset,
+    rigidBodyPos.y + lookAtOffsetY,
     rigidBodyPos.z
   );
 

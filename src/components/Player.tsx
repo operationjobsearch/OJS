@@ -1,19 +1,8 @@
-import {
-  Projectiles,
-  Reticle,
-  handleKeyEvent,
-  useCameraStore,
-  usePlayerStore,
-} from "..";
+import { Reticle, handleKeyEvent, useCameraStore, usePlayerStore } from "..";
 import { useEffect, useRef } from "react";
 import { useAnimations, useGLTF } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
-import {
-  CapsuleCollider,
-  RapierRigidBody,
-  RigidBody,
-  RigidBodyProps,
-} from "@react-three/rapier";
+import { RapierRigidBody, RigidBody } from "@react-three/rapier";
 import * as THREE from "three";
 
 export const Player = () => {
@@ -21,7 +10,7 @@ export const Player = () => {
   const { θ } = useCameraStore();
   const {
     controls,
-    playerColliderRadius,
+    modelRotation,
     setIsWalking,
     setModelRotation,
     setDirectionVectors,
@@ -29,43 +18,52 @@ export const Player = () => {
     setVelocity,
     setCharacterModel,
     setRigidBody,
+    setIsFiringPrimary,
+    setIsChargingSecondary,
+    setShouldFireSecondary,
+    setChargeStartTime,
     handleCollisions,
   } = usePlayerStore();
 
-  const rigidBody = useRef<RapierRigidBody>(null);
+  const rb = useRef<RapierRigidBody>(null);
   const characterModel = useRef<THREE.Object3D>(null);
 
   const playerModel = useGLTF("./Fox/glTF/Fox.gltf");
   const animations = useAnimations(playerModel.animations, playerModel.scene);
 
-  const rigidBodyProps: RigidBodyProps = {
-    lockRotations: true,
-    colliders: false,
-    linearDamping: 5,
-    onCollisionEnter: ({ other }) => {
-      handleCollisions(other, true);
-    },
-    onCollisionExit: ({ other }) => {
-      handleCollisions(other, false);
-    },
-  };
-
   useEffect(() => {
     // initialize null properties on player object
-    setRigidBody(rigidBody);
+    setRigidBody(rb);
     setCharacterModel(characterModel);
 
     const handleKeyDown = (e: KeyboardEvent) => {
       handleKeyEvent(controls, e);
     };
-
     const handleKeyUp = (e: KeyboardEvent) => {
       handleKeyEvent(controls, e);
     };
+    const handleMouseUp = (e: MouseEvent) => {
+      if (e.button === 0) setIsFiringPrimary(false);
+      if (e.button === 2) {
+        setIsChargingSecondary(false);
+        setShouldFireSecondary(true);
+      }
+    };
+    const handleMouseDown = (e: MouseEvent) => {
+      if (e.button === 0) setIsFiringPrimary(true);
+      if (e.button === 2) {
+        setChargeStartTime(performance.now());
+        setIsChargingSecondary(true);
+      }
+    };
 
+    document.addEventListener("mouseup", handleMouseUp);
+    document.addEventListener("mousedown", handleMouseDown);
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("keyup", handleKeyUp);
     return () => {
+      document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("mousedown", handleMouseDown);
       document.removeEventListener("keydown", handleKeyDown);
       document.removeEventListener("keyup", handleKeyUp);
     };
@@ -81,22 +79,21 @@ export const Player = () => {
 
   return (
     <>
-      <RigidBody ref={rigidBody} {...rigidBodyProps}>
-        <CapsuleCollider
-          args={[0.1, playerColliderRadius]}
-          position={[0, 0.5, 0]}
-          rotation={[Math.PI / 2, 0, 0]}
-          friction={0}
-        />
+      <RigidBody
+        ref={rb}
+        lockRotations={true}
+        onCollisionEnter={(o) => handleCollisions(o, true)}
+        onCollisionExit={(o) => handleCollisions(o, false)}
+        colliders={"cuboid"}
+        rotation={[0, modelRotation, 0]}
+      >
         <primitive
           ref={characterModel}
           object={playerModel.scene}
           scale={0.01}
-          rotation-y={Math.PI}
         />
       </RigidBody>
       <Reticle />
-      <Projectiles />
     </>
   );
 };
