@@ -4,8 +4,7 @@ import { Canvas } from "@react-three/fiber";
 
 export const App = () => {
   const { setMouseMovement } = usePlayerStore();
-  const { setFocus, setBlur, setPointerLockChange, setPaused, isPaused } =
-    useGameStore();
+  const { setBlur, setPointerLockChange, setPaused, isPaused } = useGameStore();
 
   const togglePause = (e: KeyboardEvent) => {
     if (e.key == "Escape") {
@@ -15,14 +14,11 @@ export const App = () => {
   };
 
   useEffect(() => {
-    window.addEventListener("focus", setFocus);
-    window.addEventListener("blur", setBlur);
     window.addEventListener("mousemove", setMouseMovement);
     document.addEventListener("pointerlockchange", setPointerLockChange);
     window.addEventListener("keydown", togglePause);
 
     return () => {
-      window.removeEventListener("focus", setFocus);
       window.removeEventListener("blur", setBlur);
       window.removeEventListener("mousemove", setMouseMovement);
       document.removeEventListener("pointerlockchange", setPointerLockChange);
