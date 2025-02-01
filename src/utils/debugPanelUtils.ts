@@ -1,5 +1,5 @@
 import GUI from "lil-gui";
-import { GameObject, KeyboardLayout, PlayerObject } from "../types/gameTypes";
+import { GameObject, KeyboardLayout, PlayerObject } from "..";
 
 // TODO: update functions to use zustand setters somehow so necessary re-renders trigger
 export const initializeGameFolder = (

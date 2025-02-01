@@ -7,10 +7,6 @@ export const useEnemyStore = create<EnemyFactory>()((set, get) => ({
     const { enemies } = get();
     set({ enemies: [...enemies, newEnemy] });
   },
-  destroyEnemy: (id) => {
-    const { enemies } = get();
-    set({ enemies: enemies.filter((e) => e.id !== id) });
-  },
   damageEnemy: (id, dmg) => {
     const { enemies } = get();
     const updatedEnemies = enemies

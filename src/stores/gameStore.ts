@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { GameObject } from "..";
+import { GameObject, GameStage } from "..";
 import Stats from "stats.js";
 
 export const useGameStore = create<GameObject>()((set) => ({
@@ -8,11 +8,15 @@ export const useGameStore = create<GameObject>()((set) => ({
   fpsLimit: 144,
   isPointerLocked: false,
   isWindowActive: true,
+  isGameOver: false,
+  currentStage: 1,
 
   setFocus: () => set({ isWindowActive: true }),
   setBlur: () => set({ isWindowActive: false }),
   setPointerLockChange: () =>
     set({ isPointerLocked: !!document.pointerLockElement }),
+  setGameOver: (isOver) => set({ isGameOver: isOver }),
+  setGameStage: (stage) => set({ currentStage: stage }),
 
   // Settings
   isDebugEnabled: true,

@@ -44,7 +44,7 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
   // Stats
   velocity: 500,
   runMultiplier: 1.5,
-  jumpVelocity: 10,
+  jumpVelocity: 7,
   health: 100,
   attackSpeed: 3,
   chargeStartTime: 0,

@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { AttackConfig, AttackTypes, ProjectileProps } from "..";
 import { RapierRigidBody } from "@react-three/rapier";
 
-export const getHitId = (camera: THREE.Camera, scene: THREE.Scene): number => {
+export const getHitId = (camera: THREE.Camera, scene: THREE.Scene): string => {
   const raycaster = new THREE.Raycaster();
   const direction = new THREE.Vector3(0, 0, -1).applyQuaternion(
     camera.quaternion
@@ -12,11 +12,12 @@ export const getHitId = (camera: THREE.Camera, scene: THREE.Scene): number => {
   const hits = raycaster.intersectObjects(scene.children);
   for (const hit of hits) {
     if (hit.object.userData.enemyId) {
+      console.log("hit:", hit.object.userData.enemyId);
       return hit.object.userData.enemyId;
     }
   }
 
-  return 0;
+  return "";
 };
 
 export const getChargedAttackDamage = (chargeStartTime: number): number => {
@@ -103,7 +104,7 @@ export const createEnemyProjectile = (
     .addScaledVector(direction, projectileOffset);
 
   return {
-    id: Date.now(),
+    id: `projectile-${Date.now()}-${Math.random() * 100}`,
     position: spawnPosition,
     direction: direction,
     velocity: projectileVelocity,

@@ -25,8 +25,4 @@ export * from "./utils/attackUtils";
 export * from "./utils/debugPanelUtils";
 
 // Types
-export * from "./types/gameTypes";
-export * from "./types/playerTypes";
-export * from "./types/enemyTypes";
-export * from "./types/cameraTypes";
-export * from "./types/attackTypes";
+export * from "./types/types";
