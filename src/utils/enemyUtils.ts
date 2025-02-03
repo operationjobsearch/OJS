@@ -34,7 +34,6 @@ export const createEnemy = (
     attackType: baseStats.attackType,
     rigidBody: null,
     position,
-    lastAttack: 0,
     attackSpeed: baseStats.attackSpeed,
     health: baseStats.health,
   };

@@ -1,28 +1,28 @@
-import { Camera, DebugPanel, World, useGameStore, usePlayerStore } from ".";
-import { Key, useEffect } from "react";
-import { Canvas } from "@react-three/fiber";
+import { Camera, DebugPanel, World, useGameStore, usePlayerStore } from '.';
+import { Key, useEffect } from 'react';
+import { Canvas } from '@react-three/fiber';
 
 export const App = () => {
   const { setMouseMovement } = usePlayerStore();
   const { setBlur, setPointerLockChange, setPaused, isPaused } = useGameStore();
 
   const togglePause = (e: KeyboardEvent) => {
-    if (e.key == "Escape") {
-      console.log("isPaused:", isPaused);
+    if (e.key == 'Escape') {
+      console.log('isPaused:', isPaused);
       setPaused(!isPaused);
     }
   };
 
   useEffect(() => {
-    window.addEventListener("mousemove", setMouseMovement);
-    document.addEventListener("pointerlockchange", setPointerLockChange);
-    window.addEventListener("keydown", togglePause);
+    window.addEventListener('mousemove', setMouseMovement);
+    document.addEventListener('pointerlockchange', setPointerLockChange);
+    window.addEventListener('keydown', togglePause);
 
     return () => {
-      window.removeEventListener("blur", setBlur);
-      window.removeEventListener("mousemove", setMouseMovement);
-      document.removeEventListener("pointerlockchange", setPointerLockChange);
-      window.removeEventListener("keydown", togglePause);
+      window.removeEventListener('blur', setBlur);
+      window.removeEventListener('mousemove', setMouseMovement);
+      document.removeEventListener('pointerlockchange', setPointerLockChange);
+      window.removeEventListener('keydown', togglePause);
     };
   }, [isPaused]);
 
