@@ -1,12 +1,5 @@
-import { useEffect } from "react";
-import {
-  createEnemy,
-  Enemy,
-  useEnemyStore,
-  useGameStore,
-  SpawnConfig,
-  EnemyTypes,
-} from "..";
+import { useEffect } from 'react';
+import { createEnemy, Enemy, useEnemyStore, useGameStore, SpawnConfig, EnemyTypes } from '..';
 
 export const EnemyManager = () => {
   const { currentStage } = useGameStore();

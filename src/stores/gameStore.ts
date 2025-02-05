@@ -1,6 +1,6 @@
-import { create } from "zustand";
-import { GameObject, GameStage } from "..";
-import Stats from "stats.js";
+import { create } from 'zustand';
+import { GameObject, GameStage } from '..';
+import Stats from 'stats.js';
 
 export const useGameStore = create<GameObject>()((set, get) => ({
   // State
@@ -10,17 +10,13 @@ export const useGameStore = create<GameObject>()((set, get) => ({
   currentStage: 1,
   isPaused: false,
 
-  setBlur: () => set({ isPaused: true }),
-  setPointerLockChange: () =>
-    set({ isPaused: !Boolean(document.pointerLockElement) }),
-  setPaused: (pausedState) => set({ isPaused: pausedState }),
+  pauseOnPointerLockChange: () => set({ isPaused: !Boolean(document.pointerLockElement) }),
   setGameOver: (isOver) => set({ isGameOver: isOver }),
   setGameStage: (stage) => set({ currentStage: stage }),
 
   // Settings
   isDebugEnabled: true,
-  keyboardLayout: "QWERTY",
+  keyboardLayout: 'QWERTY',
 
   setDebugMode: (isEnabled) => set({ isDebugEnabled: isEnabled }),
 }));
-

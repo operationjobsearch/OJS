@@ -1,9 +1,7 @@
-import * as THREE from "three";
-import { EnemyProps, EnemyTypes, EnemyConfig } from "..";
+import * as THREE from 'three';
+import { EnemyProps, EnemyTypes, EnemyConfig } from '..';
 
-const getSpawnPosition = (
-  occupiedPositions: THREE.Vector3[]
-): THREE.Vector3 => {
+const getSpawnPosition = (occupiedPositions: THREE.Vector3[]): THREE.Vector3 => {
   let position: THREE.Vector3;
   let attempts = 0;
 
@@ -12,10 +10,7 @@ const getSpawnPosition = (
     const posZ = Math.random() * 20 - 10;
     position = new THREE.Vector3(posX, 1, posZ);
     attempts++;
-  } while (
-    occupiedPositions.some((pos) => pos.distanceTo(position) < 2) &&
-    attempts < 10
-  );
+  } while (occupiedPositions.some((pos) => pos.distanceTo(position) < 2) && attempts < 10);
 
   return position;
 };

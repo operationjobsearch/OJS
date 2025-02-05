@@ -1,16 +1,16 @@
-import Stats from "stats.js";
-import * as THREE from "three";
-import { CollisionTarget, RapierRigidBody } from "@react-three/rapier";
+import Stats from 'stats.js';
+import * as THREE from 'three';
+import { CollisionTarget, RapierRigidBody } from '@react-three/rapier';
 
 //#region Attack
 export enum AttackTypes {
   // Player
-  Primary = "Resume",
-  Secondary = "TailoredResume",
+  Primary = 'Resume',
+  Secondary = 'TailoredResume',
 
   // Enemy
-  JobPostingAtk = "RejectionLetter",
-  GhostJobAtk = "IndefiniteWait",
+  JobPostingAtk = 'RejectionLetter',
+  GhostJobAtk = 'IndefiniteWait',
 }
 
 export interface AttackStats {
@@ -110,12 +110,9 @@ export interface PlayerObject {
     frameTime: number
   ) => void;
 
-  handleCollisions: (
-    otherObject: CollisionTarget,
-    isCollisionEnter: boolean
-  ) => void;
+  handleCollisions: (otherObject: CollisionTarget, isCollisionEnter: boolean) => void;
   handleFloorCollision: (
-    rigidBodyObject: CollisionTarget["rigidBodyObject"],
+    rigidBodyObject: CollisionTarget['rigidBodyObject'],
     isCollisionEnter: boolean
   ) => void;
 }
@@ -140,8 +137,8 @@ export interface MovementVectorObject {
 
 //#region Enemy
 export enum EnemyTypes {
-  JobPosting = "JobPosting",
-  GhostJob = "GhostJob",
+  JobPosting = 'JobPosting',
+  GhostJob = 'GhostJob',
 }
 
 export interface EnemyFactory {
@@ -150,11 +147,7 @@ export interface EnemyFactory {
   damageEnemy: (id: string, damage: number) => void;
   setEnemyRb: (id: string, rb: React.RefObject<RapierRigidBody>) => void;
   attack: (type: EnemyTypes) => void;
-  handleCollisions: (
-    id: string,
-    otherObject: CollisionTarget,
-    isCollisionEnter: boolean
-  ) => void;
+  handleCollisions: (id: string, otherObject: CollisionTarget, isCollisionEnter: boolean) => void;
 }
 
 export interface EnemyProps {
@@ -170,7 +163,7 @@ export interface EnemyProps {
 
 export const EnemyConfig: Record<EnemyTypes, EnemyProps> = {
   [EnemyTypes.JobPosting]: {
-    id: "",
+    id: '',
     type: EnemyTypes.JobPosting,
     attackType: AttackTypes.JobPostingAtk,
     rigidBody: null,
@@ -180,7 +173,7 @@ export const EnemyConfig: Record<EnemyTypes, EnemyProps> = {
     health: 100,
   },
   [EnemyTypes.GhostJob]: {
-    id: "",
+    id: '',
     type: EnemyTypes.GhostJob,
     attackType: AttackTypes.GhostJobAtk,
     rigidBody: null,
@@ -193,7 +186,7 @@ export const EnemyConfig: Record<EnemyTypes, EnemyProps> = {
 //#endregion
 
 //#region Game
-export type KeyboardLayout = "QWERTY" | "Colemak";
+export type KeyboardLayout = 'QWERTY' | 'Colemak';
 export type Coordinate = { x: number; y: number };
 
 export enum RenderOrders {
@@ -215,11 +208,9 @@ export interface GameObject {
   currentStage: GameStage;
   isPaused: boolean;
 
-  setBlur: () => void;
-  setPointerLockChange: () => void;
+  pauseOnPointerLockChange: () => void;
   setGameStage: (stage: GameStage) => void;
   setGameOver: (isOver: boolean) => void;
-  setPaused: (isPaused: boolean) => void;
 
   // Settings
   isDebugEnabled: boolean;

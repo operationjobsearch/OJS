@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { useEffect, useRef } from 'react';
-import { EnemyProps } from '..';
+import { EnemyProps, useGameStore } from '..';
 import { useGLTF } from '@react-three/drei';
 import { RapierRigidBody, RigidBody } from '@react-three/rapier';
 import {
@@ -13,6 +13,7 @@ import {
 import { useFrame } from '@react-three/fiber';
 
 export const Enemy = ({ id, rigidBody, position, attackSpeed }: EnemyProps) => {
+  const { isPaused } = useGameStore();
   const { spawnProjectile } = useAttackStore();
   const playerRb = usePlayerStore((p) => p.rigidBody);
   const { handleCollisions, setEnemyRb } = useEnemyStore();
@@ -25,16 +26,15 @@ export const Enemy = ({ id, rigidBody, position, attackSpeed }: EnemyProps) => {
   useEffect(() => {
     console.log('init enemy: ', id);
     enemyModel.current.traverse((c) => {
-      if (c instanceof THREE.Mesh) {
-        c.userData.enemyId = id;
-      }
+      if (c instanceof THREE.Mesh) c.userData.enemyId = id;
     });
 
     setEnemyRb(id, rb);
   }, []);
 
   useFrame(() => {
-    if (!playerRb?.current || !rb.current) return;
+    if (!playerRb?.current || !rb.current || isPaused) return;
+    console.log('enemy not paused');
 
     const now = performance.now();
     const elapsedTime = (now - lastAttackTime.current) / 1000;

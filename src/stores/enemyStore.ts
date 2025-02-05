@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import { EnemyFactory, EnemyProps, EnemyTypes } from "..";
+import { create } from 'zustand';
+import { EnemyFactory, EnemyProps, EnemyTypes } from '..';
 
 export const useEnemyStore = create<EnemyFactory>()((set, get) => ({
   enemies: [],
@@ -13,7 +13,7 @@ export const useEnemyStore = create<EnemyFactory>()((set, get) => ({
       .map((e) => {
         if (e.id === id) {
           const updatedHealth = e.health - dmg;
-          return e.health <= 0 ? null : { ...e, health: updatedHealth };
+          return updatedHealth <= 0 ? null : { ...e, health: updatedHealth };
         }
         return e;
       })
@@ -24,12 +24,9 @@ export const useEnemyStore = create<EnemyFactory>()((set, get) => ({
   setEnemyRb: (id, rb) => {
     const { enemies } = get();
     set({
-      enemies: enemies.map((enemy) =>
-        enemy.id === id ? { ...enemy, rigidBody: rb } : enemy
-      ),
+      enemies: enemies.map((enemy) => (enemy.id === id ? { ...enemy, rigidBody: rb } : enemy)),
     });
   },
-  setEnemyAttackCd: () => {},
   attack: (enemyType) => {
     switch (enemyType) {
       case EnemyTypes.JobPosting:

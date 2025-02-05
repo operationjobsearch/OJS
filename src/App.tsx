@@ -4,30 +4,23 @@ import { Canvas } from '@react-three/fiber';
 
 export const App = () => {
   const { setMouseMovement } = usePlayerStore();
-  const { setBlur, setPointerLockChange, setPaused, isPaused } = useGameStore();
-
-  const togglePause = (e: KeyboardEvent) => {
-    if (e.key == 'Escape') {
-      console.log('isPaused:', isPaused);
-      setPaused(!isPaused);
-    }
-  };
+  const { pauseOnPointerLockChange, isPaused } = useGameStore();
 
   useEffect(() => {
     window.addEventListener('mousemove', setMouseMovement);
-    document.addEventListener('pointerlockchange', setPointerLockChange);
-    window.addEventListener('keydown', togglePause);
+    document.addEventListener('pointerlockchange', pauseOnPointerLockChange);
 
     return () => {
-      window.removeEventListener('blur', setBlur);
       window.removeEventListener('mousemove', setMouseMovement);
-      document.removeEventListener('pointerlockchange', setPointerLockChange);
-      window.removeEventListener('keydown', togglePause);
+      document.removeEventListener('pointerlockchange', pauseOnPointerLockChange);
     };
   }, [isPaused]);
 
   return (
-    <div className="canvas" onClick={() => document.body.requestPointerLock()}>
+    <div
+      className="canvas"
+      onClick={() => document.body.requestPointerLock({ unadjustedMovement: true })}
+    >
       <Canvas>
         <DebugPanel />
         <Camera />

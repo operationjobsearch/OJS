@@ -31,12 +31,11 @@ export const canFirePrimaryAttack = (
   isFiringPrimary: boolean,
   isChargingSecondary: boolean,
   lastAttack: number,
-  attackSpeed: number,
-  isPaused: boolean
+  attackSpeed: number
 ): boolean => {
   const elapsedTime = (performance.now() - lastAttack) / 1000;
   const offCooldown = elapsedTime >= 1 / attackSpeed;
-  return !isPaused && offCooldown && isFiringPrimary && !isChargingSecondary;
+  return offCooldown && isFiringPrimary && !isChargingSecondary;
 };
 
 export const createEnemyProjectile = (

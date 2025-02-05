@@ -1,11 +1,7 @@
-import { useEffect, useRef } from "react";
-import * as THREE from "three";
-import { ProjectileProps } from "..";
-import {
-  CoefficientCombineRule,
-  RapierRigidBody,
-  RigidBody,
-} from "@react-three/rapier";
+import { useEffect, useRef } from 'react';
+import * as THREE from 'three';
+import { ProjectileProps } from '..';
+import { CoefficientCombineRule, RapierRigidBody, RigidBody } from '@react-three/rapier';
 
 export const Projectile = ({
   position,

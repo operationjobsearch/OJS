@@ -1,5 +1,5 @@
-import { create } from "zustand";
-import { AttackFactory } from "..";
+import { create } from 'zustand';
+import { AttackFactory } from '..';
 
 export const useAttackStore = create<AttackFactory>()((set, get) => ({
   projectiles: [],
@@ -9,8 +9,6 @@ export const useAttackStore = create<AttackFactory>()((set, get) => ({
   },
   destroyProjectile: (id) => {
     const { projectiles } = get();
-    set({
-      projectiles: projectiles.filter((p) => p.id !== id),
-    });
+    set({ projectiles: projectiles.filter((p) => p.id !== id) });
   },
 }));

@@ -1,13 +1,7 @@
-import * as THREE from "three";
-import { create } from "zustand";
-import {
-  CameraObject,
-  Coordinate,
-  moveCamera,
-  updatePhi,
-  updateTheta,
-} from "..";
-import { RapierRigidBody } from "@react-three/rapier";
+import * as THREE from 'three';
+import { create } from 'zustand';
+import { CameraObject, Coordinate, moveCamera, updatePhi, updateTheta } from '..';
+import { RapierRigidBody } from '@react-three/rapier';
 
 export const useCameraStore = create<CameraObject>()((set, get) => ({
   // Camera
@@ -32,14 +26,7 @@ export const useCameraStore = create<CameraObject>()((set, get) => ({
     camera: THREE.Camera,
     playerRigidBody: React.RefObject<RapierRigidBody> | null
   ) => {
-    const {
-      cameraRadius,
-      lookAtOffsetY,
-      positionOffsetY,
-      θ,
-      φ,
-      dampingFactor,
-    } = get();
+    const { cameraRadius, lookAtOffsetY, positionOffsetY, θ, φ, dampingFactor } = get();
     moveCamera(
       camera,
       cameraRadius,
