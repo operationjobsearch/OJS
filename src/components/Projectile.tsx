@@ -21,6 +21,7 @@ export const Projectile = ({
 
     const timeout = setTimeout(() => {
       if (onExpire) onExpire();
+      // TODO: delay auto expire of projectiles when paused
     }, 3000);
 
     return () => clearTimeout(timeout);

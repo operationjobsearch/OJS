@@ -29,6 +29,7 @@ export const Player = () => {
   const rb = useRef<RapierRigidBody>(null);
   const characterModel = useRef<THREE.Object3D>(null);
 
+  // TODO: replace fox stand-in with game appropriate player model when available
   const playerModel = useGLTF('./Fox/glTF/Fox.gltf');
   const animations = useAnimations(playerModel.animations, playerModel.scene);
 
@@ -67,7 +68,7 @@ export const Player = () => {
   }, []);
 
   useFrame((_, delta) => {
-    if (!isPaused) return;
+    if (isPaused) return;
     console.log('player not paused');
     setIsWalking(controls);
     setModelRotation(θ);

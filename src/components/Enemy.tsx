@@ -19,6 +19,7 @@ export const Enemy = ({ id, rigidBody, position, attackSpeed }: EnemyProps) => {
   const { handleCollisions, setEnemyRb } = useEnemyStore();
 
   const rb = useRef<RapierRigidBody>(null);
+  // TODO: replace hamburger stand-in with game appropriate enemy models when available
   const baseModel = useGLTF('./hamburger.glb');
   const enemyModel = useRef<THREE.Group>(baseModel.scene.clone());
   const lastAttackTime = useRef<number>(performance.now());

@@ -22,6 +22,8 @@ export const EnemyManager = () => {
     const delayedSpawns = remainingSpawns.length;
     for (let i = 0; i < delayedSpawns; i++) {
       // TODO: add timer before executing spawn based on spawnConf.spawnInterval
+      // TODO: configure logic to pause spawning, maybe w/ global clock in a store
+      // in case multiple functions need this pause/resume functionality w/ timers
       spawnEnemy(createEnemy(remainingSpawns[0]));
       remainingSpawns = remainingSpawns.slice(1);
     }

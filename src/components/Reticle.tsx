@@ -16,7 +16,7 @@ export const Reticle = () => {
   }, []);
 
   useFrame(() => {
-    if (!isPaused) return;
+    if (isPaused) return;
 
     if (reticle.current) {
       const distance = cameraRadius + playerColliderRadius + 10;
