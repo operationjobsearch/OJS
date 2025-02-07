@@ -30,7 +30,8 @@ export const useGameStore = create<GameObject>()((set, get) => ({
         break;
       case GameStage.Interview:
         document.exitPointerLock();
-        set({ gameState: win });
+        nextStage = GameStage.Application;
+        set({ gameState: win, currentStage: nextStage });
         break;
     }
   },
