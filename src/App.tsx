@@ -1,32 +1,16 @@
-import { Camera, DebugPanel, World, useGameStore, usePlayerStore } from '.';
-import { Key, useEffect } from 'react';
-import { Canvas } from '@react-three/fiber';
+import { MainMenu, EndMenu, Game, GameState, useGameStore } from '.';
 
 export const App = () => {
-  const { setMouseMovement } = usePlayerStore();
-  const { pauseOnPointerLockChange, isPaused } = useGameStore();
+  const { gameState } = useGameStore();
 
-  useEffect(() => {
-    window.addEventListener('mousemove', setMouseMovement);
-    document.addEventListener('pointerlockchange', pauseOnPointerLockChange);
-
-    return () => {
-      window.removeEventListener('mousemove', setMouseMovement);
-      document.removeEventListener('pointerlockchange', pauseOnPointerLockChange);
-    };
-  }, [isPaused]);
-
-  return (
-    <div
-      className="canvas"
-      onClick={() => document.body.requestPointerLock({ unadjustedMovement: true })}
-    >
-      <Canvas>
-        <DebugPanel />
-        <Camera />
-        <World />
-        <ambientLight />
-      </Canvas>
-    </div>
-  );
+  switch (gameState) {
+    case GameState.MainMenu:
+      return <MainMenu />;
+    case GameState.Active:
+      return <Game />;
+    case GameState.Lost:
+      return <EndMenu endState={GameState.Lost} />;
+    case GameState.Won:
+      return <EndMenu endState={GameState.Won} />;
+  }
 };

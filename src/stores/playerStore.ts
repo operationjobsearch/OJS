@@ -90,10 +90,16 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
 
     const collisionTargetMap: Record<string, void> = {
       ['floor']: handleFloorCollision(rigidBodyObject, isCollisionEnter),
+      ['rejectionLetter']: handleProjectileCollision(rigidBodyObject, isCollisionEnter),
     };
     collisionTargetMap[rigidBodyObject.name];
   },
   handleFloorCollision: (rigidBodyObject, isCollisionEnter) => {
     if (rigidBodyObject) set(() => ({ isOnFloor: isCollisionEnter }));
+  },
+  handleProjectileCollision: (otherObject, isCollisionEnter) => {
+    const { health } = get();
+    const newHealth = health;
+    set({ health: health });
   },
 }));

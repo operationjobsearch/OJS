@@ -42,7 +42,7 @@ export const AttackManager = () => {
 
   useFrame((state, delta) => {
     if (isPaused) return;
-    console.log('attack manager not paused');
+    // console.log('attack manager not paused');
 
     if (canFirePrimaryAttack(isFiringPrimary, isChargingSecondary, lastAttack, attackSpeed)) {
       setLastAttack(performance.now());

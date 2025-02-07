@@ -1,21 +1,43 @@
 import { create } from 'zustand';
-import { GameObject, GameStage } from '..';
+import { GameObject, GameStage, GameState } from '..';
 import Stats from 'stats.js';
 
 export const useGameStore = create<GameObject>()((set, get) => ({
   // State
+  gameState: 1,
   stats: new Stats(),
-  fpsLimit: 144,
-  isGameOver: false,
+  fpsLimit: 60,
   currentStage: 1,
   isPaused: false,
+  isStageCleared: false,
 
+  setGameState: (state) => set({ gameState: state }),
+  setStageCleared: (isCleared) => set({ isStageCleared: isCleared }),
   pauseOnPointerLockChange: () => set({ isPaused: !Boolean(document.pointerLockElement) }),
-  setGameOver: (isOver) => set({ isGameOver: isOver }),
-  setGameStage: (stage) => set({ currentStage: stage }),
+  advanceGame: () => {
+    const { currentStage } = get();
+
+    let nextStage: number = 0;
+    const win: number = GameState.Won;
+    switch (currentStage) {
+      case GameStage.Application:
+        nextStage = GameStage.Assessment;
+        set({ currentStage: nextStage });
+        break;
+      case GameStage.Assessment:
+        nextStage = GameStage.Interview;
+        set({ currentStage: nextStage });
+        break;
+      case GameStage.Interview:
+        document.exitPointerLock();
+        set({ gameState: win });
+        break;
+    }
+  },
 
   // Settings
   isDebugEnabled: true,
+  isAntiAliasingEnabled: false,
   keyboardLayout: 'QWERTY',
 
   setDebugMode: (isEnabled) => set({ isDebugEnabled: isEnabled }),

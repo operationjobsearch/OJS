@@ -25,7 +25,7 @@ export const Enemy = ({ id, rigidBody, position, attackSpeed }: EnemyProps) => {
   const lastAttackTime = useRef<number>(performance.now());
 
   useEffect(() => {
-    console.log('init enemy: ', id);
+    // console.log('init enemy: ', id);
     enemyModel.current.traverse((c) => {
       if (c instanceof THREE.Mesh) c.userData.enemyId = id;
     });
@@ -35,7 +35,7 @@ export const Enemy = ({ id, rigidBody, position, attackSpeed }: EnemyProps) => {
 
   useFrame(() => {
     if (!playerRb?.current || !rb.current || isPaused) return;
-    console.log('enemy not paused');
+    // console.log('enemy not paused');
 
     const now = performance.now();
     const elapsedTime = (now - lastAttackTime.current) / 1000;

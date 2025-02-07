@@ -37,7 +37,8 @@ export interface ProjectileProps {
 export const AttackConfig: Record<string, AttackStats> = {
   [AttackTypes.Primary]: {
     type: AttackTypes.Primary,
-    baseDamage: 10,
+    // TODO: set back to 10 or something else fair and balanced
+    baseDamage: 300,
   },
   [AttackTypes.Secondary]: {
     type: AttackTypes.Secondary,
@@ -113,6 +114,10 @@ export interface PlayerObject {
   handleCollisions: (otherObject: CollisionTarget, isCollisionEnter: boolean) => void;
   handleFloorCollision: (
     rigidBodyObject: CollisionTarget['rigidBodyObject'],
+    isCollisionEnter: boolean
+  ) => void;
+  handleProjectileCollision: (
+    otherObject: CollisionTarget['rigidBodyObject'],
     isCollisionEnter: boolean
   ) => void;
 }
@@ -194,6 +199,13 @@ export enum RenderOrders {
   Hud = 1,
 }
 
+export enum GameState {
+  MainMenu = 1,
+  Active = 2,
+  Lost = 3,
+  Won = 4,
+}
+
 export enum GameStage {
   Application = 1,
   Assessment = 2,
@@ -202,18 +214,21 @@ export enum GameStage {
 
 export interface GameObject {
   // State
+  gameState: GameState;
   stats: Stats;
   fpsLimit: number;
-  isGameOver: boolean;
-  currentStage: GameStage;
   isPaused: boolean;
+  currentStage: GameStage;
+  isStageCleared: boolean;
 
   pauseOnPointerLockChange: () => void;
-  setGameStage: (stage: GameStage) => void;
-  setGameOver: (isOver: boolean) => void;
+  advanceGame: () => void;
+  setGameState: (state: GameState) => void;
+  setStageCleared: (isCleared: boolean) => void;
 
   // Settings
   isDebugEnabled: boolean;
+  isAntiAliasingEnabled: boolean;
   keyboardLayout: KeyboardLayout;
 
   setDebugMode: (isEnabled: boolean) => void;
@@ -251,6 +266,10 @@ export const SpawnConfig: Record<GameStage, StageConfig> = {
     spawnInterval: 3,
   },
 };
+
+export interface EndMenuProps {
+  endState: GameState.Won | GameState.Lost;
+}
 //#endregion
 
 //#region Camera

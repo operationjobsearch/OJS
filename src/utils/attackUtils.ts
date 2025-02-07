@@ -10,7 +10,7 @@ export const getHitId = (camera: THREE.Camera, scene: THREE.Scene): string => {
   const hits = raycaster.intersectObjects(scene.children);
   for (const hit of hits) {
     if (hit.object.userData.enemyId) {
-      console.log('hit:', hit.object.userData.enemyId);
+      // console.log('hit:', hit.object.userData.enemyId);
       return hit.object.userData.enemyId;
     }
   }

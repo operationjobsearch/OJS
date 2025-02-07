@@ -1,11 +1,29 @@
-import { useEffect } from 'react';
-import { createEnemy, Enemy, useEnemyStore, useGameStore, SpawnConfig, EnemyTypes } from '..';
+import { useEffect, useState } from 'react';
+import {
+  createEnemy,
+  Enemy,
+  useEnemyStore,
+  useGameStore,
+  SpawnConfig,
+  EnemyTypes,
+  EndMenu,
+} from '..';
 
 export const EnemyManager = () => {
-  const { currentStage } = useGameStore();
   const { enemies, spawnEnemy } = useEnemyStore();
+  const { currentStage, setStageCleared } = useGameStore();
+  const [spawningComplete, setSpawningComplete] = useState<boolean>(false);
 
   useEffect(() => {
+    if (spawningComplete && enemies.length === 0) {
+      // console.log('stage cleared');
+      setStageCleared(true);
+      setSpawningComplete(false);
+    }
+  }, [enemies.length, spawningComplete]);
+
+  useEffect(() => {
+    // console.log('current stage: ', currentStage);
     const spawnConf = SpawnConfig[currentStage];
     let spawnTypes: EnemyTypes[] = [];
 
@@ -27,6 +45,8 @@ export const EnemyManager = () => {
       spawnEnemy(createEnemy(remainingSpawns[0]));
       remainingSpawns = remainingSpawns.slice(1);
     }
+
+    setSpawningComplete(true);
   }, [currentStage]);
 
   return enemies.map((enemy) => <Enemy {...enemy} key={enemy.id} />);
