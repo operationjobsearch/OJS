@@ -12,7 +12,7 @@ import {
 } from '..';
 import { useFrame } from '@react-three/fiber';
 
-export const Enemy = ({ id, rigidBody, position, attackSpeed }: EnemyProps) => {
+export const Enemy = ({ id, rigidBody, position, attackSpeed, attackType }: EnemyProps) => {
   const { isPaused } = useGameStore();
   const { spawnProjectile } = useAttackStore();
   const playerRb = usePlayerStore((p) => p.rigidBody);
@@ -41,7 +41,7 @@ export const Enemy = ({ id, rigidBody, position, attackSpeed }: EnemyProps) => {
     const elapsedTime = (now - lastAttackTime.current) / 1000;
 
     if (elapsedTime >= 1 / attackSpeed) {
-      const projectile = createEnemyProjectile(rb, playerRb, 10, 1);
+      const projectile = createEnemyProjectile(rb, playerRb, 10, 1, attackType);
       spawnProjectile(projectile);
       lastAttackTime.current = now; // Reset attack cooldown
     }

@@ -8,6 +8,7 @@ export const Projectile = ({
   direction,
   velocity,
   isFriendly,
+  name,
   onExpire,
 }: ProjectileProps) => {
   const projectileRigidBody = useRef<RapierRigidBody>(null);
@@ -36,7 +37,7 @@ export const Projectile = ({
       restitution={0}
       restitutionCombineRule={CoefficientCombineRule.Min}
       position={position}
-      name="resume"
+      name={name}
     >
       <mesh ref={projectileModel}>
         <sphereGeometry args={[0.1, 16, 16]} />

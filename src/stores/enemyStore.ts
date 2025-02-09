@@ -36,4 +36,5 @@ export const useEnemyStore = create<EnemyFactory>()((set, get) => ({
   handleCollisions: (id, o, isCollisionEnter) => {
     if (!isCollisionEnter) return;
   },
+  resetEnemies: () => set({ enemies: [] }),
 }));

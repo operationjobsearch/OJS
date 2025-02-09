@@ -1,11 +1,13 @@
 import { Box } from '@react-three/drei';
 import { RigidBody } from '@react-three/rapier';
 import { useGameStore } from '../stores/gameStore';
-import { GameStage } from '..';
+import { GameStage, GameState, usePlayerStore } from '..';
 import { useEffect } from 'react';
 
 export const StageManager = () => {
-  const { currentStage, isStageCleared, advanceGame, setStageCleared } = useGameStore();
+  const { health } = usePlayerStore();
+  const { currentStage, isStageCleared, advanceGame, setStageCleared, setGameState } =
+    useGameStore();
 
   useEffect(() => {
     if (isStageCleared) {
@@ -15,6 +17,13 @@ export const StageManager = () => {
       setStageCleared(false);
     }
   }, [isStageCleared]);
+
+  useEffect(() => {
+    if (health <= 0) {
+      document.exitPointerLock();
+      setGameState(GameState.Lost);
+    }
+  }, [health]);
 
   switch (currentStage) {
     case GameStage.Application:

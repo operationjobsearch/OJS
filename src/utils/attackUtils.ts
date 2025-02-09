@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { AttackConfig, AttackTypes, ProjectileProps } from '..';
+import { AttackConfig, AttackTypes, EnemyTypes, ProjectileProps } from '..';
 import { RapierRigidBody } from '@react-three/rapier';
 
 export const getHitId = (camera: THREE.Camera, scene: THREE.Scene): string => {
@@ -42,7 +42,8 @@ export const createEnemyProjectile = (
   creatorRb: React.RefObject<RapierRigidBody> | null,
   playerRb: React.RefObject<RapierRigidBody> | null,
   projectileVelocity: number,
-  projectileOffset: number
+  projectileOffset: number,
+  attackType: AttackTypes
 ): ProjectileProps => {
   if (!creatorRb?.current || !playerRb?.current) return null!;
 
@@ -69,6 +70,7 @@ export const createEnemyProjectile = (
     position: spawnPosition,
     direction: direction,
     velocity: projectileVelocity,
+    name: attackType.toString(),
     isFriendly: false,
   };
 };

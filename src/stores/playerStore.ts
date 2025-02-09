@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 import { create } from 'zustand';
 import {
+  AttackConfig,
+  AttackTypes,
   PlayerObject,
   updateAnimationState,
   updateDirectionVectors,
@@ -84,13 +86,14 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
   },
 
   handleCollisions: (otherObject, isCollisionEnter) => {
-    const { handleFloorCollision } = get();
+    const { handleFloorCollision, handleProjectileCollision } = get();
     const { rigidBodyObject } = otherObject;
     if (!rigidBodyObject) return;
 
     const collisionTargetMap: Record<string, void> = {
       ['floor']: handleFloorCollision(rigidBodyObject, isCollisionEnter),
-      ['rejectionLetter']: handleProjectileCollision(rigidBodyObject, isCollisionEnter),
+      [AttackTypes.JobPostingAtk]: handleProjectileCollision(rigidBodyObject, isCollisionEnter),
+      [AttackTypes.GhostJobAtk]: handleProjectileCollision(rigidBodyObject, isCollisionEnter),
     };
     collisionTargetMap[rigidBodyObject.name];
   },
@@ -98,8 +101,26 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
     if (rigidBodyObject) set(() => ({ isOnFloor: isCollisionEnter }));
   },
   handleProjectileCollision: (otherObject, isCollisionEnter) => {
+    if (!isCollisionEnter) return;
+
     const { health } = get();
-    const newHealth = health;
-    set({ health: health });
+    // console.log('projectile that hit: ', otherObject);
+    // console.log('player hit');
+
+    let damage = 0;
+    switch (otherObject?.name) {
+      case AttackTypes.JobPostingAtk:
+        damage = AttackConfig[AttackTypes.JobPostingAtk].baseDamage;
+        break;
+      case AttackTypes.GhostJobAtk:
+        damage = AttackConfig[AttackTypes.GhostJobAtk].baseDamage;
+        break;
+    }
+
+    console.log('hp', health);
+    const newHealth = health - damage;
+    set({ health: newHealth });
   },
+
+  setPlayer: (newState) => set((state) => ({ ...state, ...newState })),
 }));
