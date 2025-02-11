@@ -16,8 +16,8 @@ export const PlayerDefaults: PlayerStats = {
 export const AttackConfig: Record<string, AttackStats> = {
   [AttackTypes.Primary]: {
     type: AttackTypes.Primary,
-    // TODO: set back to 10 or something else fair and balanced
-    baseDamage: 300,
+    // TODO: determine fair and balanced value
+    baseDamage: 10,
   },
   [AttackTypes.Secondary]: {
     type: AttackTypes.Secondary,

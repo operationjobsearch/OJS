@@ -76,7 +76,7 @@ export const Player = () => {
 
   useFrame((_, delta) => {
     if (isPaused) return;
-    console.log('player not paused');
+    // console.log('player not paused');
     setIsWalking(controls);
     setModelRotation(θ);
     setDirectionVectors(camera);
