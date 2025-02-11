@@ -11,6 +11,7 @@ export const useGameStore = create<GameObject>()((set, get) => ({
   isPaused: false,
   isStageCleared: false,
 
+  setGameStage: (stage) => set({ currentStage: stage }),
   setGameState: (state) => set({ gameState: state }),
   setStageCleared: (isCleared) => set({ isStageCleared: isCleared }),
   pauseOnPointerLockChange: () => set({ isPaused: !Boolean(document.pointerLockElement) }),

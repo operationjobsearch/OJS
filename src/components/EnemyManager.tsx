@@ -1,18 +1,22 @@
+import * as THREE from 'three';
 import { useEffect, useState } from 'react';
 import {
   createEnemy,
   Enemy,
   useEnemyStore,
   useGameStore,
+  usePlayerStore,
   SpawnConfig,
   EnemyTypes,
   EndMenu,
 } from '..';
+import { useFrame } from '@react-three/fiber';
 
 export const EnemyManager = () => {
   const { enemies, spawnEnemy } = useEnemyStore();
-  const { currentStage, setStageCleared } = useGameStore();
+  const { isPaused, currentStage, setStageCleared } = useGameStore();
   const [spawningComplete, setSpawningComplete] = useState<boolean>(false);
+  const playerRb = usePlayerStore((p) => p.rigidBody);
 
   useEffect(() => {
     if (spawningComplete && enemies.length === 0) {
@@ -48,6 +52,67 @@ export const EnemyManager = () => {
 
     setSpawningComplete(true);
   }, [currentStage]);
+
+  useFrame((state, delta) => {
+    if (isPaused || !playerRb?.current) return;
+
+    const playerPosition = new THREE.Vector3().copy(playerRb.current.translation());
+
+    enemies.forEach((enemy) => {
+      const enemyRb = enemy.rigidBody?.current;
+      if (!enemyRb) return;
+
+      // TODO: move moveSpeed to enemy stats and refactor
+      const moveSpeed = 2;
+      const enemyPosition = enemyRb.translation();
+      let movement = new THREE.Vector3();
+
+      // Movement based on enemy type
+      switch (enemy.type) {
+        case 'JobPosting': // Chase Player
+          movement = playerPosition
+            .clone()
+            .sub(enemyPosition)
+            .normalize()
+            .multiplyScalar(moveSpeed * delta);
+          break;
+
+        case 'GhostJob': // Wander Randomly
+          movement = new THREE.Vector3(
+            (Math.random() - 0.5) * moveSpeed * delta,
+            0,
+            (Math.random() - 0.5) * moveSpeed * delta
+          );
+          break;
+      }
+
+      // Simple Separation Force (Avoid Stacking)
+      const separationForce = new THREE.Vector3();
+      enemies.forEach((otherEnemy) => {
+        if (otherEnemy.id === enemy.id) return;
+        const otherPos = otherEnemy.rigidBody?.current?.translation();
+        if (!otherPos) return;
+
+        const distance = new THREE.Vector3().subVectors(enemyPosition, otherPos).length();
+        if (distance < 1.5) {
+          const pushDir = new THREE.Vector3().subVectors(enemyPosition, otherPos).normalize();
+          separationForce.add(pushDir.multiplyScalar(0.5 * delta));
+        }
+      });
+
+      movement.add(separationForce);
+
+      // Apply movement
+      enemyRb.setTranslation(
+        {
+          x: enemyPosition.x + movement.x,
+          y: enemyPosition.y,
+          z: enemyPosition.z + movement.z,
+        },
+        true
+      );
+    });
+  });
 
   return enemies.map((enemy) => <Enemy {...enemy} key={enemy.id} />);
 };

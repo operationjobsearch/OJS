@@ -1,7 +1,14 @@
-import { useGameStore, GameState, usePlayerStore, PlayerDefaults, useEnemyStore } from '../';
+import {
+  useGameStore,
+  GameState,
+  usePlayerStore,
+  PlayerDefaults,
+  useEnemyStore,
+  GameStage,
+} from '../';
 
 export const MainMenu = () => {
-  const { setGameState } = useGameStore();
+  const { setGameState, setGameStage } = useGameStore();
   const { resetEnemies } = useEnemyStore();
   const { setPlayer } = usePlayerStore();
 
@@ -14,6 +21,7 @@ export const MainMenu = () => {
             document.body.requestPointerLock({ unadjustedMovement: true });
             resetEnemies();
             setPlayer(PlayerDefaults);
+            setGameStage(GameStage.Application);
             setGameState(GameState.Active);
           }}
         >

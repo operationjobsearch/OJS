@@ -1,7 +1,12 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { ProjectileProps } from '..';
-import { CoefficientCombineRule, RapierRigidBody, RigidBody } from '@react-three/rapier';
+import { CollisionGroups, ProjectileProps } from '..';
+import {
+  CoefficientCombineRule,
+  interactionGroups,
+  RapierRigidBody,
+  RigidBody,
+} from '@react-three/rapier';
 
 export const Projectile = ({
   position,
@@ -38,6 +43,8 @@ export const Projectile = ({
       restitutionCombineRule={CoefficientCombineRule.Min}
       position={position}
       name={name}
+      // TODO: update to dynamically set group based on isFriendly or attack type
+      collisionGroups={interactionGroups(CollisionGroups.EnemyProjectile, CollisionGroups.Player)}
     >
       <mesh ref={projectileModel}>
         <sphereGeometry args={[0.1, 16, 16]} />

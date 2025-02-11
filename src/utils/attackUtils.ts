@@ -43,13 +43,14 @@ export const createEnemyProjectile = (
   playerRb: React.RefObject<RapierRigidBody> | null,
   projectileVelocity: number,
   projectileOffset: number,
+  projectileVerticalOffset: number,
   attackType: AttackTypes
 ): ProjectileProps => {
   if (!creatorRb?.current || !playerRb?.current) return null!;
 
   const playerPos = new THREE.Vector3(
     playerRb.current.translation().x,
-    playerRb.current.translation().y,
+    playerRb.current.translation().y + projectileVerticalOffset,
     playerRb.current.translation().z
   );
 

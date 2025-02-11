@@ -13,8 +13,6 @@ export interface EnemyFactory {
   spawnEnemy: (newEnemy: EnemyProps) => void;
   damageEnemy: (id: string, damage: number) => void;
   setEnemyRb: (id: string, rb: React.RefObject<RapierRigidBody>) => void;
-  attack: (type: EnemyTypes) => void;
-  handleCollisions: (id: string, otherObject: CollisionTarget, isCollisionEnter: boolean) => void;
   resetEnemies: () => void;
 }
 

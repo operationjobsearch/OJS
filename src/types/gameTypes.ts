@@ -22,6 +22,13 @@ export enum GameStage {
   Interview = 3,
 }
 
+export enum CollisionGroups {
+  Player = 1,
+  Enemy = 2,
+  EnemyProjectile = 3,
+  PlayerProjectile = 4,
+}
+
 export interface GameObject {
   // State
   gameState: GameState;
@@ -33,6 +40,7 @@ export interface GameObject {
 
   pauseOnPointerLockChange: () => void;
   advanceGame: () => void;
+  setGameStage: (state: GameStage) => void;
   setGameState: (state: GameState) => void;
   setStageCleared: (isCleared: boolean) => void;
 

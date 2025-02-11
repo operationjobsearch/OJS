@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { EnemyFactory, EnemyProps, EnemyTypes } from '..';
 
+//#region store
 export const useEnemyStore = create<EnemyFactory>()((set, get) => ({
   enemies: [],
   spawnEnemy: (newEnemy) => {
@@ -27,14 +28,10 @@ export const useEnemyStore = create<EnemyFactory>()((set, get) => ({
       enemies: enemies.map((enemy) => (enemy.id === id ? { ...enemy, rigidBody: rb } : enemy)),
     });
   },
-  attack: (enemyType) => {
-    switch (enemyType) {
-      case EnemyTypes.JobPosting:
-        break;
-    }
-  },
-  handleCollisions: (id, o, isCollisionEnter) => {
-    if (!isCollisionEnter) return;
-  },
   resetEnemies: () => set({ enemies: [] }),
 }));
+//#endregion
+
+//#region helpers
+
+//#endregion

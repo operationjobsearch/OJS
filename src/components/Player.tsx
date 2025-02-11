@@ -1,8 +1,15 @@
-import { Reticle, handleKeyEvent, useCameraStore, useGameStore, usePlayerStore } from '..';
+import {
+  CollisionGroups,
+  Reticle,
+  handleKeyEvent,
+  useCameraStore,
+  useGameStore,
+  usePlayerStore,
+} from '..';
 import { useEffect, useRef } from 'react';
 import { useAnimations, useGLTF } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
-import { RapierRigidBody, RigidBody } from '@react-three/rapier';
+import { interactionGroups, RapierRigidBody, RigidBody } from '@react-three/rapier';
 import * as THREE from 'three';
 
 export const Player = () => {
@@ -69,7 +76,7 @@ export const Player = () => {
 
   useFrame((_, delta) => {
     if (isPaused) return;
-    // console.log('player not paused');
+    console.log('player not paused');
     setIsWalking(controls);
     setModelRotation(θ);
     setDirectionVectors(camera);
@@ -84,6 +91,7 @@ export const Player = () => {
         lockRotations={true}
         onCollisionEnter={(o) => handleCollisions(o, true)}
         onCollisionExit={(o) => handleCollisions(o, false)}
+        collisionGroups={interactionGroups(CollisionGroups.Player, CollisionGroups.EnemyProjectile)}
         colliders={'cuboid'}
         rotation={[0, modelRotation, 0]}
       >

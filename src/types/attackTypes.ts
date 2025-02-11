@@ -19,6 +19,9 @@ export interface AttackStats {
 
 export interface AttackFactory {
   projectiles: ProjectileProps[];
+  projectileOffset: number;
+  projectileVerticalOffset: number;
+  projectileVelocity: number;
   spawnProjectile: (newProjectile: ProjectileProps) => void;
   destroyProjectile: (id: string) => void;
 }

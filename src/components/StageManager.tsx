@@ -1,7 +1,7 @@
 import { Box } from '@react-three/drei';
-import { RigidBody } from '@react-three/rapier';
+import { interactionGroups, RigidBody } from '@react-three/rapier';
 import { useGameStore } from '../stores/gameStore';
-import { GameStage, GameState, usePlayerStore } from '..';
+import { CollisionGroups, GameStage, GameState, usePlayerStore } from '..';
 import { useEffect } from 'react';
 
 export const StageManager = () => {
