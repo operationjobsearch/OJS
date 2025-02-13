@@ -5,7 +5,7 @@ import {
   PlayerDefaults,
   useEnemyStore,
   GameStage,
-} from '../';
+} from '../..';
 
 export const MainMenu = () => {
   const { setGameState, setGameStage } = useGameStore();

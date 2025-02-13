@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { useEffect, useRef } from 'react';
-import { CollisionGroups, EnemyProps, useGameStore } from '..';
+import { CollisionGroups, EnemyProps, useGameStore } from '../..';
 import { useGLTF } from '@react-three/drei';
 import { interactionGroups, RapierRigidBody, RigidBody } from '@react-three/rapier';
 import {
@@ -9,7 +9,7 @@ import {
   useEnemyStore,
   usePlayerStore,
   useAttackStore,
-} from '..';
+} from '../..';
 import { useFrame, useThree } from '@react-three/fiber';
 
 export const Enemy = ({ id, rigidBody, position, attackSpeed, attackType }: EnemyProps) => {
@@ -64,18 +64,18 @@ export const Enemy = ({ id, rigidBody, position, attackSpeed, attackType }: Enem
     const now = performance.now();
     const elapsedTime = (now - lastAttackTime.current) / 1000;
 
-    // if (elapsedTime >= 1 / attackSpeed) {
-    //   const projectile = createEnemyProjectile(
-    //     rb,
-    //     playerRb,
-    //     projectileVelocity,
-    //     projectileOffset,
-    //     projectileVerticalOffset,
-    //     attackType
-    //   );
-    //   spawnProjectile(projectile);
-    //   lastAttackTime.current = now; // Reset attack cooldown
-    // }
+    if (elapsedTime >= 1 / attackSpeed) {
+      const projectile = createEnemyProjectile(
+        rb,
+        playerRb,
+        projectileVelocity,
+        projectileOffset,
+        projectileVerticalOffset,
+        attackType
+      );
+      spawnProjectile(projectile);
+      lastAttackTime.current = now; // Reset attack cooldown
+    }
 
     enemyModel.current.traverse((m) => {
       if (

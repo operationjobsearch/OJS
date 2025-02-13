@@ -1,7 +1,7 @@
 import { useFrame, useThree } from '@react-three/fiber';
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { RenderOrders, useCameraStore, useGameStore, usePlayerStore } from '..';
+import { RenderOrders, useCameraStore, useGameStore, usePlayerStore } from '../..';
 
 export const Reticle = () => {
   const { camera } = useThree();

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { Camera, DebugPanel, PauseMenu, World, useGameStore, usePlayerStore } from '../';
+import { Camera, DebugPanel, HUD, PauseMenu, World, useGameStore, usePlayerStore } from '../..';
 
 export const Game = () => {
   const { setMouseMovement } = usePlayerStore();
@@ -27,6 +27,7 @@ export const Game = () => {
           <directionalLight position={[0, 10, 0]} />
         </Canvas>
       </div>
+      <HUD />
       <PauseMenu />
     </>
   );

@@ -7,20 +7,24 @@ export { useCameraStore } from './stores/cameraStore';
 
 // Components
 export { App } from './App';
-export { Game } from './components/Game';
-export { MainMenu } from './components/MainMenu';
-export { PauseMenu } from './components/PauseMenu';
-export { EndMenu } from './components/EndMenu';
-export { StageManager } from './components/StageManager';
-export { Camera } from './components/Camera';
+export { Game } from './components/Game/Game';
+export { Camera } from './components/Game/Camera';
+export { StageManager } from './components/Game/StageManager';
+export { Player } from './components/Game/Player';
+export { Reticle } from './components/Game/Reticle';
+export { Enemy } from './components/Game/Enemy';
+export { EnemyManager } from './components/Game/EnemyManager';
+export { Projectile } from './components/Game/Projectile';
+export { AttackManager } from './components/Game/AttackManager';
+export { World } from './components/Game/World';
+
+export { HUD } from './components/UI/HUD';
+export { MainMenu } from './components/UI/MainMenu';
+export { PauseMenu } from './components/UI/PauseMenu';
+export { EndMenu } from './components/UI/EndMenu';
+export { LoadingScreen } from './components/UI/LoadingScreen';
+
 export { DebugPanel } from './components/DebugPanel';
-export { Player } from './components/Player';
-export { Reticle } from './components/Reticle';
-export { Enemy } from './components/Enemy';
-export { EnemyManager } from './components/EnemyManager';
-export { Projectile } from './components/Projectile';
-export { AttackManager } from './components/AttackManager';
-export { World } from './components/World';
 
 // Utils
 export * from './utils/cameraUtils';

@@ -5,7 +5,7 @@ import {
   useCameraStore,
   useGameStore,
   usePlayerStore,
-} from '..';
+} from '../..';
 import { useEffect, useRef } from 'react';
 import { useAnimations, useGLTF } from '@react-three/drei';
 import { useFrame, useThree } from '@react-three/fiber';
@@ -94,6 +94,7 @@ export const Player = () => {
         collisionGroups={interactionGroups(CollisionGroups.Player, CollisionGroups.EnemyProjectile)}
         colliders={'cuboid'}
         rotation={[0, modelRotation, 0]}
+        name="player"
       >
         <primitive ref={characterModel} object={playerModel.scene} scale={0.01} />
       </RigidBody>

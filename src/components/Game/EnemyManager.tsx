@@ -9,7 +9,7 @@ import {
   SpawnConfig,
   EnemyTypes,
   EndMenu,
-} from '..';
+} from '../..';
 import { useFrame } from '@react-three/fiber';
 
 export const EnemyManager = () => {

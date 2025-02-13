@@ -1,4 +1,4 @@
-import { useGameStore, EndMenuProps, GameState } from '../';
+import { useGameStore, EndMenuProps, GameState } from '../..';
 
 export const EndMenu = ({ endState }: EndMenuProps) => {
   const { setGameState } = useGameStore();

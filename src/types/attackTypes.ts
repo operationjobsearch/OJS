@@ -33,6 +33,5 @@ export interface ProjectileProps {
   velocity: number;
   isFriendly: boolean;
   name: string;
-  onExpire?: CallableFunction;
 }
 //#endregion

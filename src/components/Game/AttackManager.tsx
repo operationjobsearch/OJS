@@ -11,13 +11,13 @@ import {
   getHitId,
   getChargedAttackDamage,
   useGameStore,
-} from '..';
+} from '../..';
 
 export const AttackManager = () => {
   const { isPaused } = useGameStore();
   const { camera, scene } = useThree();
   const { damageEnemy } = useEnemyStore();
-  const { projectiles, spawnProjectile, destroyProjectile } = useAttackStore();
+  const { projectiles } = useAttackStore();
   const {
     isFiringPrimary,
     isChargingSecondary,
@@ -51,11 +51,5 @@ export const AttackManager = () => {
     }
   });
 
-  return projectiles.map((projectile) => (
-    <Projectile
-      {...projectile}
-      key={projectile.id}
-      onExpire={() => destroyProjectile(projectile.id)}
-    />
-  ));
+  return projectiles.map((projectile) => <Projectile {...projectile} key={projectile.id} />);
 };

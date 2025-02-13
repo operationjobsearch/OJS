@@ -1,4 +1,4 @@
-import { useGameStore } from '..';
+import { useGameStore } from '../..';
 
 export const PauseMenu = () => {
   const { isPaused } = useGameStore();
