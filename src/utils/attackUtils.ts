@@ -72,6 +72,7 @@ export const createEnemyProjectile = (
     direction: direction,
     velocity: projectileVelocity,
     name: attackType.toString(),
+    type: attackType,
     isFriendly: false,
   };
 };

@@ -15,6 +15,7 @@ export interface AttackStats {
   type: AttackTypes;
   baseDamage: number;
   chargeMultiplier?: number;
+  projectileTimeout?: number;
 }
 
 export interface AttackFactory {
@@ -31,7 +32,9 @@ export interface ProjectileProps {
   position: THREE.Vector3;
   direction: THREE.Vector3;
   velocity: number;
-  isFriendly: boolean;
   name: string;
+  type: AttackTypes;
+
+  isFriendly: boolean;
 }
 //#endregion

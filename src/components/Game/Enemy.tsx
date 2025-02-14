@@ -16,6 +16,7 @@ export const Enemy = ({ id, rigidBody, position, attackSpeed, attackType }: Enem
   const { isPaused } = useGameStore();
   const playerRb = usePlayerStore((p) => p.rigidBody);
   const { setEnemyRb } = useEnemyStore();
+  // TODO: move projectile velocity to attack stats
   const { projectileOffset, projectileVerticalOffset, projectileVelocity, spawnProjectile } =
     useAttackStore();
 
@@ -86,7 +87,7 @@ export const Enemy = ({ id, rigidBody, position, attackSpeed, attackType }: Enem
         if (hitTimer.current > 0) {
           hitTimer.current -= delta;
           m.material.emissive.set(new THREE.Color('rgb(138, 3, 3)'));
-          m.material.emissiveIntensity = 1.0;
+          m.material.emissiveIntensity = 10.0;
         } else {
           m.material.emissive.copy(
             originalEmissiveColors.current.get(m) || new THREE.Color('rgb(0, 0, 0)')

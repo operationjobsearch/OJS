@@ -19,6 +19,7 @@ export const AttackConfig: Record<string, AttackStats> = {
     // TODO: determine fair and balanced value
     baseDamage: 10,
   },
+  // TODO: change player secondary attack to projectile rather than hit scan; scale size AND damage
   [AttackTypes.Secondary]: {
     type: AttackTypes.Secondary,
     baseDamage: 50,
@@ -27,10 +28,12 @@ export const AttackConfig: Record<string, AttackStats> = {
   [AttackTypes.JobPostingAtk]: {
     type: AttackTypes.JobPostingAtk,
     baseDamage: 5,
+    projectileTimeout: 3000
   },
   [AttackTypes.GhostJobAtk]: {
     type: AttackTypes.GhostJobAtk,
     baseDamage: 1,
+    projectileTimeout: 5000
   },
 };
 

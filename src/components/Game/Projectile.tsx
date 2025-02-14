@@ -1,38 +1,62 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import { CollisionGroups, ProjectileProps, useAttackStore } from '../..';
+import {
+  AttackConfig,
+  CollisionGroups,
+  ProjectileProps,
+  useAttackStore,
+  useGameStore,
+} from '../..';
 import {
   CoefficientCombineRule,
   interactionGroups,
   RapierRigidBody,
   RigidBody,
 } from '@react-three/rapier';
+import { useFrame } from '@react-three/fiber';
 
 export const Projectile = ({
   id,
   position,
   direction,
   velocity,
+  type,
   isFriendly,
   name,
 }: ProjectileProps) => {
+  const { isPaused } = useGameStore();
   const { destroyProjectile } = useAttackStore();
   const projectileRigidBody = useRef<RapierRigidBody>(null);
   const projectileModel = useRef<THREE.Mesh>(null);
+  const [projectileTimeOut, setProjectileTimeout] = useState<number>(
+    AttackConfig[type].projectileTimeout!
+  );
+  const [initialTime, setInitialTime] = useState<number>(Date.now());
 
   useEffect(() => {
     const projectileVector = new THREE.Vector3();
     projectileVector.add(direction);
     projectileVector.normalize().multiplyScalar(velocity);
     projectileRigidBody.current?.setLinvel(projectileVector, true);
-
-    const timeout = setTimeout(() => {
-      destroyProjectile(id);
-      // TODO: delay auto expire of projectiles when paused
-    }, 3000);
-
-    return () => clearTimeout(timeout);
   }, []);
+
+  useEffect(() => {
+    console.log('initialTime', initialTime);
+    const destroyTimer = setTimeout(() => {
+      if (!isPaused) destroyProjectile(id);
+    }, projectileTimeOut);
+
+    if (isPaused) {
+      setProjectileTimeout(Date.now() - initialTime);
+      console.log('math', Date.now() - initialTime);
+    }
+
+    return () => clearTimeout(destroyTimer);
+  }, [isPaused]);
+
+  useEffect(() => {
+    console.log('projectileTimeOut', projectileTimeOut);
+  }, [projectileTimeOut]);
 
   return (
     <RigidBody
@@ -51,6 +75,7 @@ export const Projectile = ({
         if (o.colliderObject?.name === 'player') destroyProjectile(id);
       }}
     >
+      {/* TODO: also set projectile appearance based on attack type */}
       <mesh ref={projectileModel}>
         <sphereGeometry args={[0.1, 16, 16]} />
         <meshStandardMaterial color="red" />
