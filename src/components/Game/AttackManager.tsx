@@ -1,5 +1,5 @@
-import { useFrame, useThree } from "@react-three/fiber";
-import { useEffect } from "react";
+import { useFrame, useThree } from '@react-three/fiber';
+import { useEffect } from 'react';
 import {
   Projectile,
   usePlayerStore,
@@ -11,13 +11,13 @@ import {
   getHitId,
   getChargedAttackDamage,
   useGameStore,
-} from "..";
+} from '../..';
 
 export const AttackManager = () => {
   const { isPaused } = useGameStore();
   const { camera, scene } = useThree();
   const { damageEnemy } = useEnemyStore();
-  const { projectiles, spawnProjectile, destroyProjectile } = useAttackStore();
+  const { projectiles } = useAttackStore();
   const {
     isFiringPrimary,
     isChargingSecondary,
@@ -32,35 +32,24 @@ export const AttackManager = () => {
   useEffect(() => {
     if (!isPaused && shouldFireSecondary) {
       const attackTargetId = getHitId(camera, scene);
-      console.log("attack target", attackTargetId);
+      console.log('attack target', attackTargetId);
       const dmg = getChargedAttackDamage(chargeStartTime);
-      console.log("secondary atk damage", dmg);
+      console.log('secondary atk damage', dmg);
       damageEnemy(attackTargetId, dmg);
       setShouldFireSecondary(false);
     }
   }, [shouldFireSecondary, chargeStartTime, isPaused]);
 
   useFrame((state, delta) => {
-    if (
-      canFirePrimaryAttack(
-        isFiringPrimary,
-        isChargingSecondary,
-        lastAttack,
-        attackSpeed,
-        isPaused
-      )
-    ) {
+    if (isPaused) return;
+    // console.log('attack manager not paused');
+
+    if (canFirePrimaryAttack(isFiringPrimary, isChargingSecondary, lastAttack, attackSpeed)) {
       setLastAttack(performance.now());
       const attackTargetId = getHitId(camera, scene);
       damageEnemy(attackTargetId, AttackConfig[AttackTypes.Primary].baseDamage);
     }
   });
 
-  return projectiles.map((projectile) => (
-    <Projectile
-      {...projectile}
-      key={projectile.id}
-      onExpire={() => destroyProjectile(projectile.id)}
-    />
-  ));
+  return projectiles.map((projectile) => <Projectile {...projectile} key={projectile.id} />);
 };

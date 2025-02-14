@@ -1,6 +1,6 @@
-import * as THREE from "three";
-import { Coordinate } from "..";
-import { RapierRigidBody } from "@react-three/rapier";
+import * as THREE from 'three';
+import { Coordinate } from '..';
+import { RapierRigidBody } from '@react-three/rapier';
 
 export const updateTheta = (
   mouseMovement: Coordinate,
@@ -24,10 +24,7 @@ export const updatePhi = (
   const mouseFrameTimeY = mouseMovement.y * cameraSpeedRatio;
   mouseMovement.y = 0;
 
-  const newPhi = Math.max(
-    -Math.PI / 3,
-    Math.min(Math.PI / 3, φ + mouseFrameTimeY * frameTime)
-  );
+  const newPhi = Math.max(-Math.PI / 3, Math.min(Math.PI / 3, φ + mouseFrameTimeY * frameTime));
   return newPhi;
 };
 

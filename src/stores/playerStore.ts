@@ -1,12 +1,14 @@
-import * as THREE from "three";
-import { create } from "zustand";
+import * as THREE from 'three';
+import { create } from 'zustand';
 import {
+  AttackConfig,
+  AttackTypes,
   PlayerObject,
   updateAnimationState,
   updateDirectionVectors,
   updateVelocity,
   updateWalkingState,
-} from "..";
+} from '..';
 
 export const usePlayerStore = create<PlayerObject>()((set, get) => ({
   // Refs
@@ -28,11 +30,11 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
   playerColliderRadius: 1,
 
   controls: {
-    forward: { value: "w", isPressed: false },
-    left: { value: "a", isPressed: false },
-    back: { value: "s", isPressed: false },
-    right: { value: "d", isPressed: false },
-    jump: { value: " ", isPressed: false },
+    forward: { value: 'w', isPressed: false },
+    left: { value: 'a', isPressed: false },
+    back: { value: 's', isPressed: false },
+    right: { value: 'd', isPressed: false },
+    jump: { value: ' ', isPressed: false },
   },
   directions: {
     forwardVector: new THREE.Vector3(),
@@ -55,21 +57,15 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
   setCharacterModel: (characterModel) => set({ characterModel }),
   setReticle: (reticle) => set({ reticle }),
   setMouseMovement: (e) => {
-    if (document.pointerLockElement)
-      set({ mouseMovement: { x: e.movementX, y: e.movementY } });
+    if (document.pointerLockElement) set({ mouseMovement: { x: e.movementX, y: e.movementY } });
   },
 
   setIsFiringPrimary: (isFiring) => set({ isFiringPrimary: isFiring }),
   setLastAttack: (timeStamp) => set({ lastAttack: timeStamp }),
-  setIsChargingSecondary: (isCharging) =>
-    set({ isChargingSecondary: isCharging }),
+  setIsChargingSecondary: (isCharging) => set({ isChargingSecondary: isCharging }),
   setChargeStartTime: (timeStamp) => set({ chargeStartTime: timeStamp }),
-  setShouldFireSecondary: (shouldFire) =>
-    set({ shouldFireSecondary: shouldFire }),
-  setIsWalking: (controls) =>
-    set(() => ({
-      isWalking: updateWalkingState(controls),
-    })),
+  setShouldFireSecondary: (shouldFire) => set({ shouldFireSecondary: shouldFire }),
+  setIsWalking: (controls) => set(() => ({ isWalking: updateWalkingState(controls) })),
 
   setModelRotation: (θ) => {
     set({
@@ -81,24 +77,8 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
     updateDirectionVectors(directions, camera);
   },
   setVelocity: (frameTime) => {
-    const {
-      rigidBody,
-      controls,
-      velocity,
-      jumpVelocity,
-      isOnFloor,
-      directions,
-    } = get();
-
-    updateVelocity(
-      rigidBody,
-      controls,
-      velocity,
-      jumpVelocity,
-      isOnFloor,
-      directions,
-      frameTime
-    );
+    const { rigidBody, controls, velocity, jumpVelocity, isOnFloor, directions } = get();
+    updateVelocity(rigidBody, controls, velocity, jumpVelocity, isOnFloor, directions, frameTime);
   },
   setAnimationState: (animations, frameTime) => {
     const { isWalking } = get();
@@ -106,16 +86,41 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
   },
 
   handleCollisions: (otherObject, isCollisionEnter) => {
-    const { handleFloorCollision } = get();
+    const { handleFloorCollision, handleProjectileCollision } = get();
     const { rigidBodyObject } = otherObject;
     if (!rigidBodyObject) return;
 
     const collisionTargetMap: Record<string, void> = {
-      ["floor"]: handleFloorCollision(rigidBodyObject, isCollisionEnter),
+      ['floor']: handleFloorCollision(rigidBodyObject, isCollisionEnter),
+      [AttackTypes.JobPostingAtk]: handleProjectileCollision(rigidBodyObject, isCollisionEnter),
+      [AttackTypes.GhostJobAtk]: handleProjectileCollision(rigidBodyObject, isCollisionEnter),
     };
     collisionTargetMap[rigidBodyObject.name];
   },
   handleFloorCollision: (rigidBodyObject, isCollisionEnter) => {
     if (rigidBodyObject) set(() => ({ isOnFloor: isCollisionEnter }));
   },
+  handleProjectileCollision: (otherObject, isCollisionEnter) => {
+    if (!isCollisionEnter) return;
+
+    const { health } = get();
+    // console.log('projectile that hit: ', otherObject);
+    // console.log('player hit');
+
+    let damage = 0;
+    switch (otherObject?.name) {
+      case AttackTypes.JobPostingAtk:
+        damage = AttackConfig[AttackTypes.JobPostingAtk].baseDamage;
+        break;
+      case AttackTypes.GhostJobAtk:
+        damage = AttackConfig[AttackTypes.GhostJobAtk].baseDamage;
+        break;
+    }
+
+    console.log('hp', health);
+    const newHealth = health - damage;
+    set({ health: newHealth });
+  },
+
+  setPlayer: (newState) => set((state) => ({ ...state, ...newState })),
 }));

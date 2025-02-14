@@ -1,15 +1,13 @@
-import * as THREE from "three";
-import { PlayerObject, ControlsObject, MovementVectorObject } from "..";
-import { RapierRigidBody } from "@react-three/rapier";
+import * as THREE from 'three';
+import { PlayerObject, ControlsObject, MovementVectorObject } from '..';
+import { RapierRigidBody } from '@react-three/rapier';
 
 export const updateWalkingState = (controls: ControlsObject): boolean => {
-  return ["forward", "left", "back", "right"].some(
-    (key) => controls[key].isPressed
-  );
+  return ['forward', 'left', 'back', 'right'].some((key) => controls[key].isPressed);
 };
 
 export const updateDirectionVectors = (
-  directions: PlayerObject["directions"],
+  directions: PlayerObject['directions'],
   camera: THREE.Camera
 ): void => {
   const { forwardVector, leftVector, rightVector, backVector } = directions;
@@ -73,16 +71,16 @@ export const updateVelocity = (
 
 export const handleKeyEvent = (controls: ControlsObject, e: KeyboardEvent) => {
   const movementInputMap: Record<string, keyof ControlsObject> = {
-    [controls.forward.value]: "forward",
-    [controls.back.value]: "back",
-    [controls.left.value]: "left",
-    [controls.right.value]: "right",
-    [controls.jump.value]: "jump",
+    [controls.forward.value]: 'forward',
+    [controls.back.value]: 'back',
+    [controls.left.value]: 'left',
+    [controls.right.value]: 'right',
+    [controls.jump.value]: 'jump',
   };
 
   const controlKey = movementInputMap[e.key];
   if (controlKey) {
     const control = controls[controlKey];
-    control.isPressed = e.type === "keydown" ? true : false;
+    control.isPressed = e.type === 'keydown' ? true : false;
   }
 };
