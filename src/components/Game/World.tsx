@@ -14,7 +14,7 @@ export const World = () => {
 
   return (
     <Suspense fallback={<LoadingScreen />}>
-      <Physics debug={isDebugEnabled} timeStep={'vary'} paused={isPaused}>
+      <Physics debug={isDebugEnabled} timeStep={1 / fpsLimit} paused={isPaused}>
         <StageManager />
         <EnemyManager />
         <AttackManager />
