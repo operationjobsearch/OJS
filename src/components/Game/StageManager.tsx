@@ -29,7 +29,7 @@ export const StageManager = () => {
     case GameStage.Application:
       return (
         <RigidBody colliders="cuboid" type="fixed" name="floor" friction={0}>
-          <Box position={[0, 0, 0]} args={[100, 0, 100]}>
+          <Box position={[0, 0, 0]} args={[100, 1, 100]}>
             <meshStandardMaterial color="blue" />
           </Box>
         </RigidBody>
@@ -37,7 +37,7 @@ export const StageManager = () => {
     case GameStage.Assessment:
       return (
         <RigidBody colliders="cuboid" type="fixed" name="floor" friction={0}>
-          <Box position={[0, 0, 0]} args={[100, 0, 100]}>
+          <Box position={[0, 0, 0]} args={[100, 1, 100]}>
             <meshStandardMaterial color="green" />
           </Box>
         </RigidBody>
@@ -45,7 +45,7 @@ export const StageManager = () => {
     case GameStage.Interview:
       return (
         <RigidBody colliders="cuboid" type="fixed" name="floor" friction={0}>
-          <Box position={[0, 0, 0]} args={[100, 0, 100]}>
+          <Box position={[0, 0, 0]} args={[100, 1, 100]}>
             <meshStandardMaterial color="purple" />
           </Box>
         </RigidBody>

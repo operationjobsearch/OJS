@@ -11,7 +11,7 @@ export const useCameraStore = create<CameraObject>()((set, get) => ({
   positionOffsetY: 1.75, // how far above the player the camera is positioned
   lookAtOffsetY: 1.5, // how far above the player the camera is looking
   cameraSpeedRatio: 0.35,
-  dampingFactor: 0.1,
+  dampingFactor: 100,
 
   setCameraAngles: (delta: number, mouseMovement: Coordinate) => {
     const { θ, φ, cameraSpeedRatio } = get();
@@ -24,7 +24,8 @@ export const useCameraStore = create<CameraObject>()((set, get) => ({
 
   setCameraPosition: (
     camera: THREE.Camera,
-    playerRigidBody: React.RefObject<RapierRigidBody> | null
+    playerRigidBody: React.RefObject<RapierRigidBody> | null,
+    delta
   ) => {
     const { cameraRadius, lookAtOffsetY, positionOffsetY, θ, φ, dampingFactor } = get();
     moveCamera(
@@ -35,7 +36,8 @@ export const useCameraStore = create<CameraObject>()((set, get) => ({
       θ,
       φ,
       playerRigidBody,
-      dampingFactor
+      dampingFactor,
+      delta
     );
   },
 }));

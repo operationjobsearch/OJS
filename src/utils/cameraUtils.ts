@@ -38,34 +38,31 @@ export const moveCamera = (
   θ: number,
   φ: number,
   rigidBody: React.RefObject<RapierRigidBody> | null,
-  dampingFactor: number
+  dampingFactor: number,
+  delta: number
 ): void => {
   if (!(rigidBody && rigidBody.current)) return;
 
   // Calculate the new camera position using spherical coordinates
-  const rigidBodyPos = rigidBody.current.translation();
+  const playerPos = rigidBody.current.translation();
 
-  const x = rigidBodyPos.x + cameraRadius * Math.sin(θ) * Math.cos(φ);
-  const y = rigidBodyPos.y + cameraRadius * Math.sin(φ) + positionOffsetY;
-  const z = rigidBodyPos.z + cameraRadius * Math.cos(θ) * Math.cos(φ);
+  const x = playerPos.x + cameraRadius * Math.sin(θ) * Math.cos(φ);
+  const y = playerPos.y + cameraRadius * Math.sin(φ) + positionOffsetY;
+  const z = playerPos.z + cameraRadius * Math.cos(θ) * Math.cos(φ);
 
   // Smoothly interpolate to the target position
-  camera.position.x += (x - camera.position.x) * dampingFactor;
-  camera.position.y += (y - camera.position.y) * dampingFactor;
-  camera.position.z += (z - camera.position.z) * dampingFactor;
+  camera.position.x += (x - camera.position.x) * dampingFactor * delta;
+  camera.position.y += (y - camera.position.y) * dampingFactor * delta;
+  camera.position.z += (z - camera.position.z) * dampingFactor * delta;
 
   // Interpolate the lookAt target
-  const lookAtTarget = new THREE.Vector3(
-    rigidBodyPos.x,
-    rigidBodyPos.y + lookAtOffsetY,
-    rigidBodyPos.z
-  );
+  const lookAtTarget = new THREE.Vector3(playerPos.x, playerPos.y + lookAtOffsetY, playerPos.z);
 
   camera.lookAt(
     new THREE.Vector3(
-      camera.position.x + (lookAtTarget.x - camera.position.x) * dampingFactor,
-      camera.position.y + (lookAtTarget.y - camera.position.y) * dampingFactor,
-      camera.position.z + (lookAtTarget.z - camera.position.z) * dampingFactor
+      camera.position.x + (lookAtTarget.x - camera.position.x) * dampingFactor * delta,
+      camera.position.y + (lookAtTarget.y - camera.position.y) * dampingFactor * delta,
+      camera.position.z + (lookAtTarget.z - camera.position.z) * dampingFactor * delta
     )
   );
 };

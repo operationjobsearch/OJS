@@ -16,7 +16,8 @@ export interface CameraObject {
   setCameraAngles: (delta: number, mouseMovement: Coordinate) => void;
   setCameraPosition: (
     camera: THREE.Camera,
-    playerRigidBody: React.RefObject<RapierRigidBody> | null
+    playerRigidBody: React.RefObject<RapierRigidBody> | null,
+    types: number
   ) => void;
 }
 //#endregion

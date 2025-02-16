@@ -22,7 +22,7 @@ export const Camera = () => {
     stats.begin();
     if (!isPaused) {
       setCameraAngles(delta, mouseMovement);
-      setCameraPosition(camera, rigidBody);
+      setCameraPosition(camera, rigidBody, delta);
     }
     stats.end();
   });
