@@ -23,7 +23,7 @@ export const updateDirectionVectors = (
 export const updateAnimationState = (
   isWalking: boolean,
   animations: Record<string, THREE.AnimationAction | null>,
-  frameTime: number
+  delta: number
 ): void => {
   if (isWalking && !animations.Walk?.isRunning()) {
     animations.Walk?.play();
@@ -40,7 +40,7 @@ export const updateVelocity = (
   jumpVelocity: number,
   isOnFloor: boolean,
   directions: MovementVectorObject,
-  frameTime: number
+  delta: number
 ): void => {
   if (!rigidBody || !rigidBody.current) return;
 
@@ -54,7 +54,7 @@ export const updateVelocity = (
 
   // Normalize for consistent speed if there is any movement
   if (movementVector.length() > 0) {
-    movementVector.normalize().multiplyScalar(velocity * frameTime);
+    movementVector.normalize().multiplyScalar(velocity * delta);
   }
 
   // Handle jumping separately

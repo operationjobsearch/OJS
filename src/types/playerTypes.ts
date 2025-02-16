@@ -55,10 +55,10 @@ export interface PlayerObject {
 
   setModelRotation: (θ: number) => void;
   setDirectionVectors: (camera: THREE.Camera) => void;
-  setVelocity: (frameTime: number) => void;
+  setVelocity: (delta: number) => void;
   setAnimationState: (
     animations: Record<string, THREE.AnimationAction | null>,
-    frameTime: number
+    delta: number
   ) => void;
 
   handleCollisions: (otherObject: CollisionTarget, isCollisionEnter: boolean) => void;

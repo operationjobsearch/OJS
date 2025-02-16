@@ -6,12 +6,12 @@ export const updateTheta = (
   mouseMovement: Coordinate,
   θ: number,
   cameraSpeedRatio: number,
-  frameTime: number
+  delta: number
 ): number => {
-  const mouseFrameTimeX = -mouseMovement.x * cameraSpeedRatio;
+  const mouseDeltaX = -mouseMovement.x * cameraSpeedRatio;
   mouseMovement.x = 0;
 
-  const newTheta = θ + mouseFrameTimeX * frameTime;
+  const newTheta = θ + mouseDeltaX * delta;
   return newTheta;
 };
 
@@ -19,12 +19,12 @@ export const updatePhi = (
   mouseMovement: Coordinate,
   φ: number,
   cameraSpeedRatio: number,
-  frameTime: number
+  delta: number
 ): number => {
-  const mouseFrameTimeY = mouseMovement.y * cameraSpeedRatio;
+  const mouseDeltaY = mouseMovement.y * cameraSpeedRatio;
   mouseMovement.y = 0;
 
-  const newPhi = Math.max(-Math.PI / 3, Math.min(Math.PI / 3, φ + mouseFrameTimeY * frameTime));
+  const newPhi = Math.max(-Math.PI / 3, Math.min(Math.PI / 3, φ + mouseDeltaY * delta));
   return newPhi;
 };
 

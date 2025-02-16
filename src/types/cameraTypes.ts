@@ -13,7 +13,7 @@ export interface CameraObject {
   cameraSpeedRatio: number;
   dampingFactor: number;
 
-  setCameraAngles: (frameTime: number, mouseMovement: Coordinate) => void;
+  setCameraAngles: (delta: number, mouseMovement: Coordinate) => void;
   setCameraPosition: (
     camera: THREE.Camera,
     playerRigidBody: React.RefObject<RapierRigidBody> | null

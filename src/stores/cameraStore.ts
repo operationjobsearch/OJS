@@ -13,12 +13,12 @@ export const useCameraStore = create<CameraObject>()((set, get) => ({
   cameraSpeedRatio: 0.35,
   dampingFactor: 0.1,
 
-  setCameraAngles: (frameTime: number, mouseMovement: Coordinate) => {
+  setCameraAngles: (delta: number, mouseMovement: Coordinate) => {
     const { θ, φ, cameraSpeedRatio } = get();
 
     set(() => ({
-      θ: updateTheta(mouseMovement, θ, cameraSpeedRatio, frameTime),
-      φ: updatePhi(mouseMovement, φ, cameraSpeedRatio, frameTime),
+      θ: updateTheta(mouseMovement, θ, cameraSpeedRatio, delta),
+      φ: updatePhi(mouseMovement, φ, cameraSpeedRatio, delta),
     }));
   },
 

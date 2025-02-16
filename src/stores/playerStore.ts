@@ -76,13 +76,13 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
     const { directions } = get();
     updateDirectionVectors(directions, camera);
   },
-  setVelocity: (frameTime) => {
+  setVelocity: (delta) => {
     const { rigidBody, controls, velocity, jumpVelocity, isOnFloor, directions } = get();
-    updateVelocity(rigidBody, controls, velocity, jumpVelocity, isOnFloor, directions, frameTime);
+    updateVelocity(rigidBody, controls, velocity, jumpVelocity, isOnFloor, directions, delta);
   },
-  setAnimationState: (animations, frameTime) => {
+  setAnimationState: (animations, delta) => {
     const { isWalking } = get();
-    updateAnimationState(isWalking, animations, frameTime);
+    updateAnimationState(isWalking, animations, delta);
   },
 
   handleCollisions: (otherObject, isCollisionEnter) => {
