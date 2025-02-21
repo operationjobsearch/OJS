@@ -6,15 +6,16 @@ export const useGameStore = create<GameObject>()((set, get) => ({
   // State
   gameState: 1,
   stats: new Stats(),
-  fpsLimit: 60,
+  fpsTarget: 60,
   currentStage: 1,
   isPaused: false,
   isStageCleared: false,
 
+  setFpsTarget: (fpsCap) => set({ fpsTarget: fpsCap }),
   setGameStage: (stage) => set({ currentStage: stage }),
   setGameState: (state) => set({ gameState: state }),
   setStageCleared: (isCleared) => set({ isStageCleared: isCleared }),
-  pauseOnPointerLockChange: () => set({ isPaused: !Boolean(document.pointerLockElement) }),
+  setPaused: (paused) => set({ isPaused: paused }),
   advanceGame: () => {
     const { currentStage } = get();
 
@@ -30,7 +31,6 @@ export const useGameStore = create<GameObject>()((set, get) => ({
         set({ currentStage: nextStage });
         break;
       case GameStage.Interview:
-        document.exitPointerLock();
         nextStage = GameStage.Application;
         set({ gameState: win, currentStage: nextStage });
         break;
@@ -38,9 +38,24 @@ export const useGameStore = create<GameObject>()((set, get) => ({
   },
 
   // Settings
+  cameraVerticalOffset: 8,
+  cameraHorizontalOffset: 8,
+  cameraAngle: Math.PI / 6,
+
   isDebugEnabled: true,
-  isAntiAliasingEnabled: false,
+  isAntiAliasingEnabled: true,
   keyboardLayout: 'QWERTY',
+  pixelRatio: 0.5,
 
   setDebugMode: (isEnabled) => set({ isDebugEnabled: isEnabled }),
+
+  projectiles: [],
+  spawnProjectile: (newProjectile) => {
+    const { projectiles } = get();
+    set({ projectiles: [...projectiles, newProjectile] });
+  },
+  destroyProjectile: (id) => {
+    const { projectiles } = get();
+    set({ projectiles: projectiles.filter((p) => p.id !== id) });
+  },
 }));

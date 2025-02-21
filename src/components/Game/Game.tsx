@@ -1,27 +1,30 @@
 import { useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
-import { Camera, DebugPanel, HUD, PauseMenu, World, useGameStore, usePlayerStore } from '../..';
+import { Debug, HUD, PauseMenu, World, useGameStore } from '../..';
 
 export const Game = () => {
-  const { setMouseMovement } = usePlayerStore();
-  const { pauseOnPointerLockChange, isPaused, isAntiAliasingEnabled } = useGameStore();
+  const { isPaused, isAntiAliasingEnabled, pixelRatio, setPaused } = useGameStore();
+
+  const pause = () => setPaused(true);
+  const togglePause = (e: KeyboardEvent) => {
+    if (e.key === 'Escape') setPaused(!isPaused);
+  };
 
   useEffect(() => {
-    window.addEventListener('mousemove', setMouseMovement);
-    document.addEventListener('pointerlockchange', pauseOnPointerLockChange);
+    document.addEventListener('keydown', togglePause);
+    document.addEventListener('blur', pause);
 
     return () => {
-      window.removeEventListener('mousemove', setMouseMovement);
-      document.removeEventListener('pointerlockchange', pauseOnPointerLockChange);
+      document.removeEventListener('keydown', togglePause);
+      document.removeEventListener('blur', pause);
     };
   }, [isPaused]);
 
   return (
     <>
       <div className="canvas">
-        <Canvas gl={{ antialias: isAntiAliasingEnabled }}>
-          <DebugPanel />
-          <Camera />
+        <Canvas gl={{ antialias: isAntiAliasingEnabled, pixelRatio: pixelRatio }}>
+          <Debug />
           <World />
           <ambientLight color={'white'} intensity={1} />
           <directionalLight position={[0, 10, 0]} />

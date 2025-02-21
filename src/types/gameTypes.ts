@@ -1,8 +1,14 @@
-import { EnemyTypes } from '..';
+import * as THREE from 'three';
+import { EnemyTypes, ProjectileProps } from '..';
 
 //#region Game
 export type KeyboardLayout = 'QWERTY' | 'Colemak';
 export type Coordinate = { x: number; y: number };
+
+export enum DampingFactors {
+  Rotational = 8,
+  Translational = 5,
+}
 
 export enum RenderOrders {
   Base = 0,
@@ -33,23 +39,33 @@ export interface GameObject {
   // State
   gameState: GameState;
   stats: Stats;
-  fpsLimit: number;
+  fpsTarget: number;
   isPaused: boolean;
   currentStage: GameStage;
   isStageCleared: boolean;
 
-  pauseOnPointerLockChange: () => void;
+  setPaused: (paused: boolean) => void;
   advanceGame: () => void;
   setGameStage: (state: GameStage) => void;
   setGameState: (state: GameState) => void;
   setStageCleared: (isCleared: boolean) => void;
+  setFpsTarget: (fpsCap: number) => void;
 
   // Settings
+  cameraVerticalOffset: number;
+  cameraHorizontalOffset: number;
+  cameraAngle: number;
+
   isDebugEnabled: boolean;
   isAntiAliasingEnabled: boolean;
+  pixelRatio: number;
   keyboardLayout: KeyboardLayout;
 
   setDebugMode: (isEnabled: boolean) => void;
+
+  projectiles: ProjectileProps[];
+  spawnProjectile: (newProjectile: ProjectileProps) => void;
+  destroyProjectile: (id: string) => void;
 }
 
 export interface StageConfig {

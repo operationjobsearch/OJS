@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { EnemyFactory, EnemyProps, EnemyTypes } from '..';
+import { EnemyFactory } from '..';
 
 //#region store
 export const useEnemyStore = create<EnemyFactory>()((set, get) => ({
@@ -14,8 +14,11 @@ export const useEnemyStore = create<EnemyFactory>()((set, get) => ({
       .map((e) => {
         if (e.id === id) {
           const updatedHealth = e.health - dmg;
+          console.log(updatedHealth);
           return updatedHealth <= 0 ? null : { ...e, health: updatedHealth };
         }
+        console.log('damage', dmg);
+        console.log('damaged', id);
         return e;
       })
       .filter((e) => e !== null);
@@ -30,8 +33,4 @@ export const useEnemyStore = create<EnemyFactory>()((set, get) => ({
   },
   resetEnemies: () => set({ enemies: [] }),
 }));
-//#endregion
-
-//#region helpers
-
 //#endregion

@@ -4,16 +4,15 @@ import {
   AttackConfig,
   CollisionGroups,
   ProjectileProps,
-  useAttackStore,
+  useEnemyStore,
   useGameStore,
-} from '../..';
+} from '../../..';
 import {
   CoefficientCombineRule,
   interactionGroups,
   RapierRigidBody,
   RigidBody,
 } from '@react-three/rapier';
-import { useFrame } from '@react-three/fiber';
 
 export const Projectile = ({
   id,
@@ -23,15 +22,38 @@ export const Projectile = ({
   type,
   isFriendly,
   name,
+  damage,
 }: ProjectileProps) => {
-  const { isPaused } = useGameStore();
-  const { destroyProjectile } = useAttackStore();
+  const { damageEnemy } = useEnemyStore();
+  const { isPaused, destroyProjectile } = useGameStore();
   const projectileRigidBody = useRef<RapierRigidBody>(null);
   const projectileModel = useRef<THREE.Mesh>(null);
   const [projectileTimeOut, setProjectileTimeout] = useState<number>(
     AttackConfig[type].projectileTimeout!
   );
   const [initialTime, setInitialTime] = useState<number>(Date.now());
+
+  const collisionGroups = isFriendly
+    ? interactionGroups(CollisionGroups.PlayerProjectile, CollisionGroups.Enemy)
+    : interactionGroups(CollisionGroups.EnemyProjectile, CollisionGroups.Player);
+
+  const projectileAppearance = isFriendly
+    ? { color: 'white', scale: [0.15, 0.15, 0.15] } // Player projectile
+    : { color: 'red', scale: [0.1, 0.1, 0.1] }; // Enemy projectile
+
+  const handleCollision = (o: any) => {
+    if (isFriendly) {
+      if (o.colliderObject.name === 'enemy') {
+        const parentRigidBody = o.collider.parent();
+        const enemyId: string = parentRigidBody.userData.enemyId;
+
+        damageEnemy(enemyId, damage);
+        destroyProjectile(id);
+      }
+    } else {
+      if (o.colliderObject?.name === 'player') destroyProjectile(id);
+    }
+  };
 
   useEffect(() => {
     const projectileVector = new THREE.Vector3();
@@ -41,21 +63,21 @@ export const Projectile = ({
   }, []);
 
   useEffect(() => {
-    console.log('initialTime', initialTime);
+    // console.log('initialTime', initialTime);
     const destroyTimer = setTimeout(() => {
       if (!isPaused) destroyProjectile(id);
     }, projectileTimeOut);
 
     if (isPaused) {
       setProjectileTimeout(Date.now() - initialTime);
-      console.log('math', Date.now() - initialTime);
+      // console.log('math', Date.now() - initialTime);
     }
 
     return () => clearTimeout(destroyTimer);
   }, [isPaused]);
 
   useEffect(() => {
-    console.log('projectileTimeOut', projectileTimeOut);
+    // console.log('projectileTimeOut', projectileTimeOut);
   }, [projectileTimeOut]);
 
   return (
@@ -68,17 +90,12 @@ export const Projectile = ({
       restitutionCombineRule={CoefficientCombineRule.Min}
       position={position}
       name={name}
-      // TODO: update to dynamically set group based on isFriendly or attack type
-      // if player projectiles are added, do the same with collision callback
-      collisionGroups={interactionGroups(CollisionGroups.EnemyProjectile, CollisionGroups.Player)}
-      onCollisionEnter={(o) => {
-        if (o.colliderObject?.name === 'player') destroyProjectile(id);
-      }}
+      collisionGroups={collisionGroups}
+      onCollisionEnter={handleCollision}
     >
-      {/* TODO: also set projectile appearance based on attack type */}
       <mesh ref={projectileModel}>
         <sphereGeometry args={[0.1, 16, 16]} />
-        <meshStandardMaterial color="red" />
+        <meshStandardMaterial color={projectileAppearance.color} />
       </mesh>
     </RigidBody>
   );

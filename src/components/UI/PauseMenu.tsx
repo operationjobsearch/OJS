@@ -1,7 +1,7 @@
 import { useGameStore } from '../..';
 
 export const PauseMenu = () => {
-  const { isPaused } = useGameStore();
+  const { isPaused, setPaused } = useGameStore();
 
   if (!isPaused) return null;
 
@@ -11,9 +11,7 @@ export const PauseMenu = () => {
         <h2>Game Paused</h2>
         <br />
         <p>
-          <button onClick={() => document.body.requestPointerLock({ unadjustedMovement: true })}>
-            Resume
-          </button>
+          <button onClick={() => setPaused(false)}>Resume</button>
         </p>
       </div>
     </div>

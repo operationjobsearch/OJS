@@ -1,37 +1,27 @@
 import * as THREE from 'three';
 import { CollisionTarget, RapierRigidBody } from '@react-three/rapier';
-import { Coordinate } from '..';
 
 //#region Player
-export type KeyState = { value: string; isPressed: boolean };
-
-export interface PlayerStats {
-  health: number;
-}
-
 export interface PlayerObject {
   // Refs
   rigidBody: React.RefObject<RapierRigidBody> | null;
   characterModel: React.RefObject<THREE.Object3D> | null;
-  reticle: React.RefObject<THREE.Object3D> | null;
-  mouseMovement: Coordinate;
+  animationActions: Record<string, THREE.AnimationAction | null>;
 
   // State
+  isMoving: boolean;
   isFiringPrimary: boolean;
   isChargingSecondary: boolean;
   shouldFireSecondary: boolean;
-  isWalking: boolean;
   modelRotation: number;
   lastAttack: number;
   chargeStartTime: number;
-  directions: MovementVectorObject;
-  controls: ControlsObject;
   isOnFloor: boolean;
-  isRunning: boolean;
-  canMove: boolean;
+  directions: MovementVectorObject;
+  aimDirection: THREE.Vector3;
 
   // Stats
-  velocity: number;
+  moveSpeed: number;
   runMultiplier: number;
   jumpVelocity: number;
   health: number;
@@ -43,23 +33,17 @@ export interface PlayerObject {
   // Functions
   setCharacterModel: (characterModel: React.RefObject<THREE.Object3D>) => void;
   setRigidBody: (rb: React.RefObject<RapierRigidBody>) => void;
-  setReticle: (reticle: React.RefObject<THREE.Mesh>) => void;
-  setMouseMovement: (e: MouseEvent) => void;
+  setAnimations: (animationActions: Record<string, THREE.AnimationAction | null>) => void;
 
+  setAimDirection: (direction: THREE.Vector3) => void;
   setIsFiringPrimary: (isLeftClickDown: boolean) => void;
   setIsChargingSecondary: (isRightClickDown: boolean) => void;
   setChargeStartTime: (timeStamp: number) => void;
   setShouldFireSecondary: (wasRightClickReleased: boolean) => void;
   setLastAttack: (timeStamp: number) => void;
-  setIsWalking: (controls: ControlsObject) => void;
-
-  setModelRotation: (θ: number) => void;
+  setIsMoving: (moving: boolean) => void;
   setDirectionVectors: (camera: THREE.Camera) => void;
-  setVelocity: (delta: number) => void;
-  setAnimationState: (
-    animations: Record<string, THREE.AnimationAction | null>,
-    delta: number
-  ) => void;
+  setModelRotation: (Θ: number) => void;
 
   handleCollisions: (otherObject: CollisionTarget, isCollisionEnter: boolean) => void;
   handleFloorCollision: (
@@ -71,16 +55,7 @@ export interface PlayerObject {
     isCollisionEnter: boolean
   ) => void;
 
-  setPlayer: (player: PlayerStats) => void;
-}
-
-export interface ControlsObject {
-  [key: string]: KeyState;
-  forward: KeyState;
-  left: KeyState;
-  back: KeyState;
-  right: KeyState;
-  jump: KeyState;
+  setPlayer: (player: PlayerObject) => void;
 }
 
 export interface MovementVectorObject {

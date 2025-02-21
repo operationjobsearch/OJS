@@ -1,41 +1,24 @@
 import * as THREE from 'three';
 import { create } from 'zustand';
-import {
-  AttackConfig,
-  AttackTypes,
-  PlayerObject,
-  updateAnimationState,
-  updateDirectionVectors,
-  updateVelocity,
-  updateWalkingState,
-} from '..';
-
+import { AttackConfig, AttackTypes, PlayerObject } from '..';
+//#region PlayerStore
 export const usePlayerStore = create<PlayerObject>()((set, get) => ({
   // Refs
   rigidBody: null,
   characterModel: null,
-  reticle: null,
-  mouseMovement: { x: 0, y: 0 },
+  animationActions: {},
 
   // State
+  isMoving: false,
   isFiringPrimary: false,
   isChargingSecondary: false,
   shouldFireSecondary: false,
-  isWalking: false,
-  isRunning: false,
   isOnFloor: true,
-  canMove: true,
   modelRotation: Math.PI,
   lastAttack: 0,
   playerColliderRadius: 1,
+  aimDirection: new THREE.Vector3(),
 
-  controls: {
-    forward: { value: 'w', isPressed: false },
-    left: { value: 'a', isPressed: false },
-    back: { value: 's', isPressed: false },
-    right: { value: 'd', isPressed: false },
-    jump: { value: ' ', isPressed: false },
-  },
   directions: {
     forwardVector: new THREE.Vector3(),
     leftVector: new THREE.Vector3(),
@@ -44,7 +27,7 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
   },
 
   // Stats
-  velocity: 500,
+  moveSpeed: 20,
   runMultiplier: 1.5,
   jumpVelocity: 7,
   health: 100,
@@ -55,34 +38,26 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
 
   setRigidBody: (rigidBody) => set({ rigidBody }),
   setCharacterModel: (characterModel) => set({ characterModel }),
-  setReticle: (reticle) => set({ reticle }),
-  setMouseMovement: (e) => {
-    if (document.pointerLockElement) set({ mouseMovement: { x: e.movementX, y: e.movementY } });
-  },
+  setAnimations: (animations) => set({ animationActions: animations }),
 
+  setModelRotation: (Θ) => set({ modelRotation: Θ }),
   setIsFiringPrimary: (isFiring) => set({ isFiringPrimary: isFiring }),
   setLastAttack: (timeStamp) => set({ lastAttack: timeStamp }),
   setIsChargingSecondary: (isCharging) => set({ isChargingSecondary: isCharging }),
   setChargeStartTime: (timeStamp) => set({ chargeStartTime: timeStamp }),
   setShouldFireSecondary: (shouldFire) => set({ shouldFireSecondary: shouldFire }),
-  setIsWalking: (controls) => set(() => ({ isWalking: updateWalkingState(controls) })),
-
-  setModelRotation: (θ) => {
-    set({
-      modelRotation: Math.PI + θ,
-    });
-  },
+  setAimDirection: (direction) => set({ aimDirection: direction }),
+  setIsMoving: (moving) => set({ isMoving: moving }),
   setDirectionVectors: (camera) => {
     const { directions } = get();
-    updateDirectionVectors(directions, camera);
-  },
-  setVelocity: (delta) => {
-    const { rigidBody, controls, velocity, jumpVelocity, isOnFloor, directions } = get();
-    updateVelocity(rigidBody, controls, velocity, jumpVelocity, isOnFloor, directions, delta);
-  },
-  setAnimationState: (animations, delta) => {
-    const { isWalking } = get();
-    updateAnimationState(isWalking, animations, delta);
+    const { forwardVector, leftVector, rightVector, backVector } = directions;
+
+    camera.getWorldDirection(forwardVector);
+    forwardVector.y = 0;
+
+    rightVector.crossVectors(forwardVector, camera.up).normalize();
+    leftVector.copy(rightVector).negate();
+    backVector.copy(forwardVector).negate();
   },
 
   handleCollisions: (otherObject, isCollisionEnter) => {
@@ -117,10 +92,15 @@ export const usePlayerStore = create<PlayerObject>()((set, get) => ({
         break;
     }
 
-    console.log('hp', health);
+    // console.log('hp', health);
     const newHealth = health - damage;
     set({ health: newHealth });
   },
 
   setPlayer: (newState) => set((state) => ({ ...state, ...newState })),
 }));
+//#endregion
+
+//#region Helpers
+
+//#endregion

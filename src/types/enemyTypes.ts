@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { CollisionTarget, RapierRigidBody } from '@react-three/rapier';
+import { RapierRigidBody } from '@react-three/rapier';
 import { AttackTypes } from '..';
 
 //#region Enemy
@@ -10,9 +10,10 @@ export enum EnemyTypes {
 
 export interface EnemyFactory {
   enemies: EnemyProps[];
+
+  setEnemyRb: (id: string, rb: React.RefObject<RapierRigidBody>) => void;
   spawnEnemy: (newEnemy: EnemyProps) => void;
   damageEnemy: (id: string, damage: number) => void;
-  setEnemyRb: (id: string, rb: React.RefObject<RapierRigidBody>) => void;
   resetEnemies: () => void;
 }
 
