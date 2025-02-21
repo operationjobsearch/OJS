@@ -19,7 +19,7 @@ export const PlayerAnimation = () => {
     const lerpFactor = 1 - Math.exp(-delta * 10);
     if (isMoving) {
       const targetRotation = Math.atan2(movement.x, movement.z);
-      setModelRotation(THREE.MathUtils.lerp(modelRotation, targetRotation, lerpFactor));
+      setModelRotation(targetRotation);
 
       if (animationActions.Run) {
         const targetSpeed = 1.0;
